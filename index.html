@@ -1,471 +1,473 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi Rekap Data Paket</title>
-    <style>
-        :root {
-            --primary: #2563eb;
-            --success: #16a34a;
-            --warning: #ea580c;
-            --danger: #dc2626;
-            --info: #0891b2;
-            --bg: #f8fafc;
-            --card: #ffffff;
-            --text: #1e293b;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PAKET CONTROL CENTER — Package Data & Monitoring System</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+          colors: {
+            rg: {
+              cyan: '#1CB0F6',
+              teal: '#2BC0E4',
+              blue: '#0F52BA',
+              navy: '#0A2540',
+              orange: '#FF8A00',
+              peach: '#FFF4E5',
+              surface: '#F6F9FD',
+              border: '#E3ECF6'
+            }
+          }
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg); color: var(--text); padding: 20px; max-width: 1000px; margin: 0 auto; }
-        
-        .header { text-align: center; margin-bottom: 20px; padding: 15px; background: var(--card); border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .info-jadwal { background: #e0f2fe; color: #0369a1; padding: 10px; border-radius: 6px; margin-top: 10px; font-weight: 600; }
-        .card { background: var(--card); padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        
-        .tab-menu { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #cbd5e1; padding-bottom: 5px; }
-        .tab-btn { background: #e2e8f0; border: none; padding: 10px 20px; font-weight: 600; border-radius: 6px 6px 0 0; cursor: pointer; color: #475569; transition: 0.2s; }
-        .tab-btn.active { background: var(--primary); color: white; }
-
-        .sub-tab-menu { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
-        .sub-tab-btn { background: #f1f5f9; border: 1px solid #cbd5e1; padding: 6px 14px; font-size: 13px; font-weight: 600; border-radius: 20px; cursor: pointer; color: #475569; }
-        .sub-tab-btn.active { background: var(--info); color: white; border-color: var(--info); }
-
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; }
-        
-        button { cursor: pointer; padding: 10px 15px; border: none; border-radius: 6px; font-weight: 600; transition: 0.2s; }
-        .btn-primary { background: var(--primary); color: white; width: 100%; }
-        .btn-primary:hover { background: #1d4ed8; }
-        .btn-success { background: var(--success); color: white; }
-        .btn-success:hover { background: #15803d; }
-        .btn-info { background: var(--info); color: white; padding: 10px 15px; font-size: 13px; }
-        .btn-danger { background: var(--danger); color: white; padding: 5px 10px; font-size: 12px; }
-
-        .table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
-        th, td { border: 1px solid #e2e8f0; padding: 10px; text-align: left; }
-        th { background: #f1f5f9; }
-
-        .badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; display: inline-block; }
-        .badge-success { background: #dcfce7; color: #15803d; }
-        .badge-warning { background: #ffedd5; color: #c2410c; }
-        .badge-danger { background: #fee2e2; color: #b91c1c; }
-
-        .alert { padding: 12px; border-radius: 6px; margin-bottom: 15px; display: none; }
-        .alert-success { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
-
-        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .stat-card { background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; text-align: center; }
-        .stat-card h4 { font-size: 13px; color: #64748b; margin-bottom: 5px; }
-        .stat-card div { font-size: 22px; font-weight: 700; color: #0f172a; }
-
-        .section-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px; }
-    </style>
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F6F9FD; color: #1E293B; }
+    .rg-gradient { background: linear-gradient(100deg, #18A4E0 0%, #20B6D5 45%, #6C63FF 100%); }
+    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: #EDF3F9; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #CBD8E6; border-radius: 6px; }
+  </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col antialiased custom-scroll">
 
-    <div class="header">
-        <h2>📦 Sistem Rekap Data Paket</h2>
-        <div class="info-jadwal" id="infoHariIni">Mengecek jadwal tanggal dipilih...</div>
-    </div>
-
-    <div id="notifAlert" class="alert alert-success">✅ Data berhasil disimpan!</div>
-
-    <div class="tab-menu">
-        <button class="tab-btn active" onclick="openMainTab('tabInput', this)">📥 Input Paket</button>
-        <button class="tab-btn" onclick="openMainTab('tabLive', this)">📋 Preview Data Live</button>
-        <button class="tab-btn" onclick="openMainTab('tabRekap', this)">📊 Rekap & Periodik</button>
-    </div>
-
-    <div id="tabInput" class="tab-content active">
-        <div class="card">
-            <h3>Input Paket Masuk</h3>
-            <br>
-            <form id="paketForm">
-                <div class="form-group">
-                    <label for="tanggal">Tanggal Rekap / Paket Masuk</label>
-                    <input type="date" id="tanggal" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="nama">Nama Penerima</label>
-                    <input type="text" id="nama" required placeholder="Masukkan nama siswa/penerima">
-                </div>
-
-                <div class="form-group">
-                    <label for="kelas">Kelas</label>
-                    <select id="kelas" required>
-                        <option value="">-- Pilih Kelas --</option>
-                        <option value="12">12</option>
-                        <option value="11">11</option>
-                        <option value="10">10</option>
-                        <option value="9A">9A</option>
-                        <option value="9B">9B</option>
-                        <option value="9C">9C</option>
-                        <option value="9D">9D</option>
-                        <option value="9E">9E</option>
-                        <option value="8A">8A</option>
-                        <option value="8B">8B</option>
-                        <option value="8C">8C</option>
-                        <option value="8D">8D</option>
-                        <option value="8E">8E</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="keterangan">Keterangan (Opsional / Buat Luar Jadwal)</label>
-                    <input type="text" id="keterangan" placeholder="Contoh: Paket Online, Urgen, Titip Guru">
-                </div>
-
-                <button type="submit" class="btn-primary" id="btnSubmit">Simpan Data Paket</button>
-            </form>
+  <!-- TOP APP BAR -->
+  <header class="bg-white border-b border-rg-border sticky top-0 z-30 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('dashboard')">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-md">
+          <i data-lucide="package-check" class="w-5 h-5"></i>
         </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-base font-extrabold tracking-tight text-slate-900">PAKET<span class="text-sky-500">CONTROL</span></span>
+            <span class="text-[10px] bg-sky-100 text-sky-800 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">REKAP SYSTEM</span>
+          </div>
+          <p class="text-[11px] text-slate-400 font-medium">Package Management & Verification</p>
+        </div>
+      </div>
+
+      <div class="hidden md:flex items-center relative w-80">
+        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3"></i>
+        <input 
+          type="text" 
+          id="global-search" 
+          oninput="handleGlobalSearch(this.value)"
+          placeholder="Cari nama penerima atau kelas..." 
+          class="w-full bg-slate-100/80 hover:bg-slate-100 focus:bg-white text-xs rounded-full pl-9 pr-4 py-2 border border-transparent focus:border-sky-400 focus:outline-none transition"
+        />
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-full px-3 py-1.5 shadow-2xs">
+          <div class="w-7 h-7 rounded-full bg-sky-500 text-white flex items-center justify-center font-bold text-xs">
+            <i data-lucide="user" class="w-3.5 h-3.5"></i>
+          </div>
+          <span class="text-xs font-bold text-slate-700">Petugas Piket</span>
+        </div>
+      </div>
     </div>
 
-    <div id="tabLive" class="tab-content">
-        <div class="card">
-            <div class="section-title">
-                <h3>✅ Preview Data Sesuai Jadwal</h3>
-                <button class="btn-success" onclick="exportCSV('sesuai')">Export CSV (Sesuai)</button>
-            </div>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Tanggal Rekap</th>
-                            <th>Nama</th>
-                            <th>Kelas</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabelSesuai"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="section-title">
-                <h3>⚠️ Preview Data Di Luar Jadwal</h3>
-                <button class="btn-success" onclick="exportCSV('luar')">Export CSV (Di Luar)</button>
-            </div>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Tanggal Rekap</th>
-                            <th>Nama</th>
-                            <th>Kelas</th>
-                            <th>Keterangan</th>
-                            <th>Legalitas Status</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabelLuar"></tbody>
-                </table>
-            </div>
-        </div>
+    <!-- NAVIGATION PILLS -->
+    <div class="bg-white border-t border-slate-100 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto flex items-center gap-2 overflow-x-auto py-2 custom-scroll text-xs font-semibold">
+        <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 hover:bg-slate-100 transition shrink-0">
+          <i data-lucide="layout-dashboard" class="w-4 h-4 text-sky-500"></i>
+          <span>Dashboard</span>
+        </button>
+        <button onclick="navigate('input')" id="nav-input" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 hover:bg-slate-100 transition shrink-0">
+          <i data-lucide="plus-circle" class="w-4 h-4 text-emerald-500"></i>
+          <span>Input Paket Masuk</span>
+        </button>
+        <button onclick="navigate('live')" id="nav-live" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 hover:bg-slate-100 transition shrink-0">
+          <i data-lucide="list-checks" class="w-4 h-4 text-indigo-500"></i>
+          <span>Data Live Preview</span>
+        </button>
+        <button onclick="navigate('rekap')" id="nav-rekap" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 hover:bg-slate-100 transition shrink-0">
+          <i data-lucide="bar-chart-3" class="w-4 h-4 text-purple-500"></i>
+          <span>Rekapitulasi & Export</span>
+        </button>
+      </div>
     </div>
+  </header>
 
-    <div id="tabRekap" class="tab-content">
-        <div class="card">
-            <div class="section-title">
-                <h3>📊 Rekapitulasi Data Paket</h3>
-                <button class="btn-info" onclick="exportCSV('semua')">📊 Export Excel (Semua Data)</button>
-            </div>
-            <br>
-            
-            <div class="sub-tab-menu">
-                <button class="sub-tab-btn active" onclick="filterRekap('hari', this)">Per Hari Ini</button>
-                <button class="sub-tab-btn" onclick="filterRekap('minggu', this)">Per Minggu Ini</button>
-                <button class="sub-tab-btn" onclick="filterRekap('bulan', this)">Per Bulan Ini</button>
-                <button class="sub-tab-btn" onclick="filterRekap('semua', this)">Semua Data</button>
-            </div>
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    <div id="app-container"></div>
+  </main>
 
-            <div class="stat-grid">
-                <div class="stat-card">
-                    <h4>Total Paket</h4>
-                    <div id="statTotal">0</div>
-                </div>
-                <div class="stat-card">
-                    <h4>Sesuai Jadwal</h4>
-                    <div id="statSesuai" style="color: var(--success);">0</div>
-                </div>
-                <div class="stat-card">
-                    <h4>Di Luar Jadwal</h4>
-                    <div id="statLuar" style="color: var(--warning);">0</div>
-                </div>
-            </div>
+  <footer class="bg-white border-t border-slate-200/80 py-4 text-center text-xs text-slate-400">
+    <p>“Streamlined Package Tracking System” • Rekap Paket Sekolah</p>
+  </footer>
 
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Tanggal Rekap</th>
-                            <th>Nama</th>
-                            <th>Kelas</th>
-                            <th>Kategori</th>
-                            <th>Keterangan</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tabelRekapPeriodik"></tbody>
-                </table>
+  <script>
+    // --- JADWAL HARI ---
+    const jadwalHari = {
+      1: ["12"],                           // Senin
+      2: ["11", "10"],                     // Selasa
+      3: ["9A", "9B"],                     // Rabu
+      4: ["9C", "9D", "9E"],               // Kamis
+      5: ["8A", "8B"],                     // Jumat
+      6: ["8C", "8D", "8E"],               // Sabtu
+      0: []                                // Minggu
+    };
+    const namaHari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+
+    // Storage Engine
+    let dataRekap = JSON.parse(localStorage.getItem('rekapPaketData_UI')) || [];
+
+    function saveDB() {
+      localStorage.setItem('rekapPaketData_UI', JSON.stringify(dataRekap));
+    }
+
+    let currentTab = 'dashboard';
+
+    function navigate(tabId) {
+      currentTab = tabId;
+      document.querySelectorAll('.nav-pill').forEach(btn => {
+        btn.classList.remove('bg-sky-500', 'text-white', 'shadow-sm');
+        btn.classList.add('text-slate-600');
+      });
+      const activeBtn = document.getElementById('nav-' + tabId);
+      if (activeBtn) {
+        activeBtn.classList.add('bg-sky-500', 'text-white', 'shadow-sm');
+        activeBtn.classList.remove('text-slate-600');
+      }
+
+      const container = document.getElementById('app-container');
+      if (tabId === 'dashboard') renderDashboard(container);
+      else if (tabId === 'input') renderInput(container);
+      else if (tabId === 'live') renderLive(container);
+      else if (tabId === 'rekap') renderRekap(container);
+
+      lucide.createIcons();
+    }
+
+    // --- DASHBOARD VIEW ---
+    function renderDashboard(container) {
+      const todayISO = new Date().toISOString().split('T')[0];
+      const todayIndex = new Date().getDay();
+      const kelasHariIni = jadwalHari[todayIndex] || [];
+
+      const todayData = dataRekap.filter(d => d.rawTanggal === todayISO);
+      const countSesuai = todayData.filter(d => d.isSesuai).length;
+      const countLuar = todayData.filter(d => !d.isSesuai).length;
+
+      container.innerHTML = `
+        <div class="rg-gradient rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
+          <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="space-y-2">
+              <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Sistem Monitoring Paket Aktif</span>
+              </div>
+              <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">
+                Selamat Datang, Petugas Piket 👋
+              </h2>
+              <p class="text-white/90 text-sm max-w-xl">
+                Rekap penerimaan paket siswa secara otomatis berdasarkan jadwal kelas harian. Rapih, akurat, lan terorganisir.
+              </p>
             </div>
+            <div class="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-2xl flex items-center gap-4 text-xs shrink-0">
+              <div class="w-12 h-12 rounded-xl bg-white text-sky-600 flex items-center justify-center font-bold text-lg shadow-sm">
+                <i data-lucide="calendar" class="w-6 h-6 text-sky-600"></i>
+              </div>
+              <div>
+                <span class="text-white/70 block text-[11px] font-semibold">Hari Ini: ${namaHari[todayIndex]}</span>
+                <span class="text-white font-bold text-sm block">Jadwal Kelas: ${kelasHariIni.length > 0 ? kelasHariIni.join(', ') : 'Libur Reguler'}</span>
+              </div>
+            </div>
+          </div>
         </div>
-    </div>
 
-    <script>
-        const jadwalHari = {
-            1: ["12"], 2: ["11", "10"], 3: ["9A", "9B"],
-            4: ["9C", "9D", "9E"], 5: ["8A", "8B"], 6: ["8C", "8D", "8E"], 0: []
-        };
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+            <div class="flex items-center justify-between text-slate-400 text-xs font-bold mb-2">
+              <span>TOTAL PAKET HARI INI</span>
+              <i data-lucide="package" class="w-4 h-4 text-sky-500"></i>
+            </div>
+            <div class="text-3xl font-black text-slate-900">${todayData.length}</div>
+            <p class="text-[11px] text-slate-400 mt-1">Total masuk tanggal ${todayISO}</p>
+          </div>
 
-        const namaHari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-        const inputTanggal = document.getElementById('tanggal');
-        inputTanggal.value = new Date().toISOString().split('T')[0];
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+            <div class="flex items-center justify-between text-slate-400 text-xs font-bold mb-2">
+              <span>SESUAI JADWAL</span>
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
+            </div>
+            <div class="text-3xl font-black text-emerald-600">${countSesuai}</div>
+            <p class="text-[11px] text-slate-400 mt-1">Sesuai kelas reguler</p>
+          </div>
 
-        function updateInfoJadwal() {
-            if(!inputTanggal.value) return;
-            const selectedDate = new Date(inputTanggal.value + "T00:00:00");
-            const dayIndex = selectedDate.getDay();
-            const kelasAllowed = jadwalHari[dayIndex] || [];
-            
-            document.getElementById('infoHariIni').innerText = 
-                `Tanggal Dipilih: ${inputTanggal.value} (${namaHari[dayIndex]}) | Jadwal Kelas: ${kelasAllowed.length > 0 ? kelasAllowed.join(', ') : 'Tidak Ada Jadwal Reguler'}`;
-        }
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+            <div class="flex items-center justify-between text-slate-400 text-xs font-bold mb-2">
+              <span>DI LUAR JADWAL / ONLINE</span>
+              <i data-lucide="alert-circle" class="w-4 h-4 text-amber-500"></i>
+            </div>
+            <div class="text-3xl font-black text-amber-600">${countLuar}</div>
+            <p class="text-[11px] text-slate-400 mt-1">Paket pengecualian/legalitas</p>
+          </div>
+        </div>
 
-        inputTanggal.addEventListener('change', updateInfoJadwal);
-        updateInfoJadwal();
+        <div class="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-sm font-extrabold text-slate-900">Rekap Input Terbaru</h3>
+              <p class="text-xs text-slate-400">Data penerimaan paket terkini</p>
+            </div>
+            <button onclick="navigate('live')" class="text-xs font-bold text-sky-600 hover:text-sky-700 flex items-center gap-1">
+              Lihat Semua <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="text-slate-400 border-b border-slate-100 font-bold uppercase tracking-wider">
+                <tr>
+                  <th class="pb-3">Tanggal Rekap</th>
+                  <th class="pb-3">Nama Penerima</th>
+                  <th class="pb-3">Kelas</th>
+                  <th class="pb-3">Status / Legalitas</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-slate-700">
+                ${dataRekap.slice(-5).reverse().map(d => `
+                  <tr>
+                    <td class="py-3 font-medium text-slate-500">${d.tglFormatted}</td>
+                    <td class="py-3 font-bold text-slate-900">${d.nama}</td>
+                    <td class="py-3 font-semibold text-slate-700">${d.kelas}</td>
+                    <td class="py-3">
+                      ${d.isSesuai 
+                        ? `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700">Sesuai Jadwal</span>`
+                        : `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700">${d.keterangan ? 'Dilegalkan (' + d.keterangan + ')' : 'Luar Jadwal'}</span>`
+                      }
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
 
-        let dataRekap = JSON.parse(localStorage.getItem('rekapPaketData')) || [];
-        renderTable();
+    // --- INPUT VIEW ---
+    function renderInput(container) {
+      const todayStr = new Date().toISOString().split('T')[0];
 
-        function openMainTab(tabId, btn) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            
-            document.getElementById(tabId).classList.add('active');
-            btn.classList.add('active');
+      container.innerHTML = `
+        <div class="max-w-2xl mx-auto bg-white rounded-3xl border border-slate-200/80 shadow-xs p-6 sm:p-8">
+          <div class="border-b border-slate-100 pb-4 mb-6">
+            <h2 class="text-xl font-extrabold text-slate-900">Input Paket Masuk</h2>
+            <p class="text-xs text-slate-400 mt-0.5" id="infoFormJadwal">Mengecek jadwal tanggal dipilih...</p>
+          </div>
 
-            if(tabId === 'tabRekap') {
-                filterRekap('hari', document.querySelector('.sub-tab-btn'));
-            }
-        }
+          <form id="formPaket" onsubmit="handleSavePaket(event)" class="space-y-5">
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1.5">Tanggal Rekap / Paket Masuk *</label>
+              <input type="date" id="inp-tanggal" value="${todayStr}" onchange="updateFormJadwalInfo(this.value)" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs font-semibold focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none" />
+            </div>
 
-        document.getElementById('paketForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1.5">Nama Penerima *</label>
+              <input type="text" id="inp-nama" required placeholder="Masukkan nama siswa/penerima..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs font-semibold focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none" />
+            </div>
 
-            const rawTanggal = inputTanggal.value;
-            const selectedDate = new Date(rawTanggal + "T00:00:00");
-            const dayIndex = selectedDate.getDay();
-            const kelasAllowed = jadwalHari[dayIndex] || [];
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1.5">Kelas *</label>
+              <select id="inp-kelas" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs font-bold text-slate-700 focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                <option value="">-- Pilih Kelas --</option>
+                <option value="12">12</option><option value="11">11</option><option value="10">10</option>
+                <option value="9A">9A</option><option value="9B">9B</option><option value="9C">9C</option><option value="9D">9D</option><option value="9E">9E</option>
+                <option value="8A">8A</option><option value="8B">8B</option><option value="8C">8C</option><option value="8D">8D</option><option value="8E">8E</option>
+              </select>
+            </div>
 
-            const nama = document.getElementById('nama').value.trim();
-            const kelas = document.getElementById('kelas').value;
-            const keterangan = document.getElementById('keterangan').value.trim();
-            const tglFormatted = `${namaHari[dayIndex]}, ${selectedDate.toLocaleDateString('id-ID')}`;
-            const isSesuai = kelasAllowed.includes(kelas);
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1.5">Keterangan (Opsional / Legalitas Luar Jadwal)</label>
+              <input type="text" id="inp-keterangan" placeholder="Contoh: Paket Online, Urgen, Titip Guru..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs font-medium focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none" />
+            </div>
 
-            const newItem = {
-                id: Date.now(),
-                rawTanggal,
-                tglFormatted,
-                nama,
-                kelas,
-                keterangan,
-                isSesuai
-            };
+            <button type="submit" class="w-full py-3.5 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl text-xs shadow-md transition flex items-center justify-center gap-2">
+              <i data-lucide="save" class="w-4 h-4"></i>
+              <span>Simpan Data Paket</span>
+            </button>
+          </form>
+        </div>
+      `;
 
-            dataRekap.push(newItem);
-            localStorage.setItem('rekapPaketData', JSON.stringify(dataRekap));
-            renderTable();
+      updateFormJadwalInfo(todayStr);
+    }
 
-            document.getElementById('nama').value = '';
-            document.getElementById('kelas').value = '';
-            document.getElementById('keterangan').value = '';
+    function updateFormJadwalInfo(rawDate) {
+      const selectedDate = new Date(rawDate + "T00:00:00");
+      const dayIndex = selectedDate.getDay();
+      const kelasAllowed = jadwalHari[dayIndex] || [];
+      const infoEl = document.getElementById('infoFormJadwal');
+      if (infoEl) {
+        infoEl.innerText = `Tanggal: ${rawDate} (${namaHari[dayIndex]}) | Jadwal Reguler: ${kelasAllowed.length > 0 ? kelasAllowed.join(', ') : 'Tidak Ada'}`;
+      }
+    }
 
-            const notifAlert = document.getElementById('notifAlert');
-            notifAlert.style.display = 'block';
-            setTimeout(() => { notifAlert.style.display = 'none'; }, 3000);
-        });
+    function handleSavePaket(e) {
+      e.preventDefault();
+      const rawTanggal = document.getElementById('inp-tanggal').value;
+      const selectedDate = new Date(rawTanggal + "T00:00:00");
+      const dayIndex = selectedDate.getDay();
+      const kelasAllowed = jadwalHari[dayIndex] || [];
 
-        function deleteItem(id) {
-            if (confirm("Apakah Bos yakin mau menghapus data ini?")) {
-                dataRekap = dataRekap.filter(item => item.id !== id);
-                localStorage.setItem('rekapPaketData', JSON.stringify(dataRekap));
-                renderTable();
-            }
-        }
+      const nama = document.getElementById('inp-nama').value.trim();
+      const kelas = document.getElementById('inp-kelas').value;
+      const keterangan = document.getElementById('inp-keterangan').value.trim();
 
-        function renderTable() {
-            const tbodySesuai = document.getElementById('tabelSesuai');
-            const tbodyLuar = document.getElementById('tabelLuar');
-            tbodySesuai.innerHTML = ''; tbodyLuar.innerHTML = '';
+      const tglFormatted = `${namaHari[dayIndex]}, ${selectedDate.toLocaleDateString('id-ID')}`;
+      const isSesuai = kelasAllowed.includes(kelas);
 
-            dataRekap.forEach(item => {
-                if (item.isSesuai) {
-                    tbodySesuai.innerHTML += `
-                        <tr>
-                            <td>${item.tglFormatted}</td>
-                            <td>${item.nama}</td>
-                            <td>${item.kelas}</td>
-                            <td><span class="badge badge-success">Sesuai Jadwal</span></td>
-                            <td><button class="btn-danger" onclick="deleteItem(${item.id})">Hapus</button></td>
-                        </tr>`;
-                } else {
-                    let badgeLegal = item.keterangan !== "" 
-                        ? `<span class="badge badge-warning">Dilegalkan (${item.keterangan})</span>` 
-                        : `<span class="badge badge-danger">Tidak Sesuai (Tanpa Keterangan)</span>`;
+      dataRekap.push({
+        id: Date.now(),
+        rawTanggal,
+        tglFormatted,
+        nama,
+        kelas,
+        keterangan,
+        isSesuai
+      });
 
-                    tbodyLuar.innerHTML += `
-                        <tr>
-                            <td>${item.tglFormatted}</td>
-                            <td>${item.nama}</td>
-                            <td>${item.kelas}</td>
-                            <td>${item.keterangan || '-'}</td>
-                            <td>${badgeLegal}</td>
-                            <td><button class="btn-danger" onclick="deleteItem(${item.id})">Hapus</button></td>
-                        </tr>`;
-                }
-            });
-        }
+      saveDB();
+      alert('✅ Data paket berhasil disimpan!');
+      document.getElementById('inp-nama').value = '';
+      document.getElementById('inp-kelas').value = '';
+      document.getElementById('inp-keterangan').value = '';
+    }
 
-        function filterRekap(periode, btn) {
-            document.querySelectorAll('.sub-tab-btn').forEach(el => el.classList.remove('active'));
-            if(btn) btn.classList.add('active');
+    // --- LIVE VIEW ---
+    function renderLive(container) {
+      const sesuai = dataRekap.filter(d => d.isSesuai);
+      const luar = dataRekap.filter(d => !d.isSesuai);
 
-            const now = new Date();
-            const todayStr = now.toISOString().split('T')[0];
-
-            let filtered = dataRekap.filter(item => {
-                if (!item.rawTanggal) return false;
-                const itemDate = new Date(item.rawTanggal + "T00:00:00");
-
-                if (periode === 'hari') {
-                    return item.rawTanggal === todayStr;
-                } else if (periode === 'minggu') {
-                    const diffTime = Math.abs(now - itemDate);
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                    return diffDays <= 7;
-                } else if (periode === 'bulan') {
-                    return itemDate.getMonth() === now.getMonth() && itemDate.getFullYear() === now.getFullYear();
-                }
-                return true;
-            });
-
-            const total = filtered.length;
-            const sesuai = filtered.filter(i => i.isSesuai).length;
-            const luar = total - sesuai;
-
-            document.getElementById('statTotal').innerText = total;
-            document.getElementById('statSesuai').innerText = sesuai;
-            document.getElementById('statLuar').innerText = luar;
-
-            const tbody = document.getElementById('tabelRekapPeriodik');
-            tbody.innerHTML = '';
-
-            if(filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#94a3b8;">Ora ana data rekap kanggo periode kiye.</td></tr>`;
-                return;
-            }
-
-            filtered.forEach(item => {
-                let kat = item.isSesuai 
-                    ? `<span class="badge badge-success">Sesuai Jadwal</span>`
-                    : `<span class="badge badge-warning">Di Luar Jadwal</span>`;
-
-                tbody.innerHTML += `
+      container.innerHTML = `
+        <div class="space-y-6">
+          <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs">
+            <h3 class="text-sm font-extrabold text-slate-900 mb-4">✅ Data Sesuai Jadwal</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 font-bold text-slate-400 uppercase">
+                  <tr><th class="p-3">Tanggal</th><th class="p-3">Nama</th><th class="p-3">Kelas</th><th class="p-3">Aksi</th></tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                  ${sesuai.map(d => `
                     <tr>
-                        <td>${item.tglFormatted}</td>
-                        <td>${item.nama}</td>
-                        <td>${item.kelas}</td>
-                        <td>${kat}</td>
-                        <td>${item.keterangan || '-'}</td>
-                    </tr>`;
-            });
-        }
+                      <td class="p-3">${d.tglFormatted}</td>
+                      <td class="p-3 font-bold">${d.nama}</td>
+                      <td class="p-3 font-semibold">${d.kelas}</td>
+                      <td class="p-3"><button onclick="deletePaket(${d.id})" class="text-rose-600 font-bold hover:underline">Hapus</button></td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
 
-        function exportCSV(tipe) {
-            let filteredData = [];
+          <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs">
+            <h3 class="text-sm font-extrabold text-slate-900 mb-4">⚠️ Data Di Luar Jadwal (Online/Izin)</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 font-bold text-slate-400 uppercase">
+                  <tr><th class="p-3">Tanggal</th><th class="p-3">Nama</th><th class="p-3">Kelas</th><th class="p-3">Keterangan</th><th class="p-3">Status</th><th class="p-3">Aksi</th></tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                  ${luar.map(d => `
+                    <tr>
+                      <td class="p-3">${d.tglFormatted}</td>
+                      <td class="p-3 font-bold">${d.nama}</td>
+                      <td class="p-3 font-semibold">${d.kelas}</td>
+                      <td class="p-3">${d.keterangan || '-'}</td>
+                      <td class="p-3">
+                        <span class="px-2 py-0.5 rounded font-bold text-[10px] ${d.keterangan ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800'}">
+                          ${d.keterangan ? 'Dilegalkan' : 'Belum Dilegalkan'}
+                        </span>
+                      </td>
+                      <td class="p-3"><button onclick="deletePaket(${d.id})" class="text-rose-600 font-bold hover:underline">Hapus</button></td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      `;
+    }
 
-            if (tipe === 'semua') {
-                filteredData = dataRekap;
-            } else if (tipe === 'sesuai') {
-                filteredData = dataRekap.filter(item => item.isSesuai);
-            } else {
-                filteredData = dataRekap.filter(item => !item.isSesuai);
-            }
+    function deletePaket(id) {
+      if (confirm('Apakah Bos yakin mau menghapus data ini?')) {
+        dataRekap = dataRekap.filter(d => d.id !== id);
+        saveDB();
+        navigate(currentTab);
+      }
+    }
 
-            if (filteredData.length === 0) {
-                alert("Ora ana data sing bisa di-export, Bos!");
-                return;
-            }
+    // --- REKAP & EXPORT VIEW ---
+    function renderRekap(container) {
+      container.innerHTML = `
+        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs space-y-4">
+          <div class="flex justify-between items-center">
+            <h3 class="text-sm font-extrabold text-slate-900">Rekapitulasi Total & Export</h3>
+            <button onclick="exportCSV()" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs shadow-sm flex items-center gap-2">
+              <i data-lucide="download" class="w-4 h-4"></i> Export CSV (Excel)
+            </button>
+          </div>
+          <p class="text-xs text-slate-400">Total data tersimpan: <strong>${dataRekap.length}</strong> paket.</p>
+        </div>
+      `;
+    }
 
-            let csvRows = [];
-            const BOM = "\uFEFF";
+    function exportCSV() {
+      if (!dataRekap.length) {
+        alert('Ora ana data sing bisa di-export, Bos!');
+        return;
+      }
+      const BOM = "\uFEFF";
+      let csvRows = [["Tanggal Rekap", "Nama", "Kelas", "Kategori Rekap", "Keterangan", "Status Legalitas"].join(",")];
 
-            if (tipe === 'semua') {
-                csvRows.push(["Tanggal Rekap", "Nama", "Kelas", "Kategori Rekap", "Keterangan", "Status Legalitas"].join(","));
-                filteredData.forEach(i => {
-                    let kategori = i.isSesuai ? "Sesuai Jadwal" : "Di Luar Jadwal";
-                    let status = i.isSesuai 
-                        ? "Sesuai Jadwal" 
-                        : (i.keterangan ? `Dilegalkan (${i.keterangan})` : "Belum Dilegalkan");
+      dataRekap.forEach(i => {
+        let kategori = i.isSesuai ? "Sesuai Jadwal" : "Di Luar Jadwal";
+        let status = i.isSesuai ? "Sesuai Jadwal" : (i.keterangan ? `Dilegalkan (${i.keterangan})` : "Belum Dilegalkan");
+        csvRows.push([
+          `"${i.tglFormatted.replace(/"/g, '""')}"`,
+          `"${i.nama.replace(/"/g, '""')}"`,
+          `"${i.kelas}"`,
+          `"${kategori}"`,
+          `"${(i.keterangan || '-').replace(/"/g, '""')}"`,
+          `"${status.replace(/"/g, '""')}"`
+        ].join(","));
+      });
 
-                    csvRows.push([
-                        `"${i.tglFormatted.replace(/"/g, '""')}"`,
-                        `"${i.nama.replace(/"/g, '""')}"`,
-                        `"${i.kelas}"`,
-                        `"${kategori}"`,
-                        `"${(i.keterangan || '-').replace(/"/g, '""')}"`,
-                        `"${status.replace(/"/g, '""')}"`
-                    ].join(","));
-                });
-            } else if (tipe === 'sesuai') {
-                csvRows.push(["Tanggal Rekap", "Nama", "Kelas", "Status"].join(","));
-                filteredData.forEach(i => {
-                    csvRows.push([
-                        `"${i.tglFormatted.replace(/"/g, '""')}"`,
-                        `"${i.nama.replace(/"/g, '""')}"`,
-                        `"${i.kelas}"`,
-                        `"Sesuai Jadwal"`
-                    ].join(","));
-                });
-            } else {
-                csvRows.push(["Tanggal Rekap", "Nama", "Kelas", "Keterangan", "Status Legalitas"].join(","));
-                filteredData.forEach(i => {
-                    let status = i.keterangan ? `Dilegalkan (${i.keterangan})` : "Belum Dilegalkan";
-                    csvRows.push([
-                        `"${i.tglFormatted.replace(/"/g, '""')}"`,
-                        `"${i.nama.replace(/"/g, '""')}"`,
-                        `"${i.kelas}"`,
-                        `"${(i.keterangan || '-').replace(/"/g, '""')}"`,
-                        `"${status.replace(/"/g, '""')}"`
-                    ].join(","));
-                });
-            }
+      const blob = new Blob([BOM + csvRows.join("\n")], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `Rekap_Paket_TOTAL_${new Date().toISOString().slice(0,10)}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
 
-            const csvString = BOM + csvRows.join("\n");
-            const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
-            
-            const link = document.createElement("a");
-            const url = URL.createObjectURL(blob);
-            
-            link.setAttribute("href", url);
-            link.setAttribute("download", `Rekap_Paket_${tipe.toUpperCase()}_${new Date().toISOString().slice(0,10)}.csv`);
-            link.style.visibility = 'hidden';
-            
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            setTimeout(() => URL.revokeObjectURL(url), 100);
-        }
-    </script>
+    window.addEventListener('DOMContentLoaded', () => {
+      navigate('dashboard');
+    });
+  </script>
 </body>
 </html>
