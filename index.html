@@ -101,7 +101,7 @@
           <span>Dashboard</span>
         </button>
         <button onclick="navigate('input')" id="nav-input" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0">
-          <i data-lucide="plus-circle" class="w-4 h-4 text-emerald-500"></i>
+          <i data-lucide="zap" class="w-4 h-4 text-emerald-500"></i>
           <span>Input Paket Masuk</span>
         </button>
         <button onclick="navigate('live')" id="nav-live" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0">
@@ -303,8 +303,9 @@
     let dataRekap = JSON.parse(localStorage.getItem('rekapPaketData_UI')) || JSON.parse(localStorage.getItem('rekapPaketData')) || [];
     let currentPetugas = localStorage.getItem('activePetugas_UI') || "Sultan Maulana";
     let selectedKelasInput = "";
-    let lastSelectedDate = new Date().toISOString().split('T')[0]; // Menyimpan tanggal terpilih
+    let lastSelectedDate = new Date().toISOString().split('T')[0];
     let activeFilterRekap = "hari";
+    let sortedKelasListCurrent = [];
 
     function saveDB() {
       localStorage.setItem('rekapPaketData_UI', JSON.stringify(dataRekap));
@@ -462,7 +463,7 @@
       `;
     }
 
-    // --- INPUT VIEW ---
+    // --- INPUT VIEW WITH KEYBOARD SHORTCUTS ---
     function renderInput(container) {
       selectedKelasInput = "";
       const dateToUse = lastSelectedDate || new Date().toISOString().split('T')[0];
@@ -470,7 +471,22 @@
 
       container.innerHTML = `
         <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs p-6 sm:p-8 space-y-6">
-          <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">Input Paket Masuk</h2>
+          <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+            <div>
+              <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">Input Paket Masuk</h2>
+              <p class="text-xs text-slate-400 dark:text-slate-500">Fast Keyboard Mode Active ⚡</p>
+            </div>
+            <span class="bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase">Full Shortcut</span>
+          </div>
+
+          <!-- SHORTCUT GUIDE BANNER -->
+          <div id="shortcut-guide-banner" class="bg-sky-50 dark:bg-sky-950/50 border border-sky-100 dark:border-sky-900 p-3.5 rounded-2xl text-xs space-y-1.5">
+            <div class="font-bold text-sky-800 dark:text-sky-300 flex items-center gap-1.5">
+              <i data-lucide="keyboard" class="w-4 h-4 text-sky-500"></i>
+              <span>Panduan Shortcut Keyboard Angka Hari Ini:</span>
+            </div>
+            <div id="shortcut-hint-list" class="flex flex-wrap gap-2 text-[11px] font-semibold text-slate-700 dark:text-slate-300"></div>
+          </div>
 
           <form id="formPaket" onsubmit="handleSavePaket(event)" class="space-y-6">
             <div>
@@ -479,14 +495,14 @@
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Nama Penerima</label>
-              <input type="text" id="inp-nama" required placeholder="Masukkan nama siswa atau penerima" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Nama Penerima <span class="text-rose-500">*</span></label>
+              <input type="text" id="inp-nama" required placeholder="Masukkan nama siswa (Ketik & Enter...)" onkeydown="handleNamaKeydown(event)" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">Pilih Kelas</label>
-              <div id="kelas-btn-container" class="flex flex-wrap gap-2.5"></div>
-              <p class="text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-2">Hijau = sesuai jadwal (Diutamakan di atas). Merah = di luar jadwal.</p>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">Pilih Kelas <span class="text-sky-500">(Tekan Angka 1, 2, 3...)</span></label>
+              <div id="kelas-btn-container" class="flex flex-wrap gap-2.5" tabindex="0" onkeydown="handleKelasContainerKeydown(event)"></div>
+              <p class="text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-2">Hijau = sesuai jadwal (Diutamakan paling kiri/atas). Merah = di luar jadwal.</p>
             </div>
 
             <div>
@@ -497,15 +513,15 @@
                 <button type="button" onclick="setKeteranganQuick('HRL')" class="py-2.5 px-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs transition">HRL</button>
                 <button type="button" onclick="setKeteranganQuick('Food')" class="py-2.5 px-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs transition">Food</button>
               </div>
-              <input type="text" id="inp-keterangan" placeholder="Atau ketik keterangan khusus di sini..." class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 text-xs font-medium focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
+              <input type="text" id="inp-keterangan" placeholder="Atau ketik keterangan khusus di sini (Enter simpan)..." onkeydown="handleKetKeydown(event)" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 text-xs font-medium focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
             </div>
 
             <button type="submit" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-xl text-sm shadow-md transition uppercase tracking-wider">
-              SIMPAN DATA PAKET
+              SIMPAN DATA PAKET (ENTER)
             </button>
           </form>
 
-          <!-- STATUS INPUT TERAKHIR (TANPA NOTIF POPUP) -->
+          <!-- STATUS INPUT TERAKHIR -->
           <div id="card-last-record" class="bg-sky-50/60 dark:bg-sky-950/40 border border-sky-100 dark:border-sky-900 rounded-2xl p-4 flex items-center justify-between transition-all duration-300 ${lastRecord ? '' : 'hidden'}">
             <div class="flex items-center gap-3">
               <span class="text-lg">✅</span>
@@ -520,6 +536,12 @@
       `;
 
       renderKelasButtons(dateToUse);
+
+      // Auto focus kursor nang input nama
+      setTimeout(() => {
+        const inputNama = document.getElementById('inp-nama');
+        if (inputNama) inputNama.focus();
+      }, 100);
     }
 
     function updateSelectedDate(val) {
@@ -535,7 +557,7 @@
 
       if (!container) return;
 
-      const sortedKelas = [...allKelasList].sort((a, b) => {
+      sortedKelasListCurrent = [...allKelasList].sort((a, b) => {
         const aSesuai = kelasAllowed.includes(a);
         const bSesuai = kelasAllowed.includes(b);
         if (aSesuai && !bSesuai) return -1;
@@ -543,15 +565,31 @@
         return 0;
       });
 
-      container.innerHTML = sortedKelas.map(k => {
+      // Update Hint Banner Shortcut
+      const hintList = document.getElementById('shortcut-hint-list');
+      if (hintList) {
+        let hints = sortedKelasListCurrent.map((k, idx) => {
+          if (idx < 9) {
+            const isS = kelasAllowed.includes(k);
+            return `<span class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2 py-0.5 rounded-md">[ ${idx + 1} ] = ${k}</span>`;
+          }
+          return '';
+        }).join('');
+        hints += `<span class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2 py-0.5 rounded-md">[ 0 ] = 12</span>`;
+        hintList.innerHTML = hints;
+      }
+
+      container.innerHTML = sortedKelasListCurrent.map((k, idx) => {
         const isSesuai = kelasAllowed.includes(k);
         const isSelected = selectedKelasInput === k;
         
         let bgClass = isSesuai ? "bg-emerald-600 hover:bg-emerald-700 text-white" : "bg-rose-500 hover:bg-rose-600 text-white";
         let borderClass = isSelected ? "ring-4 ring-sky-300 dark:ring-sky-500 scale-105" : "";
+        let badgeNum = idx < 9 ? `<span class="absolute -top-1 -right-1 bg-slate-900 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">${idx + 1}</span>` : '';
 
         return `
-          <button type="button" onclick="selectKelasBtn('${k}')" id="btn-k-${k}" class="w-12 h-10 sm:w-14 sm:h-11 rounded-xl font-extrabold text-xs sm:text-sm shadow-xs transition flex items-center justify-center ${bgClass} ${borderClass}">
+          <button type="button" onclick="selectKelasBtn('${k}')" id="btn-k-${k}" class="relative w-12 h-10 sm:w-14 sm:h-11 rounded-xl font-extrabold text-xs sm:text-sm shadow-xs transition flex items-center justify-center ${bgClass} ${borderClass}">
+            ${badgeNum}
             ${k}
           </button>
         `;
@@ -564,26 +602,67 @@
       renderKelasButtons(rawDate);
     }
 
+    // --- KEYBOARD SHORTCUT ENGINE LOGIC ---
+    function handleNamaKeydown(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const namaVal = document.getElementById('inp-nama').value.trim();
+        if (namaVal) {
+          const container = document.getElementById('kelas-btn-container');
+          if (container) container.focus();
+        }
+      }
+    }
+
+    function handleKelasContainerKeydown(e) {
+      if (e.key >= '1' && e.key <= '9') {
+        e.preventDefault();
+        const idx = parseInt(e.key) - 1;
+        if (idx < sortedKelasListCurrent.length) {
+          selectKelasBtn(sortedKelasListCurrent[idx]);
+        }
+      } else if (e.key === '0') {
+        e.preventDefault();
+        selectKelasBtn("12");
+      }
+
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (selectedKelasInput) {
+          handleSavePaket(e);
+        }
+      }
+    }
+
+    function handleKetKeydown(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleSavePaket(e);
+      }
+    }
+
     function setKeteranganQuick(val) {
       document.getElementById('inp-keterangan').value = val;
     }
 
     function handleSavePaket(e) {
-      e.preventDefault();
+      if (e) e.preventDefault();
 
       if (!selectedKelasInput) {
-        alert("⚠️ Harap pilih salah satu Kelas terlebih dahulu!");
+        alert("⚠️ Harap pilih salah satu Kelas terlebih dahulu (Atau tekan angka 1, 2, 3)!");
         return;
       }
 
       const rawTanggal = document.getElementById('inp-tanggal').value;
-      lastSelectedDate = rawTanggal; // Menjaga tanggal tetep padha pas disimpen
+      lastSelectedDate = rawTanggal;
 
       const selectedDate = new Date(rawTanggal + "T00:00:00");
       const dayIndex = selectedDate.getDay();
       const kelasAllowed = jadwalHari[dayIndex] || [];
 
       const nama = document.getElementById('inp-nama').value.trim();
+      if (!nama) return;
+
       const kelas = selectedKelasInput;
       const keterangan = document.getElementById('inp-keterangan').value.trim();
 
@@ -604,28 +683,26 @@
       dataRekap.push(newItem);
       saveDB();
 
-      // Reset Isian Nama & Keterangan wae (Tanggal & Kelas Tetep Berada ing Posisine)
+      // Reset Isian Nama & Keterangan
       document.getElementById('inp-nama').value = '';
       document.getElementById('inp-keterangan').value = '';
       selectedKelasInput = "";
       renderKelasButtons(rawTanggal);
 
-      // Update Card Status Input Terakhir Tanpa Alert Pop-up
+      // Update Card Status Input Terakhir
       const cardRecord = document.getElementById('card-last-record');
       const txtRecord = document.getElementById('txt-last-record-detail');
       
       if (cardRecord && txtRecord) {
         txtRecord.innerText = `${newItem.nama} — Kelas ${newItem.kelas} | ${newItem.tglFormatted || newItem.rawTanggal}`;
         cardRecord.classList.remove('hidden');
-        
-        // Efek visual kedhep ijo sedhela minangka notifikasi sukses
         cardRecord.classList.add('ring-2', 'ring-emerald-500');
         setTimeout(() => {
           cardRecord.classList.remove('ring-2', 'ring-emerald-500');
         }, 1000);
       }
 
-      // Fokuskan maneh marang input nama ben cepet
+      // Auto-Focus bali maring kolom nama ben siap ngetik maneh
       document.getElementById('inp-nama').focus();
     }
 
