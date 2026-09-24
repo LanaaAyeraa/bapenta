@@ -107,13 +107,13 @@
   <div class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
     <div class="flex flex-col lg:flex-row gap-6 items-start">
       
-      <!-- 🎵 SIDEBAR MUSIC PLAYER (PAS NANG AREA SISI KIWA SING DITANDAHI ABANG) -->
-      <aside class="w-full lg:w-64 shrink-0 lg:sticky lg:top-28 space-y-4">
+      <!-- 🎵 SIDEBAR MUSIC PLAYER (UKURAN LAYAR DITAMBAH GEDE) -->
+      <aside class="w-full lg:w-72 shrink-0 lg:sticky lg:top-24 space-y-4">
         <div class="bg-white border border-slate-200/80 rounded-3xl p-4 shadow-xs">
           <!-- PLAYER HEADER -->
           <div class="flex items-center justify-between mb-3">
             <div class="flex items-center gap-2">
-              <div class="w-7 h-7 rounded-lg bg-rose-500 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+              <div class="w-8 h-8 rounded-xl bg-rose-500 text-white flex items-center justify-center font-bold text-xs shadow-xs">
                 <i data-lucide="music" class="w-4 h-4 animate-bounce"></i>
               </div>
               <span class="text-xs font-extrabold text-slate-800 tracking-tight">Music Player</span>
@@ -123,34 +123,34 @@
 
           <!-- TAB PLAYER (YOUTUBE / SPOTIFY) -->
           <div class="flex gap-1 bg-slate-100 p-1 rounded-xl text-[11px] font-bold mb-3">
-            <button onclick="switchMusicTab('yt')" id="tab-m-yt" class="flex-1 py-1 rounded-lg bg-white text-slate-800 shadow-2xs transition">YouTube</button>
-            <button onclick="switchMusicTab('sp')" id="tab-m-sp" class="flex-1 py-1 rounded-lg text-slate-500 hover:text-slate-800 transition">Spotify</button>
+            <button onclick="switchMusicTab('yt')" id="tab-m-yt" class="flex-1 py-1.5 rounded-lg bg-white text-slate-800 shadow-2xs transition">YouTube</button>
+            <button onclick="switchMusicTab('sp')" id="tab-m-sp" class="flex-1 py-1.5 rounded-lg text-slate-500 hover:text-slate-800 transition">Spotify</button>
           </div>
 
-          <!-- YOUTUBE PLAYER CONTAINER -->
-          <div id="player-yt-box" class="space-y-2">
-            <div class="aspect-video w-full rounded-2xl overflow-hidden bg-slate-900 shadow-inner border border-slate-200">
+          <!-- YOUTUBE PLAYER CONTAINER (LAYAR TALLER / GEDE) -->
+          <div id="player-yt-box" class="space-y-2.5">
+            <div class="w-full h-48 rounded-2xl overflow-hidden bg-slate-900 shadow-inner border border-slate-200">
               <iframe id="iframe-yt" class="w-full h-full" src="https://www.youtube.com/embed/jfKfPfyJRdk" title="YouTube Music Player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
             <div class="space-y-1">
               <label class="text-[10px] font-bold text-slate-400 block">Link/ID Video YouTube:</label>
               <div class="flex gap-1">
-                <input type="text" id="input-yt-url" placeholder="Paste link YouTube..." class="flex-1 bg-slate-50 border border-slate-200 rounded-lg p-1.5 text-[10px] font-semibold focus:outline-none" />
-                <button onclick="loadYouTubeURL()" class="bg-rose-500 hover:bg-rose-600 text-white px-2 py-1 rounded-lg text-[10px] font-bold transition">Set</button>
+                <input type="text" id="input-yt-url" placeholder="Paste link YouTube..." class="flex-1 bg-slate-50 border border-slate-200 rounded-lg p-2 text-[10px] font-semibold focus:outline-none" />
+                <button onclick="loadYouTubeURL()" class="bg-rose-500 hover:bg-rose-600 text-white px-3 py-1 rounded-lg text-[10px] font-bold transition">Set</button>
               </div>
             </div>
           </div>
 
-          <!-- SPOTIFY PLAYER CONTAINER -->
-          <div id="player-sp-box" class="space-y-2 hidden">
-            <div class="h-[152px] w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 shadow-inner">
+          <!-- SPOTIFY PLAYER CONTAINER (TINGGI 208px) -->
+          <div id="player-sp-box" class="space-y-2.5 hidden">
+            <div class="h-52 w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 shadow-inner">
               <iframe id="iframe-sp" class="w-full h-full" src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
             </div>
             <div class="space-y-1">
               <label class="text-[10px] font-bold text-slate-400 block">Link Track/Playlist Spotify:</label>
               <div class="flex gap-1">
-                <input type="text" id="input-sp-url" placeholder="Paste link Spotify..." class="flex-1 bg-slate-50 border border-slate-200 rounded-lg p-1.5 text-[10px] font-semibold focus:outline-none" />
-                <button onclick="loadSpotifyURL()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-2 py-1 rounded-lg text-[10px] font-bold transition">Set</button>
+                <input type="text" id="input-sp-url" placeholder="Paste link Spotify..." class="flex-1 bg-slate-50 border border-slate-200 rounded-lg p-2 text-[10px] font-semibold focus:outline-none" />
+                <button onclick="loadSpotifyURL()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1 rounded-lg text-[10px] font-bold transition">Set</button>
               </div>
             </div>
           </div>
@@ -235,7 +235,7 @@
     const namaHari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
     const allKelasList = ["12", "11", "10", "9A", "9B", "9C", "9D", "9E", "8A", "8B", "8C", "8D", "8E"];
 
-    // Storage Engine & State
+    // Storage Engine & State (Menjaga data ora bakal hilang)
     let dataRekap = JSON.parse(localStorage.getItem('rekapPaketData_UI')) || JSON.parse(localStorage.getItem('rekapPaketData')) || [];
     let currentPetugas = localStorage.getItem('activePetugas_UI') || "Sultan Maulana";
     let selectedKelasInput = "";
