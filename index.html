@@ -119,9 +119,11 @@
       0: []                                // Minggu
     };
     const namaHari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+    const allKelasList = ["12", "11", "10", "9A", "9B", "9C", "9D", "9E", "8A", "8B", "8C", "8D", "8E"];
 
-    // Multi-key support (Gaya Canva lawas + UI Anyar)
+    // Storage Engine
     let dataRekap = JSON.parse(localStorage.getItem('rekapPaketData_UI')) || JSON.parse(localStorage.getItem('rekapPaketData')) || [];
+    let selectedKelasInput = "";
 
     function saveDB() {
       localStorage.setItem('rekapPaketData_UI', JSON.stringify(dataRekap));
@@ -259,73 +261,113 @@
       `;
     }
 
-    // --- INPUT VIEW ---
+    // --- INPUT VIEW (DISAMAKAN SAMA PERSIS DENGAN CANVA) ---
     function renderInput(container) {
       const todayStr = new Date().toISOString().split('T')[0];
+      selectedKelasInput = "";
+
+      const lastRecord = dataRekap.length > 0 ? dataRekap[dataRekap.length - 1] : null;
 
       container.innerHTML = `
-        <div class="max-w-2xl mx-auto bg-white rounded-3xl border border-slate-200/80 shadow-xs p-6 sm:p-8">
-          <div class="border-b border-slate-100 pb-4 mb-6">
-            <h2 class="text-xl font-extrabold text-slate-900">Input Paket Masuk</h2>
-            <p class="text-xs text-slate-400 mt-0.5" id="infoFormJadwal">Mengecek jadwal tanggal dipilih...</p>
-          </div>
+        <div class="max-w-3xl mx-auto bg-white rounded-3xl border border-slate-200/80 shadow-xs p-6 sm:p-8 space-y-6">
+          <h2 class="text-xl font-extrabold text-slate-900">Input Paket Masuk</h2>
 
-          <form id="formPaket" onsubmit="handleSavePaket(event)" class="space-y-5">
+          <form id="formPaket" onsubmit="handleSavePaket(event)" class="space-y-6">
             <div>
-              <label class="block text-xs font-bold text-slate-600 mb-1.5">Tanggal Rekap / Paket Masuk *</label>
-              <input type="date" id="inp-tanggal" value="${todayStr}" onchange="updateFormJadwalInfo(this.value)" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs font-semibold focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none" />
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Tanggal Rekap / Paket Masuk</label>
+              <input type="date" id="inp-tanggal" value="${todayStr}" onchange="renderKelasButtons(this.value)" required class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm font-semibold focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-600 mb-1.5">Nama Penerima *</label>
-              <input type="text" id="inp-nama" required placeholder="Masukkan nama siswa/penerima..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs font-semibold focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none" />
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama Penerima</label>
+              <input type="text" id="inp-nama" required placeholder="Masukkan nama siswa atau penerima" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-600 mb-1.5">Kelas *</label>
-              <select id="inp-kelas" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs font-bold text-slate-700 focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none">
-                <option value="">-- Pilih Kelas --</option>
-                <option value="12">12</option><option value="11">11</option><option value="10">10</option>
-                <option value="9A">9A</option><option value="9B">9B</option><option value="9C">9C</option><option value="9D">9D</option><option value="9E">9E</option>
-                <option value="8A">8A</option><option value="8B">8B</option><option value="8C">8C</option><option value="8D">8D</option><option value="8E">8E</option>
-              </select>
+              <label class="block text-xs font-bold text-slate-700 mb-2">Pilih Kelas</label>
+              <div id="kelas-btn-container" class="flex flex-wrap gap-2.5"></div>
+              <p class="text-[11px] text-slate-400 font-medium mt-2">Hijau = sesuai jadwal. Merah = di luar jadwal.</p>
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-600 mb-1.5">Keterangan (Opsional / Legalitas Luar Jadwal)</label>
-              <input type="text" id="inp-keterangan" placeholder="Contoh: Paket Online, Urgen, Titip Guru..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs font-medium focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none" />
+              <label class="block text-xs font-bold text-slate-700 mb-2">Keterangan Paket</label>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-2">
+                <button type="button" onclick="setKeteranganQuick('Online')" class="py-2.5 px-4 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 shadow-2xs transition">Online</button>
+                <button type="button" onclick="setKeteranganQuick('Non-online')" class="py-2.5 px-4 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 shadow-2xs transition">Non-online</button>
+                <button type="button" onclick="setKeteranganQuick('HRL')" class="py-2.5 px-4 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 shadow-2xs transition">HRL</button>
+                <button type="button" onclick="setKeteranganQuick('Lainnya')" class="py-2.5 px-4 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 shadow-2xs transition">Lainnya</button>
+              </div>
+              <input type="text" id="inp-keterangan" placeholder="Atau ketik keterangan khusus di sini..." class="w-full bg-white border border-slate-200 rounded-xl p-3 text-xs font-medium focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
             </div>
 
-            <button type="submit" class="w-full py-3.5 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl text-xs shadow-md transition flex items-center justify-center gap-2">
-              <i data-lucide="save" class="w-4 h-4"></i>
-              <span>Simpan Data Paket</span>
+            <button type="submit" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-xl text-sm shadow-md transition uppercase tracking-wider">
+              SIMPAN DATA PAKET
             </button>
           </form>
+
+          ${lastRecord ? `
+            <div class="bg-sky-50/60 border border-sky-100 rounded-2xl p-4 flex items-center gap-3">
+              <span class="text-lg">📌</span>
+              <div class="text-xs">
+                <span class="font-extrabold text-slate-800 block">Input Terakhir</span>
+                <span class="text-slate-500 font-medium">${lastRecord.nama} — Kelas ${lastRecord.kelas} \vert{}${lastRecord.tglFormatted || lastRecord.rawTanggal}</span>
+              </div>
+            </div>
+          ` : ''}
         </div>
       `;
 
-      updateFormJadwalInfo(todayStr);
+      renderKelasButtons(todayStr);
     }
 
-    function updateFormJadwalInfo(rawDate) {
+    function renderKelasButtons(rawDate) {
       const selectedDate = new Date(rawDate + "T00:00:00");
       const dayIndex = selectedDate.getDay();
       const kelasAllowed = jadwalHari[dayIndex] || [];
-      const infoEl = document.getElementById('infoFormJadwal');
-      if (infoEl) {
-        infoEl.innerText = `Tanggal: ${rawDate} (${namaHari[dayIndex]}) | Jadwal Reguler: ${kelasAllowed.length > 0 ? kelasAllowed.join(', ') : 'Tidak Ada'}`;
-      }
+      const container = document.getElementById('kelas-btn-container');
+
+      if (!container) return;
+
+      container.innerHTML = allKelasList.map(k => {
+        const isSesuai = kelasAllowed.includes(k);
+        const isSelected = selectedKelasInput === k;
+        
+        let bgClass = isSesuai ? "bg-emerald-600 hover:bg-emerald-700 text-white" : "bg-rose-500 hover:bg-rose-600 text-white";
+        let borderClass = isSelected ? "ring-4 ring-sky-300 scale-105" : "";
+
+        return `
+          <button type="button" onclick="selectKelasBtn('${k}')" id="btn-k-${k}" class="w-12 h-10 sm:w-14 sm:h-11 rounded-xl font-extrabold text-xs sm:text-sm shadow-xs transition flex items-center justify-center ${bgClass} ${borderClass}">
+            ${k}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectKelasBtn(k) {
+      selectedKelasInput = k;
+      const rawDate = document.getElementById('inp-tanggal').value;
+      renderKelasButtons(rawDate);
+    }
+
+    function setKeteranganQuick(val) {
+      document.getElementById('inp-keterangan').value = val;
     }
 
     function handleSavePaket(e) {
       e.preventDefault();
+
+      if (!selectedKelasInput) {
+        alert("⚠️ Harap pilih salah satu Kelas terlebih dahulu!");
+        return;
+      }
+
       const rawTanggal = document.getElementById('inp-tanggal').value;
       const selectedDate = new Date(rawTanggal + "T00:00:00");
       const dayIndex = selectedDate.getDay();
       const kelasAllowed = jadwalHari[dayIndex] || [];
 
       const nama = document.getElementById('inp-nama').value.trim();
-      const kelas = document.getElementById('inp-kelas').value;
+      const kelas = selectedKelasInput;
       const keterangan = document.getElementById('inp-keterangan').value.trim();
 
       const tglFormatted = `${namaHari[dayIndex]}, ${selectedDate.toLocaleDateString('id-ID')}`;
@@ -343,9 +385,7 @@
 
       saveDB();
       alert('✅ Data paket berhasil disimpan!');
-      document.getElementById('inp-nama').value = '';
-      document.getElementById('inp-kelas').value = '';
-      document.getElementById('inp-keterangan').value = '';
+      renderInput(document.getElementById('app-container'));
     }
 
     // --- LIVE VIEW ---
