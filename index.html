@@ -16,6 +16,7 @@
 
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
           fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
@@ -36,17 +37,21 @@
     }
   </script>
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F6F9FD; color: #1E293B; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; transition: background-color 0.3s, color 0.3s; }
     .rg-gradient { background: linear-gradient(100deg, #18A4E0 0%, #20B6D5 45%, #6C63FF 100%); }
     .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
     .custom-scroll::-webkit-scrollbar-track { background: #EDF3F9; }
     .custom-scroll::-webkit-scrollbar-thumb { background: #CBD8E6; border-radius: 6px; }
+    
+    /* Dark Mode Custom Scrollbar */
+    .dark .custom-scroll::-webkit-scrollbar-track { background: #0F172A; }
+    .dark .custom-scroll::-webkit-scrollbar-thumb { background: #334155; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased custom-scroll">
+<body class="min-h-screen flex flex-col antialiased bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 custom-scroll">
 
   <!-- TOP APP BAR -->
-  <header class="bg-white border-b border-rg-border sticky top-0 z-30 shadow-xs">
+  <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 shadow-xs transition-colors duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('dashboard')">
         <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-md">
@@ -54,48 +59,54 @@
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <span class="text-base font-extrabold tracking-tight text-slate-900">PAKET<span class="text-sky-500">CONTROL</span></span>
-            <span class="text-[10px] bg-sky-100 text-sky-800 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">REKAP SYSTEM</span>
+            <span class="text-base font-extrabold tracking-tight text-slate-900 dark:text-white">PAKET<span class="text-sky-500">CONTROL</span></span>
+            <span class="text-[10px] bg-sky-100 dark:bg-sky-900/60 text-sky-800 dark:text-sky-300 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">REKAP SYSTEM</span>
           </div>
-          <p class="text-[11px] text-slate-400 font-medium">Package Management & Verification</p>
+          <p class="text-[11px] text-slate-400 dark:text-slate-500 font-medium">Package Management & Verification</p>
         </div>
       </div>
 
-      <!-- PETUGAS PIKET SELECTOR -->
-      <div class="flex items-center gap-3">
-        <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-full px-3 py-1.5 shadow-2xs">
+      <!-- RIGHT TOP BAR: PETUGAS & DARK MODE TOGGLE -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- TOGGLE DARK MODE BUTTON -->
+        <button onclick="toggleDarkMode()" id="btn-theme-toggle" title="Ubah Mode Tampilan" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-amber-400 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition border border-slate-200 dark:border-slate-700">
+          <i data-lucide="moon" id="icon-theme" class="w-4 h-4"></i>
+        </button>
+
+        <!-- PETUGAS PIKET SELECTOR -->
+        <div class="flex items-center gap-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-full px-3 py-1.5 shadow-2xs">
           <div class="w-7 h-7 rounded-full bg-sky-500 text-white flex items-center justify-center font-bold text-xs">
             <i data-lucide="user" class="w-3.5 h-3.5"></i>
           </div>
-          <select id="select-petugas" onchange="changePetugas(this.value)" class="text-xs font-bold text-slate-700 bg-transparent focus:outline-none cursor-pointer">
-            <option value="Sultan Maulana">Sultan Maulana</option>
-            <option value="Dzaka Rozan">Dzaka Rozan</option>
-            <option value="Ghani Rizky">Ghani Rizky</option>
+          <select id="select-petugas" onchange="changePetugas(this.value)" class="text-xs font-bold text-slate-700 dark:text-slate-200 bg-transparent focus:outline-none cursor-pointer">
+            <option value="Sultan Maulana" class="dark:bg-slate-900">Sultan Maulana</option>
+            <option value="Dzaka Rozan" class="dark:bg-slate-900">Dzaka Rozan</option>
+            <option value="Ghani Rizky" class="dark:bg-slate-900">Ghani Rizky</option>
           </select>
         </div>
       </div>
     </div>
 
     <!-- NAVIGATION PILLS -->
-    <div class="bg-white border-t border-slate-100 px-4 sm:px-6 lg:px-8">
+    <div class="bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
       <div class="max-w-7xl mx-auto flex items-center gap-2 overflow-x-auto py-2 custom-scroll text-xs font-semibold">
-        <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 hover:bg-slate-100 transition shrink-0">
+        <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0">
           <i data-lucide="layout-dashboard" class="w-4 h-4 text-sky-500"></i>
           <span>Dashboard</span>
         </button>
-        <button onclick="navigate('input')" id="nav-input" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 hover:bg-slate-100 transition shrink-0">
+        <button onclick="navigate('input')" id="nav-input" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0">
           <i data-lucide="plus-circle" class="w-4 h-4 text-emerald-500"></i>
           <span>Input Paket Masuk</span>
         </button>
-        <button onclick="navigate('live')" id="nav-live" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 hover:bg-slate-100 transition shrink-0">
+        <button onclick="navigate('live')" id="nav-live" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0">
           <i data-lucide="list-checks" class="w-4 h-4 text-indigo-500"></i>
           <span>Data Live Preview</span>
         </button>
-        <button onclick="navigate('rekap')" id="nav-rekap" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 hover:bg-slate-100 transition shrink-0">
+        <button onclick="navigate('rekap')" id="nav-rekap" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0">
           <i data-lucide="bar-chart-3" class="w-4 h-4 text-purple-500"></i>
           <span>Rekapitulasi & Export</span>
         </button>
-        <button onclick="navigate('migrasi')" id="nav-migrasi" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 hover:bg-slate-100 transition shrink-0">
+        <button onclick="navigate('migrasi')" id="nav-migrasi" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0">
           <i data-lucide="arrow-left-right" class="w-4 h-4 text-amber-500"></i>
           <span>Migrasi Data / Backup</span>
         </button>
@@ -107,55 +118,55 @@
   <div class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
     <div class="flex flex-col lg:flex-row gap-6 items-start">
       
-      <!-- 🎵 SIDEBAR MUSIC PLAYER (UKURAN LAYAR DITAMBAH GEDE) -->
+      <!-- 🎵 SIDEBAR MUSIC PLAYER -->
       <aside class="w-full lg:w-72 shrink-0 lg:sticky lg:top-24 space-y-4">
-        <div class="bg-white border border-slate-200/80 rounded-3xl p-4 shadow-xs">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-4 shadow-xs transition-colors duration-300">
           <!-- PLAYER HEADER -->
           <div class="flex items-center justify-between mb-3">
             <div class="flex items-center gap-2">
               <div class="w-8 h-8 rounded-xl bg-rose-500 text-white flex items-center justify-center font-bold text-xs shadow-xs">
                 <i data-lucide="music" class="w-4 h-4 animate-bounce"></i>
               </div>
-              <span class="text-xs font-extrabold text-slate-800 tracking-tight">Music Player</span>
+              <span class="text-xs font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">Music Player</span>
             </div>
-            <span class="text-[10px] font-extrabold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full uppercase">Live Sync</span>
+            <span class="text-[10px] font-extrabold bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-full uppercase">Live Sync</span>
           </div>
 
           <!-- TAB PLAYER (YOUTUBE / SPOTIFY) -->
-          <div class="flex gap-1 bg-slate-100 p-1 rounded-xl text-[11px] font-bold mb-3">
-            <button onclick="switchMusicTab('yt')" id="tab-m-yt" class="flex-1 py-1.5 rounded-lg bg-white text-slate-800 shadow-2xs transition">YouTube</button>
-            <button onclick="switchMusicTab('sp')" id="tab-m-sp" class="flex-1 py-1.5 rounded-lg text-slate-500 hover:text-slate-800 transition">Spotify</button>
+          <div class="flex gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-[11px] font-bold mb-3">
+            <button onclick="switchMusicTab('yt')" id="tab-m-yt" class="flex-1 py-1.5 rounded-lg bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-2xs transition">YouTube</button>
+            <button onclick="switchMusicTab('sp')" id="tab-m-sp" class="flex-1 py-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition">Spotify</button>
           </div>
 
-          <!-- YOUTUBE PLAYER CONTAINER (LAYAR TALLER / GEDE) -->
+          <!-- YOUTUBE PLAYER CONTAINER -->
           <div id="player-yt-box" class="space-y-2.5">
-            <div class="w-full h-48 rounded-2xl overflow-hidden bg-slate-900 shadow-inner border border-slate-200">
+            <div class="w-full h-48 rounded-2xl overflow-hidden bg-slate-900 shadow-inner border border-slate-200 dark:border-slate-800">
               <iframe id="iframe-yt" class="w-full h-full" src="https://www.youtube.com/embed/jfKfPfyJRdk" title="YouTube Music Player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
             <div class="space-y-1">
-              <label class="text-[10px] font-bold text-slate-400 block">Link/ID Video YouTube:</label>
+              <label class="text-[10px] font-bold text-slate-400 dark:text-slate-500 block">Link/ID Video YouTube:</label>
               <div class="flex gap-1">
-                <input type="text" id="input-yt-url" placeholder="Paste link YouTube..." class="flex-1 bg-slate-50 border border-slate-200 rounded-lg p-2 text-[10px] font-semibold focus:outline-none" />
+                <input type="text" id="input-yt-url" placeholder="Paste link YouTube..." class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-lg p-2 text-[10px] font-semibold focus:outline-none" />
                 <button onclick="loadYouTubeURL()" class="bg-rose-500 hover:bg-rose-600 text-white px-3 py-1 rounded-lg text-[10px] font-bold transition">Set</button>
               </div>
             </div>
           </div>
 
-          <!-- SPOTIFY PLAYER CONTAINER (TINGGI 208px) -->
+          <!-- SPOTIFY PLAYER CONTAINER -->
           <div id="player-sp-box" class="space-y-2.5 hidden">
-            <div class="h-52 w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 shadow-inner">
+            <div class="h-52 w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-inner">
               <iframe id="iframe-sp" class="w-full h-full" src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
             </div>
             <div class="space-y-1">
-              <label class="text-[10px] font-bold text-slate-400 block">Link Track/Playlist Spotify:</label>
+              <label class="text-[10px] font-bold text-slate-400 dark:text-slate-500 block">Link Track/Playlist Spotify:</label>
               <div class="flex gap-1">
-                <input type="text" id="input-sp-url" placeholder="Paste link Spotify..." class="flex-1 bg-slate-50 border border-slate-200 rounded-lg p-2 text-[10px] font-semibold focus:outline-none" />
+                <input type="text" id="input-sp-url" placeholder="Paste link Spotify..." class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-lg p-2 text-[10px] font-semibold focus:outline-none" />
                 <button onclick="loadSpotifyURL()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1 rounded-lg text-[10px] font-bold transition">Set</button>
               </div>
             </div>
           </div>
 
-          <p class="text-[10px] text-slate-400 font-medium text-center mt-3">🎧 Musik tetep muter lan nyambung karo aktivitas rekap paket!</p>
+          <p class="text-[10px] text-slate-400 dark:text-slate-500 font-medium text-center mt-3">🎧 Musik tetep muter lan nyambung karo aktivitas rekap paket!</p>
         </div>
       </aside>
 
@@ -167,11 +178,36 @@
     </div>
   </div>
 
-  <footer class="bg-white border-t border-slate-200/80 py-4 text-center text-xs text-slate-400">
+  <footer class="bg-white dark:bg-slate-900 border-t border-slate-200/80 dark:border-slate-800 py-4 text-center text-xs text-slate-400 dark:text-slate-500 transition-colors duration-300">
     <p>“Streamlined Package Tracking System” • Rekap Paket Sekolah</p>
   </footer>
 
   <script>
+    // --- DARK MODE SYSTEM ---
+    function initTheme() {
+      const isDark = localStorage.getItem('theme_mode') === 'dark';
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      updateThemeIcon(isDark);
+    }
+
+    function toggleDarkMode() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme_mode', isDark ? 'dark' : 'light');
+      updateThemeIcon(isDark);
+    }
+
+    function updateThemeIcon(isDark) {
+      const icon = document.getElementById('icon-theme');
+      if (icon) {
+        icon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+        lucide.createIcons();
+      }
+    }
+
     // --- MUSIC PLAYER LOGIC ---
     function switchMusicTab(type) {
       const ytBox = document.getElementById('player-yt-box');
@@ -182,17 +218,17 @@
       if (type === 'yt') {
         ytBox.classList.remove('hidden');
         spBox.classList.add('hidden');
-        btnYt.classList.add('bg-white', 'text-slate-800', 'shadow-2xs');
-        btnYt.classList.remove('text-slate-500');
-        btnSp.classList.remove('bg-white', 'text-slate-800', 'shadow-2xs');
-        btnSp.classList.add('text-slate-500');
+        btnYt.classList.add('bg-white', 'dark:bg-slate-700', 'text-slate-800', 'dark:text-white', 'shadow-2xs');
+        btnYt.classList.remove('text-slate-500', 'dark:text-slate-400');
+        btnSp.classList.remove('bg-white', 'dark:bg-slate-700', 'text-slate-800', 'dark:text-white', 'shadow-2xs');
+        btnSp.classList.add('text-slate-500', 'dark:text-slate-400');
       } else {
         spBox.classList.remove('hidden');
         ytBox.classList.add('hidden');
-        btnSp.classList.add('bg-white', 'text-slate-800', 'shadow-2xs');
-        btnSp.classList.remove('text-slate-500');
-        btnYt.classList.remove('bg-white', 'text-slate-800', 'shadow-2xs');
-        btnYt.classList.add('text-slate-500');
+        btnSp.classList.add('bg-white', 'dark:bg-slate-700', 'text-slate-800', 'dark:text-white', 'shadow-2xs');
+        btnSp.classList.remove('text-slate-500', 'dark:text-slate-400');
+        btnYt.classList.remove('bg-white', 'dark:bg-slate-700', 'text-slate-800', 'dark:text-white', 'shadow-2xs');
+        btnYt.classList.add('text-slate-500', 'dark:text-slate-400');
       }
     }
 
@@ -235,7 +271,7 @@
     const namaHari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
     const allKelasList = ["12", "11", "10", "9A", "9B", "9C", "9D", "9E", "8A", "8B", "8C", "8D", "8E"];
 
-    // Storage Engine & State (Menjaga data ora bakal hilang)
+    // Storage Engine & State
     let dataRekap = JSON.parse(localStorage.getItem('rekapPaketData_UI')) || JSON.parse(localStorage.getItem('rekapPaketData')) || [];
     let currentPetugas = localStorage.getItem('activePetugas_UI') || "Sultan Maulana";
     let selectedKelasInput = "";
@@ -260,12 +296,12 @@
       currentTab = tabId;
       document.querySelectorAll('.nav-pill').forEach(btn => {
         btn.classList.remove('bg-sky-500', 'text-white', 'shadow-sm');
-        btn.classList.add('text-slate-600');
+        btn.classList.add('text-slate-600', 'dark:text-slate-300');
       });
       const activeBtn = document.getElementById('nav-' + tabId);
       if (activeBtn) {
         activeBtn.classList.add('bg-sky-500', 'text-white', 'shadow-sm');
-        activeBtn.classList.remove('text-slate-600');
+        activeBtn.classList.remove('text-slate-600', 'dark:text-slate-300');
       }
 
       const container = document.getElementById('app-container');
@@ -288,7 +324,6 @@
       const countSesuai = todayData.filter(d => d.isSesuai).length;
       const countLuar = todayData.filter(d => !d.isSesuai).length;
 
-      // Sambutan Khusus Petugas
       let titleSambutan = `Selamat Datang, ${currentPetugas} 👋`;
       let subSambutan = "Selamat bertugas! Rekap penerimaan paket siswa harian makin gampang, akurat, lan terorganisir.";
 
@@ -327,47 +362,47 @@
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
-            <div class="flex items-center justify-between text-slate-400 text-xs font-bold mb-2">
+          <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <div class="flex items-center justify-between text-slate-400 dark:text-slate-500 text-xs font-bold mb-2">
               <span>TOTAL PAKET HARI INI</span>
               <i data-lucide="package" class="w-4 h-4 text-sky-500"></i>
             </div>
-            <div class="text-3xl font-black text-slate-900">${todayData.length}</div>
-            <p class="text-[11px] text-slate-400 mt-1">Total masuk tanggal ${todayISO}</p>
+            <div class="text-3xl font-black text-slate-900 dark:text-white">${todayData.length}</div>
+            <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Total masuk tanggal ${todayISO}</p>
           </div>
 
-          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
-            <div class="flex items-center justify-between text-slate-400 text-xs font-bold mb-2">
+          <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <div class="flex items-center justify-between text-slate-400 dark:text-slate-500 text-xs font-bold mb-2">
               <span>SESUAI JADWAL</span>
               <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
             </div>
-            <div class="text-3xl font-black text-emerald-600">${countSesuai}</div>
-            <p class="text-[11px] text-slate-400 mt-1">Sesuai kelas reguler</p>
+            <div class="text-3xl font-black text-emerald-600 dark:text-emerald-400">${countSesuai}</div>
+            <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Sesuai kelas reguler</p>
           </div>
 
-          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
-            <div class="flex items-center justify-between text-slate-400 text-xs font-bold mb-2">
+          <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <div class="flex items-center justify-between text-slate-400 dark:text-slate-500 text-xs font-bold mb-2">
               <span>DI LUAR JADWAL / ONLINE</span>
               <i data-lucide="alert-circle" class="w-4 h-4 text-amber-500"></i>
             </div>
-            <div class="text-3xl font-black text-amber-600">${countLuar}</div>
-            <p class="text-[11px] text-slate-400 mt-1">Paket pengecualian/legalitas</p>
+            <div class="text-3xl font-black text-amber-600 dark:text-amber-400">${countLuar}</div>
+            <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Paket pengecualian/legalitas</p>
           </div>
         </div>
 
-        <div class="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-6">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs p-6">
           <div class="flex items-center justify-between mb-4">
             <div>
-              <h3 class="text-sm font-extrabold text-slate-900">Rekap Input Terbaru</h3>
-              <p class="text-xs text-slate-400">Data penerimaan paket terkini</p>
+              <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Rekap Input Terbaru</h3>
+              <p class="text-xs text-slate-400 dark:text-slate-500">Data penerimaan paket terkini</p>
             </div>
-            <button onclick="navigate('live')" class="text-xs font-bold text-sky-600 hover:text-sky-700 flex items-center gap-1">
+            <button onclick="navigate('live')" class="text-xs font-bold text-sky-600 dark:text-sky-400 hover:text-sky-700 flex items-center gap-1">
               Lihat Semua <i data-lucide="chevron-right" class="w-4 h-4"></i>
             </button>
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
-              <thead class="text-slate-400 border-b border-slate-100 font-bold uppercase tracking-wider">
+              <thead class="text-slate-400 dark:text-slate-500 border-b border-slate-100 dark:border-slate-800 font-bold uppercase tracking-wider">
                 <tr>
                   <th class="pb-3">Tanggal Rekap</th>
                   <th class="pb-3">Nama Penerima</th>
@@ -376,17 +411,17 @@
                   <th class="pb-3">Status / Legalitas</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-100 text-slate-700">
+              <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
                 ${dataRekap.slice(-5).reverse().map(d => `
                   <tr>
-                    <td class="py-3 font-medium text-slate-500">${d.tglFormatted || d.rawTanggal}</td>
-                    <td class="py-3 font-bold text-slate-900">${d.nama}</td>
-                    <td class="py-3 font-semibold text-slate-700">${d.kelas}</td>
-                    <td class="py-3 font-medium text-slate-500">${d.petugas || '-'}</td>
+                    <td class="py-3 font-medium text-slate-500 dark:text-slate-400">${d.tglFormatted || d.rawTanggal}</td>
+                    <td class="py-3 font-bold text-slate-900 dark:text-white">${d.nama}</td>
+                    <td class="py-3 font-semibold text-slate-700 dark:text-slate-300">${d.kelas}</td>
+                    <td class="py-3 font-medium text-slate-500 dark:text-slate-400">${d.petugas || '-'}</td>
                     <td class="py-3">
                       ${d.isSesuai 
-                        ? `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700">Sesuai Jadwal</span>`
-                        : `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700">${d.keterangan ? 'Dilegalkan (' + d.keterangan + ')' : 'Luar Jadwal'}</span>`
+                        ? `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400">Sesuai Jadwal</span>`
+                        : `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400">${d.keterangan ? 'Dilegalkan (' + d.keterangan + ')' : 'Luar Jadwal'}</span>`
                       }
                     </td>
                   </tr>
@@ -406,35 +441,35 @@
       const lastRecord = dataRekap.length > 0 ? dataRekap[dataRekap.length - 1] : null;
 
       container.innerHTML = `
-        <div class="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-6 sm:p-8 space-y-6">
-          <h2 class="text-xl font-extrabold text-slate-900">Input Paket Masuk</h2>
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs p-6 sm:p-8 space-y-6">
+          <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">Input Paket Masuk</h2>
 
           <form id="formPaket" onsubmit="handleSavePaket(event)" class="space-y-6">
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1.5">Tanggal Rekap / Paket Masuk</label>
-              <input type="date" id="inp-tanggal" value="${todayStr}" onchange="renderKelasButtons(this.value)" required class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm font-semibold focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Tanggal Rekap / Paket Masuk</label>
+              <input type="date" id="inp-tanggal" value="${todayStr}" onchange="renderKelasButtons(this.value)" required class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 text-sm font-semibold focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1.5">Nama Penerima</label>
-              <input type="text" id="inp-nama" required placeholder="Masukkan nama siswa atau penerima" class="w-full bg-white border border-slate-200 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Nama Penerima</label>
+              <input type="text" id="inp-nama" required placeholder="Masukkan nama siswa atau penerima" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-2">Pilih Kelas</label>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">Pilih Kelas</label>
               <div id="kelas-btn-container" class="flex flex-wrap gap-2.5"></div>
-              <p class="text-[11px] text-slate-400 font-medium mt-2">Hijau = sesuai jadwal (Diutamakan di atas). Merah = di luar jadwal.</p>
+              <p class="text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-2">Hijau = sesuai jadwal (Diutamakan di atas). Merah = di luar jadwal.</p>
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-2">Keterangan Paket</label>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">Keterangan Paket</label>
               <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-2">
-                <button type="button" onclick="setKeteranganQuick('Online')" class="py-2.5 px-4 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 shadow-2xs transition">Online</button>
-                <button type="button" onclick="setKeteranganQuick('Non-online')" class="py-2.5 px-4 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 shadow-2xs transition">Non-online</button>
-                <button type="button" onclick="setKeteranganQuick('HRL')" class="py-2.5 px-4 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 shadow-2xs transition">HRL</button>
-                <button type="button" onclick="setKeteranganQuick('Food')" class="py-2.5 px-4 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 shadow-2xs transition">Food</button>
+                <button type="button" onclick="setKeteranganQuick('Online')" class="py-2.5 px-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs transition">Online</button>
+                <button type="button" onclick="setKeteranganQuick('Non-online')" class="py-2.5 px-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs transition">Non-online</button>
+                <button type="button" onclick="setKeteranganQuick('HRL')" class="py-2.5 px-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs transition">HRL</button>
+                <button type="button" onclick="setKeteranganQuick('Food')" class="py-2.5 px-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs transition">Food</button>
               </div>
-              <input type="text" id="inp-keterangan" placeholder="Atau ketik keterangan khusus di sini..." class="w-full bg-white border border-slate-200 rounded-xl p-3 text-xs font-medium focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
+              <input type="text" id="inp-keterangan" placeholder="Atau ketik keterangan khusus di sini..." class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 text-xs font-medium focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
             </div>
 
             <button type="submit" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-xl text-sm shadow-md transition uppercase tracking-wider">
@@ -443,11 +478,11 @@
           </form>
 
           ${lastRecord ? `
-            <div class="bg-sky-50/60 border border-sky-100 rounded-2xl p-4 flex items-center gap-3">
+            <div class="bg-sky-50/60 dark:bg-sky-950/40 border border-sky-100 dark:border-sky-900 rounded-2xl p-4 flex items-center gap-3">
               <span class="text-lg">📌</span>
               <div class="text-xs">
-                <span class="font-extrabold text-slate-800 block">Input Terakhir</span>
-                <span class="text-slate-500 font-medium">${lastRecord.nama} — Kelas ${lastRecord.kelas} \vert{}${lastRecord.tglFormatted || lastRecord.rawTanggal}</span>
+                <span class="font-extrabold text-slate-800 dark:text-slate-200 block">Input Terakhir</span>
+                <span class="text-slate-500 dark:text-slate-400 font-medium">${lastRecord.nama} — Kelas ${lastRecord.kelas} \vert{}${lastRecord.tglFormatted || lastRecord.rawTanggal}</span>
               </div>
             </div>
           ` : ''}
@@ -478,7 +513,7 @@
         const isSelected = selectedKelasInput === k;
         
         let bgClass = isSesuai ? "bg-emerald-600 hover:bg-emerald-700 text-white" : "bg-rose-500 hover:bg-rose-600 text-white";
-        let borderClass = isSelected ? "ring-4 ring-sky-300 scale-105" : "";
+        let borderClass = isSelected ? "ring-4 ring-sky-300 dark:ring-sky-500 scale-105" : "";
 
         return `
           <button type="button" onclick="selectKelasBtn('${k}')" id="btn-k-${k}" class="w-12 h-10 sm:w-14 sm:h-11 rounded-xl font-extrabold text-xs sm:text-sm shadow-xs transition flex items-center justify-center ${bgClass} ${borderClass}">
@@ -541,21 +576,21 @@
 
       container.innerHTML = `
         <div class="space-y-6">
-          <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs">
-            <h3 class="text-sm font-extrabold text-slate-900 mb-4">✅ Data Sesuai Jadwal</h3>
+          <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white mb-4">✅ Data Sesuai Jadwal</h3>
             <div class="overflow-x-auto">
               <table class="w-full text-left text-xs">
-                <thead class="bg-slate-50 font-bold text-slate-400 uppercase">
+                <thead class="bg-slate-50 dark:bg-slate-800 font-bold text-slate-400 dark:text-slate-400 uppercase">
                   <tr><th class="p-3">Tanggal</th><th class="p-3">Nama</th><th class="p-3">Kelas</th><th class="p-3">Petugas</th><th class="p-3">Aksi</th></tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
                   ${sesuai.map(d => `
                     <tr>
                       <td class="p-3">${d.tglFormatted || d.rawTanggal}</td>
-                      <td class="p-3 font-bold">${d.nama}</td>
+                      <td class="p-3 font-bold text-slate-900 dark:text-white">${d.nama}</td>
                       <td class="p-3 font-semibold">${d.kelas}</td>
-                      <td class="p-3 text-slate-500">${d.petugas || '-'}</td>
-                      <td class="p-3"><button onclick="deletePaket(${d.id})" class="text-rose-600 font-bold hover:underline">Hapus</button></td>
+                      <td class="p-3 text-slate-500 dark:text-slate-400">${d.petugas || '-'}</td>
+                      <td class="p-3"><button onclick="deletePaket(${d.id})" class="text-rose-600 dark:text-rose-400 font-bold hover:underline">Hapus</button></td>
                     </tr>
                   `).join('')}
                 </tbody>
@@ -563,27 +598,27 @@
             </div>
           </div>
 
-          <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs">
-            <h3 class="text-sm font-extrabold text-slate-900 mb-4">⚠️ Data Di Luar Jadwal (Online/Izin)</h3>
+          <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white mb-4">⚠️ Data Di Luar Jadwal (Online/Izin)</h3>
             <div class="overflow-x-auto">
               <table class="w-full text-left text-xs">
-                <thead class="bg-slate-50 font-bold text-slate-400 uppercase">
+                <thead class="bg-slate-50 dark:bg-slate-800 font-bold text-slate-400 dark:text-slate-400 uppercase">
                   <tr><th class="p-3">Tanggal</th><th class="p-3">Nama</th><th class="p-3">Kelas</th><th class="p-3">Keterangan</th><th class="p-3">Petugas</th><th class="p-3">Status</th><th class="p-3">Aksi</th></tr>
                 </thead>
-                <tbody class="divide-y divide-slate-100">
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
                   ${luar.map(d => `
                     <tr>
                       <td class="p-3">${d.tglFormatted || d.rawTanggal}</td>
-                      <td class="p-3 font-bold">${d.nama}</td>
+                      <td class="p-3 font-bold text-slate-900 dark:text-white">${d.nama}</td>
                       <td class="p-3 font-semibold">${d.kelas}</td>
                       <td class="p-3">${d.keterangan || '-'}</td>
-                      <td class="p-3 text-slate-500">${d.petugas || '-'}</td>
+                      <td class="p-3 text-slate-500 dark:text-slate-400">${d.petugas || '-'}</td>
                       <td class="p-3">
-                        <span class="px-2 py-0.5 rounded font-bold text-[10px] ${d.keterangan ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800'}">
+                        <span class="px-2 py-0.5 rounded font-bold text-[10px] ${d.keterangan ? 'bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-400' : 'bg-rose-100 dark:bg-rose-950/80 text-rose-800 dark:text-rose-400'}">
                           ${d.keterangan ? 'Dilegalkan' : 'Belum Dilegalkan'}
                         </span>
                       </td>
-                      <td class="p-3"><button onclick="deletePaket(${d.id})" class="text-rose-600 font-bold hover:underline">Hapus</button></td>
+                      <td class="p-3"><button onclick="deletePaket(${d.id})" class="text-rose-600 dark:text-rose-400 font-bold hover:underline">Hapus</button></td>
                     </tr>
                   `).join('')}
                 </tbody>
@@ -607,46 +642,46 @@
       const todayISO = new Date().toISOString().split('T')[0];
 
       container.innerHTML = `
-        <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs space-y-6">
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-6">
           <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div class="flex items-center gap-2">
               <span class="text-xl">📊</span>
-              <h2 class="text-lg font-extrabold text-slate-900">Rekapitulasi Data Paket</h2>
+              <h2 class="text-lg font-extrabold text-slate-900 dark:text-white">Rekapitulasi Data Paket</h2>
             </div>
             <button onclick="exportCSV('semua')" class="px-5 py-2.5 bg-sky-500 hover:bg-sky-600 text-white font-extrabold rounded-xl text-xs shadow-sm transition">
               Export Semua Data
             </button>
           </div>
 
-          <div class="flex flex-wrap gap-2 border-b border-slate-100 pb-4">
+          <div class="flex flex-wrap gap-2 border-b border-slate-100 dark:border-slate-800 pb-4">
             <button onclick="filterPeriodik('hari', this)" class="sub-filter-btn px-4 py-2 rounded-full text-xs font-extrabold transition bg-sky-500 text-white shadow-xs">Hari Ini</button>
-            <button onclick="filterPeriodik('minggu', this)" class="sub-filter-btn px-4 py-2 rounded-full text-xs font-extrabold text-slate-600 bg-slate-100 hover:bg-slate-200 transition">Minggu Ini</button>
-            <button onclick="filterPeriodik('bulan', this)" class="sub-filter-btn px-4 py-2 rounded-full text-xs font-extrabold text-slate-600 bg-slate-100 hover:bg-slate-200 transition">Bulan Ini</button>
-            <button onclick="filterPeriodik('semua', this)" class="sub-filter-btn px-4 py-2 rounded-full text-xs font-extrabold text-slate-600 bg-slate-100 hover:bg-slate-200 transition">Semua Data</button>
+            <button onclick="filterPeriodik('minggu', this)" class="sub-filter-btn px-4 py-2 rounded-full text-xs font-extrabold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">Minggu Ini</button>
+            <button onclick="filterPeriodik('bulan', this)" class="sub-filter-btn px-4 py-2 rounded-full text-xs font-extrabold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">Bulan Ini</button>
+            <button onclick="filterPeriodik('semua', this)" class="sub-filter-btn px-4 py-2 rounded-full text-xs font-extrabold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">Semua Data</button>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-xs text-center space-y-1">
-              <span class="text-xs font-bold text-slate-400">Total Paket</span>
-              <div id="stat-total" class="text-3xl font-black text-slate-900">0</div>
+            <div class="bg-white dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs text-center space-y-1">
+              <span class="text-xs font-bold text-slate-400 dark:text-slate-400">Total Paket</span>
+              <div id="stat-total" class="text-3xl font-black text-slate-900 dark:text-white">0</div>
             </div>
-            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-xs text-center space-y-1">
-              <span class="text-xs font-bold text-slate-400">Sesuai Jadwal</span>
-              <div id="stat-sesuai" class="text-3xl font-black text-emerald-600">0</div>
+            <div class="bg-white dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs text-center space-y-1">
+              <span class="text-xs font-bold text-slate-400 dark:text-slate-400">Sesuai Jadwal</span>
+              <div id="stat-sesuai" class="text-3xl font-black text-emerald-600 dark:text-emerald-400">0</div>
             </div>
-            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-xs text-center space-y-1">
-              <span class="text-xs font-bold text-slate-400">Di Luar Jadwal</span>
-              <div id="stat-luar" class="text-3xl font-black text-amber-600">0</div>
+            <div class="bg-white dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs text-center space-y-1">
+              <span class="text-xs font-bold text-slate-400 dark:text-slate-400">Di Luar Jadwal</span>
+              <div id="stat-luar" class="text-3xl font-black text-amber-600 dark:text-amber-400">0</div>
             </div>
           </div>
 
-          <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="bg-slate-50 dark:bg-slate-800/80 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div class="space-y-1">
-              <span class="text-xs font-extrabold text-slate-800 block">📅 Export Rentang Tanggal Khusus:</span>
+              <span class="text-xs font-extrabold text-slate-800 dark:text-slate-200 block">📅 Export Rentang Tanggal Khusus:</span>
               <div class="flex items-center gap-2">
-                <input type="date" id="export-start" value="${todayISO}" class="bg-white border border-slate-200 rounded-lg p-2 text-xs font-bold" />
+                <input type="date" id="export-start" value="${todayISO}" class="bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100 rounded-lg p-2 text-xs font-bold" />
                 <span class="text-xs font-bold text-slate-400">s/d</span>
-                <input type="date" id="export-end" value="${todayISO}" class="bg-white border border-slate-200 rounded-lg p-2 text-xs font-bold" />
+                <input type="date" id="export-end" value="${todayISO}" class="bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100 rounded-lg p-2 text-xs font-bold" />
               </div>
             </div>
             <button onclick="exportCSVByDateRange()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow-xs transition shrink-0">
@@ -656,7 +691,7 @@
 
           <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
-              <thead class="text-slate-500 font-extrabold border-b border-slate-100">
+              <thead class="text-slate-500 dark:text-slate-400 font-extrabold border-b border-slate-100 dark:border-slate-800">
                 <tr>
                   <th class="pb-3 w-32">Tanggal</th>
                   <th class="pb-3">Nama</th>
@@ -665,7 +700,7 @@
                   <th class="pb-3">Keterangan</th>
                 </tr>
               </thead>
-              <tbody id="tabel-rekap-body" class="divide-y divide-slate-100 text-slate-700"></tbody>
+              <tbody id="tabel-rekap-body" class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300"></tbody>
             </table>
           </div>
         </div>
@@ -677,11 +712,11 @@
     function filterPeriodik(period, btn) {
       document.querySelectorAll('.sub-filter-btn').forEach(b => {
         b.classList.remove('bg-sky-500', 'text-white', 'shadow-xs');
-        b.classList.add('text-slate-600', 'bg-slate-100');
+        b.classList.add('text-slate-600', 'dark:text-slate-300', 'bg-slate-100', 'dark:bg-slate-800');
       });
       if(btn) {
         btn.classList.add('bg-sky-500', 'text-white', 'shadow-xs');
-        btn.classList.remove('text-slate-600', 'bg-slate-100');
+        btn.classList.remove('text-slate-600', 'dark:text-slate-300', 'bg-slate-100', 'dark:bg-slate-800');
       }
 
       activeFilterRekap = period;
@@ -710,22 +745,22 @@
       tbody.innerHTML = '';
 
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400 font-medium">Belum ada data untuk periode ini.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400 dark:text-slate-500 font-medium">Belum ada data untuk periode ini.</td></tr>`;
         return;
       }
 
       filtered.forEach(d => {
         tbody.innerHTML += `
           <tr>
-            <td class="py-3 font-medium text-slate-500">${d.tglFormatted || d.rawTanggal}</td>
-            <td class="py-3 font-bold text-slate-900">${d.nama}</td>
-            <td class="py-3 font-semibold text-slate-700">${d.kelas}</td>
+            <td class="py-3 font-medium text-slate-500 dark:text-slate-400">${d.tglFormatted || d.rawTanggal}</td>
+            <td class="py-3 font-bold text-slate-900 dark:text-white">${d.nama}</td>
+            <td class="py-3 font-semibold text-slate-700 dark:text-slate-300">${d.kelas}</td>
             <td class="py-3">
-              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${d.isSesuai ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${d.isSesuai ? 'bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400' : 'bg-amber-50 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400'}">
                 ${d.isSesuai ? 'Sesuai Jadwal' : 'Di Luar Jadwal'}
               </span>
             </td>
-            <td class="py-3 text-slate-600">${d.keterangan || '-'}</td>
+            <td class="py-3 text-slate-600 dark:text-slate-400">${d.keterangan || '-'}</td>
           </tr>
         `;
       });
@@ -792,19 +827,19 @@
 
       container.innerHTML = `
         <div class="space-y-6">
-          <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs">
-            <h3 class="text-sm font-extrabold text-slate-900 mb-1">📤 Export / Copy Data Lokal</h3>
-            <p class="text-xs text-slate-400 mb-4">Salin kode JSON ing ngisor kiye kanggo disimpen utawa dipindah menyang piranti/web liyane.</p>
-            <textarea id="txt-export" readonly class="w-full h-36 bg-slate-50 border border-slate-200 rounded-xl p-3 font-mono text-[11px] text-slate-700 focus:outline-none">${jsonString}</textarea>
+          <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white mb-1">📤 Export / Copy Data Lokal</h3>
+            <p class="text-xs text-slate-400 dark:text-slate-500 mb-4">Salin kode JSON ing ngisor kiye kanggo disimpen utawa dipindah menyang piranti/web liyane.</p>
+            <textarea id="txt-export" readonly class="w-full h-36 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl p-3 font-mono text-[11px] focus:outline-none">${jsonString}</textarea>
             <button onclick="copyExportJSON()" class="mt-2 px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl text-xs flex items-center gap-2">
               <i data-lucide="copy" class="w-4 h-4"></i> Copy Kode JSON
             </button>
           </div>
 
-          <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs">
-            <h3 class="text-sm font-extrabold text-slate-900 mb-1">📥 Import / Paste Data saka Canva Code</h3>
-            <p class="text-xs text-slate-400 mb-4">Paste kode JSON saka web Canva/backup lawas ing ngisor iki, banjur klik tombol **Import Data**.</p>
-            <textarea id="txt-import" placeholder='Paste kode JSON nang kene (Contoh: [{"nama":"Budi","kelas":"8A"...}])' class="w-full h-36 bg-slate-50 border border-slate-200 rounded-xl p-3 font-mono text-[11px] text-slate-700 focus:bg-white focus:ring-2 focus:ring-amber-500 focus:outline-none"></textarea>
+          <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white mb-1">📥 Import / Paste Data saka Canva Code</h3>
+            <p class="text-xs text-slate-400 dark:text-slate-500 mb-4">Paste kode JSON saka web Canva/backup lawas ing ngisor iki, banjur klik tombol **Import Data**.</p>
+            <textarea id="txt-import" placeholder='Paste kode JSON nang kene (Contoh: [{"nama":"Budi","kelas":"8A"...}])' class="w-full h-36 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl p-3 font-mono text-[11px] focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-amber-500 focus:outline-none"></textarea>
             <button onclick="importJSONData()" class="mt-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-xs flex items-center gap-2">
               <i data-lucide="download-cloud" class="w-4 h-4"></i> Import & Gabung Data
             </button>
@@ -848,6 +883,7 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      initTheme();
       navigate('dashboard');
     });
   </script>
