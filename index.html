@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PAKET CONTROL CENTER — Package Data & Monitoring System</title>
   
+  <!-- PWA Web App Meta -->
+  <meta name="theme-color" content="#0F172A" />
+  <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlBBS0VUIENPTlRST0wgQ0VOVEVSIiwKICAic2hvcnRfbmFtZSI6ICJQYWtldENvbnRyb2wiLAogICJzdGFydF91cmwiOiAiLi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwRjE3MkEiLAogICJ0aGVtZV9jb2xvciI6ICIjMEYxNzJBIgp9" />
+
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Lucide Icons -->
@@ -43,7 +47,6 @@
     .custom-scroll::-webkit-scrollbar-track { background: #EDF3F9; }
     .custom-scroll::-webkit-scrollbar-thumb { background: #CBD8E6; border-radius: 6px; }
     
-    /* Dark Mode Custom Scrollbar */
     .dark .custom-scroll::-webkit-scrollbar-track { background: #0F172A; }
     .dark .custom-scroll::-webkit-scrollbar-thumb { background: #334155; }
   </style>
@@ -60,7 +63,10 @@
         <div>
           <div class="flex items-center gap-2">
             <span class="text-base font-extrabold tracking-tight text-slate-900 dark:text-white">PAKET<span class="text-sky-500">CONTROL</span></span>
-            <span class="text-[10px] bg-sky-100 dark:bg-sky-900/60 text-sky-800 dark:text-sky-300 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">REKAP SYSTEM</span>
+            <span id="badge-online-status" class="text-[10px] bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              ONLINE
+            </span>
           </div>
           <p class="text-[11px] text-slate-400 dark:text-slate-500 font-medium">Package Management & Verification</p>
         </div>
@@ -121,7 +127,6 @@
       <!-- 🎵 SIDEBAR MUSIC PLAYER -->
       <aside class="w-full lg:w-72 shrink-0 lg:sticky lg:top-24 space-y-4">
         <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-4 shadow-xs transition-colors duration-300">
-          <!-- PLAYER HEADER -->
           <div class="flex items-center justify-between mb-3">
             <div class="flex items-center gap-2">
               <div class="w-8 h-8 rounded-xl bg-rose-500 text-white flex items-center justify-center font-bold text-xs shadow-xs">
@@ -132,13 +137,11 @@
             <span class="text-[10px] font-extrabold bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-full uppercase">Live Sync</span>
           </div>
 
-          <!-- TAB PLAYER (YOUTUBE / SPOTIFY) -->
           <div class="flex gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-[11px] font-bold mb-3">
             <button onclick="switchMusicTab('yt')" id="tab-m-yt" class="flex-1 py-1.5 rounded-lg bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-2xs transition">YouTube</button>
             <button onclick="switchMusicTab('sp')" id="tab-m-sp" class="flex-1 py-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition">Spotify</button>
           </div>
 
-          <!-- YOUTUBE PLAYER CONTAINER -->
           <div id="player-yt-box" class="space-y-2.5">
             <div class="w-full h-48 rounded-2xl overflow-hidden bg-slate-900 shadow-inner border border-slate-200 dark:border-slate-800">
               <iframe id="iframe-yt" class="w-full h-full" src="https://www.youtube.com/embed/jfKfPfyJRdk" title="YouTube Music Player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -152,7 +155,6 @@
             </div>
           </div>
 
-          <!-- SPOTIFY PLAYER CONTAINER -->
           <div id="player-sp-box" class="space-y-2.5 hidden">
             <div class="h-52 w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-inner">
               <iframe id="iframe-sp" class="w-full h-full" src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
@@ -183,6 +185,32 @@
   </footer>
 
   <script>
+    // --- SERVICE WORKER REGISTRATION (OFFLINE MODE) ---
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(() => console.log('✅ Offline Mode Ready!'))
+          .catch((err) => console.log('Offline SW Error:', err));
+      });
+    }
+
+    // --- NETWORK STATUS DETECTOR ---
+    function updateOnlineStatus() {
+      const badge = document.getElementById('badge-online-status');
+      if (!badge) return;
+
+      if (navigator.onLine) {
+        badge.className = "text-[10px] bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1";
+        badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> ONLINE`;
+      } else {
+        badge.className = "text-[10px] bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-400 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1";
+        badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> OFFLINE MODE`;
+      }
+    }
+
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+
     // --- DARK MODE SYSTEM ---
     function initTheme() {
       const isDark = localStorage.getItem('theme_mode') === 'dark';
@@ -275,6 +303,7 @@
     let dataRekap = JSON.parse(localStorage.getItem('rekapPaketData_UI')) || JSON.parse(localStorage.getItem('rekapPaketData')) || [];
     let currentPetugas = localStorage.getItem('activePetugas_UI') || "Sultan Maulana";
     let selectedKelasInput = "";
+    let lastSelectedDate = new Date().toISOString().split('T')[0]; // Menyimpan tanggal terpilih
     let activeFilterRekap = "hari";
 
     function saveDB() {
@@ -435,9 +464,8 @@
 
     // --- INPUT VIEW ---
     function renderInput(container) {
-      const todayStr = new Date().toISOString().split('T')[0];
       selectedKelasInput = "";
-
+      const dateToUse = lastSelectedDate || new Date().toISOString().split('T')[0];
       const lastRecord = dataRekap.length > 0 ? dataRekap[dataRekap.length - 1] : null;
 
       container.innerHTML = `
@@ -447,7 +475,7 @@
           <form id="formPaket" onsubmit="handleSavePaket(event)" class="space-y-6">
             <div>
               <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Tanggal Rekap / Paket Masuk</label>
-              <input type="date" id="inp-tanggal" value="${todayStr}" onchange="renderKelasButtons(this.value)" required class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 text-sm font-semibold focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
+              <input type="date" id="inp-tanggal" value="${dateToUse}" onchange="updateSelectedDate(this.value)" required class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 text-sm font-semibold focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
             </div>
 
             <div>
@@ -477,19 +505,26 @@
             </button>
           </form>
 
-          ${lastRecord ? `
-            <div class="bg-sky-50/60 dark:bg-sky-950/40 border border-sky-100 dark:border-sky-900 rounded-2xl p-4 flex items-center gap-3">
-              <span class="text-lg">📌</span>
+          <!-- STATUS INPUT TERAKHIR (TANPA NOTIF POPUP) -->
+          <div id="card-last-record" class="bg-sky-50/60 dark:bg-sky-950/40 border border-sky-100 dark:border-sky-900 rounded-2xl p-4 flex items-center justify-between transition-all duration-300 ${lastRecord ? '' : 'hidden'}">
+            <div class="flex items-center gap-3">
+              <span class="text-lg">✅</span>
               <div class="text-xs">
-                <span class="font-extrabold text-slate-800 dark:text-slate-200 block">Input Terakhir</span>
-                <span class="text-slate-500 dark:text-slate-400 font-medium">${lastRecord.nama} — Kelas ${lastRecord.kelas} \vert{}${lastRecord.tglFormatted || lastRecord.rawTanggal}</span>
+                <span class="font-extrabold text-slate-800 dark:text-slate-200 block">Input Terakhir Terkini</span>
+                <span id="txt-last-record-detail" class="text-slate-500 dark:text-slate-400 font-medium">${lastRecord ? `${lastRecord.nama} — Kelas ${lastRecord.kelas} \vert{}${lastRecord.tglFormatted || lastRecord.rawTanggal}` : ''}</span>
               </div>
             </div>
-          ` : ''}
+            <span class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950 px-2.5 py-1 rounded-full uppercase">Tersimpan</span>
+          </div>
         </div>
       `;
 
-      renderKelasButtons(todayStr);
+      renderKelasButtons(dateToUse);
+    }
+
+    function updateSelectedDate(val) {
+      lastSelectedDate = val;
+      renderKelasButtons(val);
     }
 
     function renderKelasButtons(rawDate) {
@@ -542,6 +577,8 @@
       }
 
       const rawTanggal = document.getElementById('inp-tanggal').value;
+      lastSelectedDate = rawTanggal; // Menjaga tanggal tetep padha pas disimpen
+
       const selectedDate = new Date(rawTanggal + "T00:00:00");
       const dayIndex = selectedDate.getDay();
       const kelasAllowed = jadwalHari[dayIndex] || [];
@@ -553,7 +590,7 @@
       const tglFormatted = `${namaHari[dayIndex]}, ${selectedDate.toLocaleDateString('id-ID')}`;
       const isSesuai = kelasAllowed.includes(kelas);
 
-      dataRekap.push({
+      const newItem = {
         id: Date.now(),
         rawTanggal,
         tglFormatted,
@@ -562,11 +599,34 @@
         keterangan,
         isSesuai,
         petugas: currentPetugas
-      });
+      };
 
+      dataRekap.push(newItem);
       saveDB();
-      alert('✅ Data paket berhasil disimpan!');
-      renderInput(document.getElementById('app-container'));
+
+      // Reset Isian Nama & Keterangan wae (Tanggal & Kelas Tetep Berada ing Posisine)
+      document.getElementById('inp-nama').value = '';
+      document.getElementById('inp-keterangan').value = '';
+      selectedKelasInput = "";
+      renderKelasButtons(rawTanggal);
+
+      // Update Card Status Input Terakhir Tanpa Alert Pop-up
+      const cardRecord = document.getElementById('card-last-record');
+      const txtRecord = document.getElementById('txt-last-record-detail');
+      
+      if (cardRecord && txtRecord) {
+        txtRecord.innerText = `${newItem.nama} — Kelas ${newItem.kelas} | ${newItem.tglFormatted || newItem.rawTanggal}`;
+        cardRecord.classList.remove('hidden');
+        
+        // Efek visual kedhep ijo sedhela minangka notifikasi sukses
+        cardRecord.classList.add('ring-2', 'ring-emerald-500');
+        setTimeout(() => {
+          cardRecord.classList.remove('ring-2', 'ring-emerald-500');
+        }, 1000);
+      }
+
+      // Fokuskan maneh marang input nama ben cepet
+      document.getElementById('inp-nama').focus();
     }
 
     // --- LIVE VIEW ---
@@ -884,6 +944,7 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       initTheme();
+      updateOnlineStatus();
       navigate('dashboard');
     });
   </script>
