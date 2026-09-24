@@ -1,814 +1,952 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aplikasi Rekap Data Paket</title>
-    <style>
-        :root {
-            --primary: #2563eb;
-            --success: #16a34a;
-            --warning: #ea580c;
-            --danger: #dc2626;
-            --info: #0891b2;
-            --bg: #f8fafc;
-            --card: #ffffff;
-            --text: #1e293b;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PAKET CONTROL CENTER — Package Data & Monitoring System</title>
+  
+  <!-- PWA Web App Meta -->
+  <meta name="theme-color" content="#0F172A" />
+  <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlBBS0VUIENPTlRST0wgQ0VOVEVSIiwKICAic2hvcnRfbmFtZSI6ICJQYWtldENvbnRyb2wiLAogICJzdGFydF91cmwiOiAiLi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwRjE3MkEiLAogICJ0aGVtZV9jb2xvciI6ICIjMEYxNzJBIgp9" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+          colors: {
+            rg: {
+              cyan: '#1CB0F6',
+              teal: '#2BC0E4',
+              blue: '#0F52BA',
+              navy: '#0A2540',
+              orange: '#FF8A00',
+              peach: '#FFF4E5',
+              surface: '#F6F9FD',
+              border: '#E3ECF6'
+            }
+          }
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg); color: var(--text); padding: 20px; max-width: 1200px; margin: 0 auto; }
-        
-        .header { text-align: center; margin-bottom: 20px; padding: 15px; background: var(--card); border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .info-jadwal { background: #e0f2fe; color: #0369a1; padding: 10px; border-radius: 6px; margin-top: 10px; font-weight: 600; }
-        .total-badge-header { display: inline-block; background: #3b82f6; color: white; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 700; margin-top: 8px; }
-        
-        /* MAIN LAYOUT 2 COLUMN (APP + AI CHAT) */
-        .app-layout { display: grid; grid-template-columns: 1fr 320px; gap: 20px; }
-        @media (max-width: 900px) { .app-layout { grid-template-columns: 1fr; } }
-
-        .card { background: var(--card); padding: 20px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        
-        .tab-menu { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #cbd5e1; padding-bottom: 5px; }
-        .tab-btn { background: #e2e8f0; border: none; padding: 10px 20px; font-weight: 600; border-radius: 6px 6px 0 0; cursor: pointer; color: #475569; transition: 0.2s; }
-        .tab-btn.active { background: var(--primary); color: white; }
-
-        .sub-tab-menu { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
-        .sub-tab-btn { background: #f1f5f9; border: 1px solid #cbd5e1; padding: 6px 14px; font-size: 13px; font-weight: 600; border-radius: 20px; cursor: pointer; color: #475569; }
-        .sub-tab-btn.active { background: var(--info); color: white; border-color: var(--info); }
-
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; }
-        input, select { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; }
-        
-        button { cursor: pointer; padding: 10px 15px; border: none; border-radius: 6px; font-weight: 600; transition: 0.2s; }
-        .btn-primary { background: var(--primary); color: white; width: 100%; }
-        .btn-primary:hover { background: #1d4ed8; }
-        .btn-success { background: var(--success); color: white; }
-        .btn-success:hover { background: #15803d; }
-        .btn-info { background: var(--info); color: white; padding: 10px 15px; font-size: 13px; }
-        .btn-danger { background: var(--danger); color: white; padding: 5px 10px; font-size: 12px; }
-
-        .table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }
-        th, td { border: 1px solid #e2e8f0; padding: 10px; text-align: left; }
-        th { background: #f1f5f9; }
-
-        .badge { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; display: inline-block; }
-        .badge-success { background: #dcfce7; color: #15803d; }
-        .badge-warning { background: #ffedd5; color: #c2410c; }
-        .badge-danger { background: #fee2e2; color: #b91c1c; }
-
-        .alert { padding: 12px; border-radius: 6px; margin-bottom: 15px; display: none; }
-        .alert-success { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
-
-        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .stat-card { background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; text-align: center; }
-        .stat-card h4 { font-size: 13px; color: #64748b; margin-bottom: 5px; }
-        .stat-card div { font-size: 22px; font-weight: 700; color: #0f172a; }
-
-        .section-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px; }
-        .table-info-sub { font-size: 13px; color: #64748b; font-weight: 600; }
-
-        .last-input-box { background: #f1f5f9; border-left: 4px solid var(--primary); padding: 12px 15px; border-radius: 6px; margin-top: 15px; font-size: 13px; }
-        .last-input-title { font-weight: 700; color: #334155; margin-bottom: 4px; }
-        .last-input-detail { color: #475569; }
-
-        /* SHORTCUT HINT BOX */
-        .shortcut-hint { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; padding: 10px; border-radius: 6px; font-size: 12px; margin-bottom: 15px; }
-
-        /* AI CHATBOX PANEL (RIGHT SIDE) */
-        .ai-panel { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; flex-direction: column; height: 580px; position: sticky; top: 20px; }
-        .ai-header { font-weight: 700; font-size: 14px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .ai-chat-box { flex: 1; overflow-y: auto; font-size: 12px; display: flex; flex-direction: column; gap: 8px; padding-right: 4px; }
-        .chat-msg { padding: 8px 12px; border-radius: 8px; max-width: 85%; word-wrap: break-word; }
-        .chat-bot { background: #f0f9ff; color: #0369a1; align-self: flex-start; border: 1px solid #e0f2fe; }
-        .chat-user { background: #2563eb; color: #ffffff; align-self: flex-end; }
-        .ai-input-area { display: flex; gap: 6px; margin-top: 10px; border-top: 1px solid #f1f5f9; padding-top: 10px; }
-        .ai-input-area input { font-size: 12px; padding: 8px; }
-        .ai-input-area button { padding: 8px 12px; font-size: 12px; width: auto; }
-    </style>
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; transition: background-color 0.3s, color 0.3s; }
+    .rg-gradient { background: linear-gradient(100deg, #18A4E0 0%, #20B6D5 45%, #6C63FF 100%); }
+    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: #EDF3F9; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #CBD8E6; border-radius: 6px; }
+    
+    .dark .custom-scroll::-webkit-scrollbar-track { background: #0F172A; }
+    .dark .custom-scroll::-webkit-scrollbar-thumb { background: #334155; }
+  </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col antialiased bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 custom-scroll">
 
-    <div class="header">
-        <h2>📦 Sistem Rekap Data Paket</h2>
-        <div class="info-jadwal" id="infoHariIni">Mengecek jadwal tanggal dipilih...</div>
-        <div class="total-badge-header">📦 Total Keseluruhan Data Paket: <span id="totalHeaderCount">0</span></div>
+  <!-- TOP APP BAR -->
+  <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 shadow-xs transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('dashboard')">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-md">
+          <i data-lucide="package-check" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-base font-extrabold tracking-tight text-slate-900 dark:text-white">PAKET<span class="text-sky-500">CONTROL</span></span>
+            <span id="badge-online-status" class="text-[10px] bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              ONLINE
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-400 dark:text-slate-500 font-medium">Package Management & Verification</p>
+        </div>
+      </div>
+
+      <!-- RIGHT TOP BAR: PETUGAS & DARK MODE TOGGLE -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- TOGGLE DARK MODE BUTTON -->
+        <button onclick="toggleDarkMode()" id="btn-theme-toggle" title="Ubah Mode Tampilan" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-amber-400 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition border border-slate-200 dark:border-slate-700">
+          <i data-lucide="moon" id="icon-theme" class="w-4 h-4"></i>
+        </button>
+
+        <!-- PETUGAS PIKET SELECTOR -->
+        <div class="flex items-center gap-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-full px-3 py-1.5 shadow-2xs">
+          <div class="w-7 h-7 rounded-full bg-sky-500 text-white flex items-center justify-center font-bold text-xs">
+            <i data-lucide="user" class="w-3.5 h-3.5"></i>
+          </div>
+          <select id="select-petugas" onchange="changePetugas(this.value)" class="text-xs font-bold text-slate-700 dark:text-slate-200 bg-transparent focus:outline-none cursor-pointer">
+            <option value="Sultan Maulana" class="dark:bg-slate-900">Sultan Maulana</option>
+            <option value="Dzaka Rozan" class="dark:bg-slate-900">Dzaka Rozan</option>
+            <option value="Ghani Rizky" class="dark:bg-slate-900">Ghani Rizky</option>
+          </select>
+        </div>
+      </div>
     </div>
 
-    <div id="notifAlert" class="alert alert-success">✅ Data berhasil disimpan!</div>
-
-    <div class="app-layout">
-        <!-- APP LEFT / CENTER MAIN CONTENT -->
-        <div class="main-app">
-            <!-- MENU TAB UTAMA -->
-            <div class="tab-menu">
-                <button class="tab-btn active" onclick="openMainTab('tabInput', this)">📥 Input Paket</button>
-                <button class="tab-btn" onclick="openMainTab('tabLive', this)">📋 Preview Data Live</button>
-                <button class="tab-btn" onclick="openMainTab('tabRekap', this)">📊 Rekap & Periodik</button>
-            </div>
-
-            <!-- TAB 1: FORM INPUT -->
-            <div id="tabInput" class="tab-content active">
-                <div class="card">
-                    <h3>Input Paket Masuk</h3>
-                    <br>
-                    
-                    <div class="shortcut-hint" id="shortcutGuide">
-                        ⚡ <strong>Speed Shortcut:</strong> Ketik Nama $\rightarrow$ Tekan <strong>Enter</strong> $\rightarrow$ Tekan Angka <strong>(1, 2, 3...)</strong> pilih kelas $\rightarrow$ Tekan <strong>Enter</strong>!
-                    </div>
-
-                    <form id="paketForm">
-                        <div class="form-group">
-                            <label for="tanggal">Tanggal Rekap / Paket Masuk</label>
-                            <input type="date" id="tanggal" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="nama">Nama Penerima</label>
-                            <input type="text" id="nama" required placeholder="Masukkan nama siswa/penerima" onkeydown="handleNamaKeydown(event)">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="kelas">Kelas (Tekan Angka 1, 2, 3...)</label>
-                            <select id="kelas" required onkeydown="handleKelasKeydown(event)">
-                                <option value="">-- Pilih Kelas --</option>
-                                <option value="12">12</option>
-                                <option value="11">11</option>
-                                <option value="10">10</option>
-                                <option value="9A">9A</option>
-                                <option value="9B">9B</option>
-                                <option value="9C">9C</option>
-                                <option value="9D">9D</option>
-                                <option value="9E">9E</option>
-                                <option value="8A">8A</option>
-                                <option value="8B">8B</option>
-                                <option value="8C">8C</option>
-                                <option value="8D">8D</option>
-                                <option value="8E">8E</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="keterangan">Keterangan (Opsional / Buat Luar Jadwal)</label>
-                            <input type="text" id="keterangan" placeholder="Contoh: Paket Online, Urgen, Titip Guru" onkeydown="handleKetKeydown(event)">
-                        </div>
-
-                        <button type="submit" class="btn-primary" id="btnSubmit">Simpan Data Paket (Enter)</button>
-                    </form>
-
-                    <div class="last-input-box" id="lastInputBox">
-                        <div class="last-input-title">📌 Input Terakhir:</div>
-                        <div class="last-input-detail" id="lastInputDetail">Belum ada data yang di-inputkan.</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 2: PREVIEW LIVE DATA -->
-            <div id="tabLive" class="tab-content">
-                <div class="card">
-                    <div class="section-title">
-                        <div>
-                            <h3>✅ Preview Data Sesuai Jadwal</h3>
-                            <div class="table-info-sub">Keterangan: Total <span id="countSesuaiLive">0</span> paket sesuai jadwal hari rekap</div>
-                        </div>
-                        <button class="btn-success" onclick="exportCSV('sesuai')">Export CSV (Sesuai)</button>
-                    </div>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Tanggal Rekap</th>
-                                    <th>Nama</th>
-                                    <th>Kelas</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabelSesuai"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="section-title">
-                        <div>
-                            <h3>⚠️ Preview Data Di Luar Jadwal</h3>
-                            <div class="table-info-sub">Keterangan: Total <span id="countLuarLive">0</span> paket di luar jadwal hari rekap</div>
-                        </div>
-                        <button class="btn-success" onclick="exportCSV('luar')">Export CSV (Di Luar)</button>
-                    </div>
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Tanggal Rekap</th>
-                                    <th>Nama</th>
-                                    <th>Kelas</th>
-                                    <th>Keterangan</th>
-                                    <th>Legalitas Status</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabelLuar"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 3: REKAP PERIODIK -->
-            <div id="tabRekap" class="tab-content">
-                <div class="card">
-                    <div class="section-title">
-                        <h3>📊 Rekapitulasi Data Paket</h3>
-                        <button class="btn-info" onclick="exportCSV('semua')">📊 Export Excel (Semua Data)</button>
-                    </div>
-                    <br>
-                    
-                    <div class="sub-tab-menu">
-                        <button class="sub-tab-btn active" onclick="filterRekap('hari', this)">Per Hari Ini</button>
-                        <button class="sub-tab-btn" onclick="filterRekap('minggu', this)">Per Minggu Ini</button>
-                        <button class="sub-tab-btn" onclick="filterRekap('bulan', this)">Per Bulan Ini</button>
-                        <button class="sub-tab-btn" onclick="filterRekap('semua', this)">Semua Data</button>
-                    </div>
-
-                    <div class="stat-grid">
-                        <div class="stat-card">
-                            <h4>Total Paket Filtered</h4>
-                            <div id="statTotal">0</div>
-                        </div>
-                        <div class="stat-card">
-                            <h4>Sesuai Jadwal</h4>
-                            <div id="statSesuai" style="color: var(--success);">0</div>
-                        </div>
-                        <div class="stat-card">
-                            <h4>Di Luar Jadwal</h4>
-                            <div id="statLuar" style="color: var(--warning);">0</div>
-                        </div>
-                    </div>
-
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Tanggal Rekap</th>
-                                    <th>Nama</th>
-                                    <th>Kelas</th>
-                                    <th>Kategori</th>
-                                    <th>Keterangan</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabelRekapPeriodik"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- RIGHT SIDEBAR: AI ASSISTANT PANEL -->
-        <div class="ai-panel">
-            <div class="ai-header">
-                <span>🤖 AI Control Assistant</span>
-                <button onclick="setApiKey()" style="background:none; border:none; cursor:pointer;" title="Set Gemini API Key">⚙️</button>
-            </div>
-
-            <div class="ai-chat-box" id="aiChatBox">
-                <div class="chat-msg chat-bot">
-                    Halo <strong>Bos Lanaa</strong>! Aku bisa diajak ngobrol santai utawa mbantu input/hapus/cek data paket otomatis lewat chat.
-                </div>
-            </div>
-
-            <form class="ai-input-area" onsubmit="handleAiChatSubmit(event)">
-                <input type="text" id="aiChatInput" placeholder="Ketik pesan / perintah..." required>
-                <button type="submit" class="btn-primary">Kirim</button>
-            </form>
-        </div>
+    <!-- NAVIGATION PILLS -->
+    <div class="bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
+      <div class="max-w-7xl mx-auto flex items-center gap-2 overflow-x-auto py-2 custom-scroll text-xs font-semibold">
+        <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0">
+          <i data-lucide="layout-dashboard" class="w-4 h-4 text-sky-500"></i>
+          <span>Dashboard</span>
+        </button>
+        <button onclick="navigate('input')" id="nav-input" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0">
+          <i data-lucide="plus-circle" class="w-4 h-4 text-emerald-500"></i>
+          <span>Input Paket Masuk</span>
+        </button>
+        <button onclick="navigate('live')" id="nav-live" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0">
+          <i data-lucide="list-checks" class="w-4 h-4 text-indigo-500"></i>
+          <span>Data Live Preview</span>
+        </button>
+        <button onclick="navigate('rekap')" id="nav-rekap" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0">
+          <i data-lucide="bar-chart-3" class="w-4 h-4 text-purple-500"></i>
+          <span>Rekapitulasi & Export</span>
+        </button>
+        <button onclick="navigate('migrasi')" id="nav-migrasi" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0">
+          <i data-lucide="arrow-left-right" class="w-4 h-4 text-amber-500"></i>
+          <span>Migrasi Data / Backup</span>
+        </button>
+      </div>
     </div>
+  </header>
 
-    <script>
-        // DATA LAWAS (124 DATA SEBELUMNYA)
-        const initialData = [
-            {"id":1725926400001,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"tamam atha","kelas":"9D","keterangan":"","isSesuai":true},
-            {"id":1725926400002,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"m syamil arroyan","kelas":"9D","keterangan":"","isSesuai":true},
-            {"id":1725926400003,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"rafa ziggy","kelas":"9C","keterangan":"","isSesuai":true},
-            {"id":1725926400004,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"ahmad sadam","kelas":"9D","keterangan":"","isSesuai":true},
-            {"id":1725926400005,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"asnanta hafis","kelas":"9D","keterangan":"","isSesuai":true},
-            {"id":1725926400006,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"rafa ziggy","kelas":"9C","keterangan":"","isSesuai":true},
-            {"id":1725926400007,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"m irgi faras","kelas":"9E","keterangan":"","isSesuai":true},
-            {"id":1725926400008,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"algana ziggy","kelas":"9E","keterangan":"","isSesuai":true},
-            {"id":1725926400009,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"dafa naufal","kelas":"9C","keterangan":"","isSesuai":true},
-            {"id":1725926400010,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"m rizki alfarizi","kelas":"9C","keterangan":"","isSesuai":true},
-            {"id":1725926400011,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"arfa firdaus","kelas":"9D","keterangan":"","isSesuai":true},
-            {"id":1725926400012,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"raihan ibni s","kelas":"9E","keterangan":"","isSesuai":true},
-            {"id":1725926400013,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"m fatan mubina","kelas":"9D","keterangan":"","isSesuai":true},
-            {"id":1725926400014,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"chesyl ferdinan","kelas":"9E","keterangan":"","isSesuai":true},
-            {"id":1725926400015,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"fadlan haris","kelas":"9D","keterangan":"","isSesuai":true},
-            {"id":1725926400016,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"khirul umam","kelas":"9D","keterangan":"","isSesuai":true},
-            {"id":1725926400017,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"danis","kelas":"9E","keterangan":"","isSesuai":true},
-            {"id":1725926400018,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"royan nafis","kelas":"9D","keterangan":"","isSesuai":true},
-            {"id":1725926400019,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"latif ayasi","kelas":"9D","keterangan":"","isSesuai":true},
-            {"id":1725926400020,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"dzaky alkhalifi","kelas":"9D","keterangan":"","isSesuai":true},
-            {"id":1725926400021,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"m haykal imna","kelas":"9C","keterangan":"","isSesuai":true},
-            {"id":1725926400022,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"asyam nadif","kelas":"9D","keterangan":"","isSesuai":true},
-            {"id":1725926400023,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"rifki pratama","kelas":"9C","keterangan":"","isSesuai":true},
-            {"id":1725926400024,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"rafandra gani","kelas":"9C","keterangan":"","isSesuai":true},
-            {"id":1725926400025,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"arkan hidayat","kelas":"9C","keterangan":"","isSesuai":true},
-            {"id":1725926400026,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"kaisan putra","kelas":"9D","keterangan":"","isSesuai":true},
-            {"id":1725926400027,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"azzan fadlurahman","kelas":"9E","keterangan":"","isSesuai":true},
-            {"id":1725926400028,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"yaqdan abri","kelas":"9E","keterangan":"","isSesuai":true},
-            {"id":1725926400029,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"galent nindriz","kelas":"9D","keterangan":"","isSesuai":true},
-            {"id":1725926400030,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"hibrizi bima","kelas":"9C","keterangan":"","isSesuai":true},
-            {"id":1725926400031,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"kanza satria","kelas":"9C","keterangan":"","isSesuai":true},
-            {"id":1725926400032,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"m juan aw","kelas":"9C","keterangan":"","isSesuai":true},
-            {"id":1725926400033,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"fetra alkindy","kelas":"9E","keterangan":"","isSesuai":true},
-            {"id":1725926400034,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"hafiz alwafi","kelas":"9D","keterangan":"","isSesuai":true},
-            {"id":1725926400035,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"sain nafal","kelas":"9D","keterangan":"","isSesuai":true},
-            {"id":1725926400036,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"prabaswara","kelas":"9E","keterangan":"","isSesuai":true},
-            {"id":1725926400037,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"anandito","kelas":"9E","keterangan":"","isSesuai":true},
-            {"id":1725926400038,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"widyan nafis","kelas":"9D","keterangan":"","isSesuai":true},
-            {"id":1725926400039,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"ahmad saddam","kelas":"9D","keterangan":"","isSesuai":true},
-            {"id":1725926400040,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"maher mayza","kelas":"9C","keterangan":"","isSesuai":true},
-            {"id":1725926400041,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"baim jibran","kelas":"9C","keterangan":"","isSesuai":true},
-            {"id":1725926400042,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"zidan hanif","kelas":"9D","keterangan":"","isSesuai":true},
-            {"id":1725926400043,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"kaisan putra","kelas":"9D","keterangan":"","isSesuai":true},
-            {"id":1725926400044,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"maher ibrahim","kelas":"9C","keterangan":"","isSesuai":true},
-            {"id":1725926400045,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"hudzaifah ibna","kelas":"9C","keterangan":"","isSesuai":true},
-            {"id":1726012800046,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"rafif azka","kelas":"8B","keterangan":"","isSesuai":true},
-            {"id":1726012800047,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"galang van dirga","kelas":"8A","keterangan":"","isSesuai":true},
-            {"id":1726012800048,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"zinefa venza","kelas":"8A","keterangan":"","isSesuai":true},
-            {"id":1726012800049,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"reza iqbal","kelas":"8A","keterangan":"","isSesuai":true},
-            {"id":1726012800050,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"rafiq abdur","kelas":"8B","keterangan":"","isSesuai":true},
-            {"id":1726012800051,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"aksel adiv","kelas":"8A","keterangan":"","isSesuai":true},
-            {"id":1726012800052,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"mahardika yafa","kelas":"8B","keterangan":"","isSesuai":true},
-            {"id":1726012800053,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"latih yafli","kelas":"8B","keterangan":"","isSesuai":true},
-            {"id":1726012800054,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"rafa viky","kelas":"8A","keterangan":"","isSesuai":true},
-            {"id":1726012800055,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"nur zaki alfatih","kelas":"8A","keterangan":"","isSesuai":true},
-            {"id":1726012800056,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"hamam faros","kelas":"8A","keterangan":"","isSesuai":true},
-            {"id":1726012800057,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"thufail rijal","kelas":"8A","keterangan":"","isSesuai":true},
-            {"id":1726012800058,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"reza iqbal","kelas":"8A","keterangan":"","isSesuai":true},
-            {"id":1726012800059,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"m fawwaz alzena","kelas":"8A","keterangan":"","isSesuai":true},
-            {"id":1726012800060,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"rafiq abdur","kelas":"8B","keterangan":"","isSesuai":true},
-            {"id":1726012800061,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"ghafar duha","kelas":"8A","keterangan":"","isSesuai":true},
-            {"id":1726012800062,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"pranav","kelas":"8B","keterangan":"","isSesuai":true},
-            {"id":1726012800063,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"hanafian bima","kelas":"8B","keterangan":"","isSesuai":true},
-            {"id":1726012800064,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"radityla earli","kelas":"8B","keterangan":"","isSesuai":true},
-            {"id":1726012800065,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"ghifari ghatan","kelas":"8B","keterangan":"","isSesuai":true},
-            {"id":1726012800066,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"mahardika","kelas":"8B","keterangan":"","isSesuai":true},
-            {"id":1726012800067,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"syafiq","kelas":"8A","keterangan":"","isSesuai":true},
-            {"id":1726012800068,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"nayaka","kelas":"8B","keterangan":"","isSesuai":true},
-            {"id":1726012800069,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"firt amri","kelas":"8B","keterangan":"","isSesuai":true},
-            {"id":1726012800070,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"galang fan","kelas":"8A","keterangan":"","isSesuai":true},
-            {"id":1726012800071,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"reyhan yasid","kelas":"8A","keterangan":"","isSesuai":true},
-            {"id":1726012800072,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"arsyad basim","kelas":"8B","keterangan":"","isSesuai":true},
-            {"id":1726012800073,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"venza","kelas":"8A","keterangan":"","isSesuai":true},
-            {"id":1726012800074,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"bagus najdzil","kelas":"8A","keterangan":"","isSesuai":true},
-            {"id":1726012800075,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"anjas","kelas":"8B","keterangan":"","isSesuai":true},
-            {"id":1726012800076,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"haykal","kelas":"8A","keterangan":"","isSesuai":true},
-            {"id":1726012800077,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"m alby sevano","kelas":"8B","keterangan":"","isSesuai":true},
-            {"id":1726012800078,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"baskar akhtar","kelas":"8B","keterangan":"","isSesuai":true},
-            {"id":1726012800079,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"anugrah syahrir","kelas":"8B","keterangan":"","isSesuai":true},
-            {"id":1726012800080,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"hamam","kelas":"8A","keterangan":"","isSesuai":true},
-            {"id":1726012800081,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"ibrahim","kelas":"8A","keterangan":"","isSesuai":true},
-            {"id":1726012800082,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"hikari alfariz","kelas":"8B","keterangan":"","isSesuai":true},
-            {"id":1726012800083,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"arsyafan wijaya","kelas":"8A","keterangan":"","isSesuai":true},
-            {"id":1726012800084,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"hisyam hilmi","kelas":"8B","keterangan":"","isSesuai":true},
-            {"id":1726012800085,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"dinu aftar","kelas":"8B","keterangan":"","isSesuai":true},
-            {"id":1726012800086,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"kian apta","kelas":"8B","keterangan":"","isSesuai":true},
-            {"id":1726012800087,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"arfa hikamy","kelas":"8B","keterangan":"","isSesuai":true},
-            {"id":1726012800088,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"faris bahtiar","kelas":"8B","keterangan":"","isSesuai":true},
-            {"id":1726012800089,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"mozila yusma","kelas":"8A","keterangan":"","isSesuai":true},
-            {"id":1726012800090,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"fawaz alzena","kelas":"8A","keterangan":"","isSesuai":true},
-            {"id":1726012800091,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"reza iqbal","kelas":"8A","keterangan":"","isSesuai":true},
-            {"id":1726012800092,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"sangguan","kelas":"8A","keterangan":"","isSesuai":true},
-            {"id":1725926400093,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"fawaz","kelas":"11","keterangan":"online","isSesuai":false},
-            {"id":1725926400094,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"bagas","kelas":"11","keterangan":"online","isSesuai":false},
-            {"id":1725926400095,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"atha ibni","kelas":"12","keterangan":"makanan","isSesuai":false},
-            {"id":1725926400096,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"haykal atsar","kelas":"8E","keterangan":"online","isSesuai":false},
-            {"id":1725926400097,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"m alby sevano","kelas":"8B","keterangan":"sajadah online","isSesuai":false},
-            {"id":1725926400098,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"m sakti","kelas":"9A","keterangan":"online","isSesuai":false},
-            {"id":1725926400099,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"athar zehan","kelas":"10","keterangan":"sabun zuzi muka online","isSesuai":false},
-            {"id":1725926400100,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"bayu hanan mumtaza","kelas":"10","keterangan":"buku & makanan","isSesuai":false},
-            {"id":1725926400101,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"akhtar rafif","kelas":"8C","keterangan":"onbline","isSesuai":false},
-            {"id":1725926400102,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"arsyad basim","kelas":"8B","keterangan":"online","isSesuai":false},
-            {"id":1725926400103,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"dinu afkar","kelas":"8A","keterangan":"parfum","isSesuai":false},
-            {"id":1725926400104,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"dinu afkar","kelas":"8A","keterangan":"parfum","isSesuai":false},
-            {"id":1725926400105,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"raditya earli","kelas":"8B","keterangan":"baju","isSesuai":false},
-            {"id":1725926400106,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"abyan hedit","kelas":"12","keterangan":"hr","isSesuai":false},
-            {"id":1725926400107,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"ahnaf nabihan","kelas":"9B","keterangan":"makanan","isSesuai":false},
-            {"id":1725926400108,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"bintang b","kelas":"12","keterangan":"baju koko","isSesuai":false},
-            {"id":1725926400109,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"raihan sabhi","kelas":"8E","keterangan":"sandal sopi","isSesuai":false},
-            {"id":1725926400110,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"arfa ha","kelas":"8B","keterangan":"baju koko","isSesuai":false},
-            {"id":1725926400111,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"kafka","kelas":"9B","keterangan":"makanan","isSesuai":false},
-            {"id":1725926400112,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"m fawwaz","kelas":"9B","keterangan":"online","isSesuai":false},
-            {"id":1725926400113,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"rafif hilmi","kelas":"9B","keterangan":"makanan","isSesuai":false},
-            {"id":1725926400114,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"aabid arkana","kelas":"10","keterangan":"buku","isSesuai":false},
-            {"id":1725926400115,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"arfa firdaus","kelas":"9B","keterangan":"","isSesuai":false},
-            {"id":1725926400116,"rawTanggal":"2026-09-10","tglFormatted":"Kamis, 10/09/2026","nama":"mukhlas yusuf","kelas":"12","keterangan":"parfum online","isSesuai":false},
-            {"id":1726012800117,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"mirza galant","kelas":"11","keterangan":"parfum","isSesuai":false},
-            {"id":1726012800118,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"m hamdan","kelas":"11","keterangan":"kaos kakiu","isSesuai":false},
-            {"id":1726012800119,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"fayrel","kelas":"8E","keterangan":"makanan","isSesuai":false},
-            {"id":1726012800120,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"aufa jafni","kelas":"8E","keterangan":"makanan","isSesuai":false},
-            {"id":1726012800121,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"baim sako","kelas":"8C","keterangan":"peci","isSesuai":false},
-            {"id":1726012800122,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"kenzi suryo","kelas":"8C","keterangan":"makanan","isSesuai":false},
-            {"id":1726012800123,"rawTanggal":"2026-09-11","tglFormatted":"Jumat, 11/09/2026","nama":"nur azzaki","kelas":"8D","keterangan":"jaket runing","isSesuai":false},
-            {"id":1726617600124,"rawTanggal":"2026-09-18","tglFormatted":"Jumat, 18/09/2026","nama":"arkan hidayat","kelas":"9C","keterangan":"online","isSesuai":false}
-        ];
+  <!-- LAYOUT GRID DENGAN MUSIC PLAYER SIDEBAR DI SISIH KIWA -->
+  <div class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="flex flex-col lg:flex-row gap-6 items-start">
+      
+      <!-- 🎵 SIDEBAR MUSIC PLAYER -->
+      <aside class="w-full lg:w-72 shrink-0 lg:sticky lg:top-24 space-y-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-4 shadow-xs transition-colors duration-300">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-xl bg-rose-500 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+                <i data-lucide="music" class="w-4 h-4 animate-bounce"></i>
+              </div>
+              <span class="text-xs font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">Music Player</span>
+            </div>
+            <span class="text-[10px] font-extrabold bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-full uppercase">Live Sync</span>
+          </div>
 
-        const jadwalHari = {
-            1: ["12"], 2: ["11", "10"], 3: ["9A", "9B"],
-            4: ["9C", "9D", "9E"], 5: ["8A", "8B"], 6: ["8C", "8D", "8E"], 0: []
-        };
+          <div class="flex gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-[11px] font-bold mb-3">
+            <button onclick="switchMusicTab('yt')" id="tab-m-yt" class="flex-1 py-1.5 rounded-lg bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-2xs transition">YouTube</button>
+            <button onclick="switchMusicTab('sp')" id="tab-m-sp" class="flex-1 py-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition">Spotify</button>
+          </div>
 
-        const namaHari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-        const inputTanggal = document.getElementById('tanggal');
-        inputTanggal.value = new Date().toISOString().split('T')[0];
+          <div id="player-yt-box" class="space-y-2.5">
+            <div class="w-full h-48 rounded-2xl overflow-hidden bg-slate-900 shadow-inner border border-slate-200 dark:border-slate-800">
+              <iframe id="iframe-yt" class="w-full h-full" src="https://www.youtube.com/embed/jfKfPfyJRdk" title="YouTube Music Player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="space-y-1">
+              <label class="text-[10px] font-bold text-slate-400 dark:text-slate-500 block">Link/ID Video YouTube:</label>
+              <div class="flex gap-1">
+                <input type="text" id="input-yt-url" placeholder="Paste link YouTube..." class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-lg p-2 text-[10px] font-semibold focus:outline-none" />
+                <button onclick="loadYouTubeURL()" class="bg-rose-500 hover:bg-rose-600 text-white px-3 py-1 rounded-lg text-[10px] font-bold transition">Set</button>
+              </div>
+            </div>
+          </div>
 
-        let dataRekap = JSON.parse(localStorage.getItem('rekapPaketData')) || initialData;
-        if (!localStorage.getItem('rekapPaketData')) {
-            localStorage.setItem('rekapPaketData', JSON.stringify(dataRekap));
-        }
+          <div id="player-sp-box" class="space-y-2.5 hidden">
+            <div class="h-52 w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-inner">
+              <iframe id="iframe-sp" class="w-full h-full" src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+            <div class="space-y-1">
+              <label class="text-[10px] font-bold text-slate-400 dark:text-slate-500 block">Link Track/Playlist Spotify:</label>
+              <div class="flex gap-1">
+                <input type="text" id="input-sp-url" placeholder="Paste link Spotify..." class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-lg p-2 text-[10px] font-semibold focus:outline-none" />
+                <button onclick="loadSpotifyURL()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1 rounded-lg text-[10px] font-bold transition">Set</button>
+              </div>
+            </div>
+          </div>
 
-        let apiKey = localStorage.getItem('gemini_api_key') || '';
+          <p class="text-[10px] text-slate-400 dark:text-slate-500 font-medium text-center mt-3">🎧 Musik tetep muter lan nyambung karo aktivitas rekap paket!</p>
+        </div>
+      </aside>
 
-        function updateInfoJadwal() {
-            if(!inputTanggal.value) return;
-            const selectedDate = new Date(inputTanggal.value + "T00:00:00");
-            const dayIndex = selectedDate.getDay();
-            const kelasAllowed = jadwalHari[dayIndex] || [];
-            
-            document.getElementById('infoHariIni').innerText = 
-                `Tanggal Dipilih: ${inputTanggal.value} (${namaHari[dayIndex]}) | Jadwal Kelas: ${kelasAllowed.length > 0 ? kelasAllowed.join(', ') : 'Tidak Ada Jadwal Reguler'}`;
+      <!-- MAIN CONTAINER UTAMA -->
+      <main class="flex-1 w-full space-y-6 min-w-0">
+        <div id="app-container"></div>
+      </main>
 
-            // Update Hint Guide
-            let guideText = `⚡ <strong>Shortcut Angka (${namaHari[dayIndex]}):</strong> `;
-            if (kelasAllowed.length > 0) {
-                kelasAllowed.forEach((k, idx) => {
-                    guideText += `[<strong>${idx + 1}</strong>] = Kelas ${k} | `;
-                });
-            } else {
-                guideText += `Ketik angka biasa utawa milih manual | `;
-            }
-            guideText += `[<strong>0</strong>] = Kelas 12`;
-            document.getElementById('shortcutGuide').innerHTML = guideText;
-        }
+    </div>
+  </div>
 
-        inputTanggal.addEventListener('change', updateInfoJadwal);
-        updateInfoJadwal();
-        renderTable();
+  <footer class="bg-white dark:bg-slate-900 border-t border-slate-200/80 dark:border-slate-800 py-4 text-center text-xs text-slate-400 dark:text-slate-500 transition-colors duration-300">
+    <p>“Streamlined Package Tracking System” • Rekap Paket Sekolah</p>
+  </footer>
 
-        // LOGIC TAB UTAMA
-        function openMainTab(tabId, btn) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            
-            document.getElementById(tabId).classList.add('active');
-            btn.classList.add('active');
+  <script>
+    // --- SERVICE WORKER REGISTRATION (OFFLINE MODE) ---
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(() => console.log('✅ Offline Mode Ready!'))
+          .catch((err) => console.log('Offline SW Error:', err));
+      });
+    }
 
-            if(tabId === 'tabRekap') {
-                filterRekap('hari', document.querySelector('.sub-tab-btn'));
-            } else if (tabId === 'tabInput') {
-                setTimeout(() => document.getElementById('nama').focus(), 100);
-            }
-        }
+    // --- NETWORK STATUS DETECTOR ---
+    function updateOnlineStatus() {
+      const badge = document.getElementById('badge-online-status');
+      if (!badge) return;
 
-        // KEYBOARD SHORTCUT ENGINE
-        function handleNamaKeydown(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                if (document.getElementById('nama').value.trim()) {
-                    document.getElementById('kelas').focus();
-                }
-            }
-        }
+      if (navigator.onLine) {
+        badge.className = "text-[10px] bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1";
+        badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> ONLINE`;
+      } else {
+        badge.className = "text-[10px] bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-400 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1";
+        badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> OFFLINE MODE`;
+      }
+    }
 
-        function handleKelasKeydown(e) {
-            const selectedDate = new Date(inputTanggal.value + "T00:00:00");
-            const dayIndex = selectedDate.getDay();
-            const kelasAllowed = jadwalHari[dayIndex] || [];
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
 
-            if (e.key >= '1' && e.key <= '9') {
-                e.preventDefault();
-                const idx = parseInt(e.key) - 1;
-                if (idx < kelasAllowed.length) {
-                    document.getElementById('kelas').value = kelasAllowed[idx];
-                }
-            } else if (e.key === '0') {
-                e.preventDefault();
-                document.getElementById('kelas').value = "12";
-            }
+    // --- DARK MODE SYSTEM ---
+    function initTheme() {
+      const isDark = localStorage.getItem('theme_mode') === 'dark';
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      updateThemeIcon(isDark);
+    }
 
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                if (document.getElementById('kelas').value) {
-                    saveFormData();
-                }
-            }
-        }
+    function toggleDarkMode() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme_mode', isDark ? 'dark' : 'light');
+      updateThemeIcon(isDark);
+    }
 
-        function handleKetKeydown(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                saveFormData();
-            }
-        }
+    function updateThemeIcon(isDark) {
+      const icon = document.getElementById('icon-theme');
+      if (icon) {
+        icon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+        lucide.createIcons();
+      }
+    }
 
-        // SUBMIT FORM
-        document.getElementById('paketForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            saveFormData();
-        });
+    // --- MUSIC PLAYER LOGIC ---
+    function switchMusicTab(type) {
+      const ytBox = document.getElementById('player-yt-box');
+      const spBox = document.getElementById('player-sp-box');
+      const btnYt = document.getElementById('tab-m-yt');
+      const btnSp = document.getElementById('tab-m-sp');
 
-        function saveFormData() {
-            const rawTanggal = inputTanggal.value;
-            const selectedDate = new Date(rawTanggal + "T00:00:00");
-            const dayIndex = selectedDate.getDay();
-            const kelasAllowed = jadwalHari[dayIndex] || [];
+      if (type === 'yt') {
+        ytBox.classList.remove('hidden');
+        spBox.classList.add('hidden');
+        btnYt.classList.add('bg-white', 'dark:bg-slate-700', 'text-slate-800', 'dark:text-white', 'shadow-2xs');
+        btnYt.classList.remove('text-slate-500', 'dark:text-slate-400');
+        btnSp.classList.remove('bg-white', 'dark:bg-slate-700', 'text-slate-800', 'dark:text-white', 'shadow-2xs');
+        btnSp.classList.add('text-slate-500', 'dark:text-slate-400');
+      } else {
+        spBox.classList.remove('hidden');
+        ytBox.classList.add('hidden');
+        btnSp.classList.add('bg-white', 'dark:bg-slate-700', 'text-slate-800', 'dark:text-white', 'shadow-2xs');
+        btnSp.classList.remove('text-slate-500', 'dark:text-slate-400');
+        btnYt.classList.remove('bg-white', 'dark:bg-slate-700', 'text-slate-800', 'dark:text-white', 'shadow-2xs');
+        btnYt.classList.add('text-slate-500', 'dark:text-slate-400');
+      }
+    }
 
-            const nama = document.getElementById('nama').value.trim();
-            const kelas = document.getElementById('kelas').value;
-            const keterangan = document.getElementById('keterangan').value.trim();
+    function loadYouTubeURL() {
+      const val = document.getElementById('input-yt-url').value.trim();
+      if (!val) return;
 
-            if (!nama || !kelas) return;
+      let videoId = val;
+      if (val.includes('v=')) {
+        videoId = val.split('v=')[1].split('&')[0];
+      } else if (val.includes('youtu.be/')) {
+        videoId = val.split('youtu.be/')[1].split('?')[0];
+      }
 
-            const tglFormatted = `${namaHari[dayIndex]}, ${selectedDate.toLocaleDateString('id-ID')}`;
-            const isSesuai = kelasAllowed.includes(kelas);
+      document.getElementById('iframe-yt').src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+    }
 
-            const newItem = {
-                id: Date.now(),
-                rawTanggal,
-                tglFormatted,
-                nama,
-                kelas,
-                keterangan,
-                isSesuai
-            };
+    function loadSpotifyURL() {
+      const val = document.getElementById('input-sp-url').value.trim();
+      if (!val) return;
 
-            dataRekap.push(newItem);
-            localStorage.setItem('rekapPaketData', JSON.stringify(dataRekap));
-            renderTable();
+      let embedUrl = val;
+      if (!val.includes('/embed/')) {
+        embedUrl = val.replace('spotify.com/', 'spotify.com/embed/');
+      }
 
-            // Reset Form & Refocus
-            document.getElementById('nama').value = '';
-            document.getElementById('kelas').value = '';
-            document.getElementById('keterangan').value = '';
+      document.getElementById('iframe-sp').src = embedUrl;
+    }
 
-            const notifAlert = document.getElementById('notifAlert');
-            notifAlert.innerText = "✅ Data berhasil disimpan!";
-            notifAlert.style.display = 'block';
-            setTimeout(() => { notifAlert.style.display = 'none'; }, 2000);
+    // --- JADWAL HARI ---
+    const jadwalHari = {
+      1: ["12"],                           // Senin
+      2: ["11", "10"],                     // Selasa
+      3: ["9A", "9B"],                     // Rabu
+      4: ["9C", "9D", "9E"],               // Kamis
+      5: ["8A", "8B"],                     // Jumat
+      6: ["8C", "8D", "8E"],               // Sabtu
+      0: []                                // Minggu
+    };
+    const namaHari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+    const allKelasList = ["12", "11", "10", "9A", "9B", "9C", "9D", "9E", "8A", "8B", "8C", "8D", "8E"];
 
-            document.getElementById('nama').focus();
-        }
+    // Storage Engine & State
+    let dataRekap = JSON.parse(localStorage.getItem('rekapPaketData_UI')) || JSON.parse(localStorage.getItem('rekapPaketData')) || [];
+    let currentPetugas = localStorage.getItem('activePetugas_UI') || "Sultan Maulana";
+    let selectedKelasInput = "";
+    let lastSelectedDate = new Date().toISOString().split('T')[0]; // Menyimpan tanggal terpilih
+    let activeFilterRekap = "hari";
 
-        function deleteItem(id) {
-            if (confirm("Apakah Bos yakin mau menghapus data ini?")) {
-                dataRekap = dataRekap.filter(item => item.id !== id);
-                localStorage.setItem('rekapPaketData', JSON.stringify(dataRekap));
-                renderTable();
-            }
-        }
+    function saveDB() {
+      localStorage.setItem('rekapPaketData_UI', JSON.stringify(dataRekap));
+      localStorage.setItem('rekapPaketData', JSON.stringify(dataRekap));
+    }
 
-        function renderTable() {
-            const tbodySesuai = document.getElementById('tabelSesuai');
-            const tbodyLuar = document.getElementById('tabelLuar');
-            const lastInputDetail = document.getElementById('lastInputDetail');
+    function changePetugas(name) {
+      currentPetugas = name;
+      localStorage.setItem('activePetugas_UI', name);
+      if (currentTab === 'dashboard') {
+        renderDashboard(document.getElementById('app-container'));
+      }
+    }
 
-            tbodySesuai.innerHTML = ''; tbodyLuar.innerHTML = '';
+    let currentTab = 'dashboard';
 
-            let countSesuai = 0;
-            let countLuar = 0;
+    function navigate(tabId) {
+      currentTab = tabId;
+      document.querySelectorAll('.nav-pill').forEach(btn => {
+        btn.classList.remove('bg-sky-500', 'text-white', 'shadow-sm');
+        btn.classList.add('text-slate-600', 'dark:text-slate-300');
+      });
+      const activeBtn = document.getElementById('nav-' + tabId);
+      if (activeBtn) {
+        activeBtn.classList.add('bg-sky-500', 'text-white', 'shadow-sm');
+        activeBtn.classList.remove('text-slate-600', 'dark:text-slate-300');
+      }
 
-            dataRekap.forEach(item => {
-                if (item.isSesuai) {
-                    countSesuai++;
-                    tbodySesuai.innerHTML += `
-                        <tr>
-                            <td>${item.tglFormatted}</td>
-                            <td>${item.nama}</td>
-                            <td>${item.kelas}</td>
-                            <td><span class="badge badge-success">Sesuai Jadwal</span></td>
-                            <td><button class="btn-danger" onclick="deleteItem(${item.id})">Hapus</button></td>
-                        </tr>`;
-                } else {
-                    countLuar++;
-                    let badgeLegal = item.keterangan !== "" 
-                        ? `<span class="badge badge-warning">Dilegalkan (${item.keterangan})</span>` 
-                        : `<span class="badge badge-danger">Tidak Sesuai (Tanpa Keterangan)</span>`;
+      const container = document.getElementById('app-container');
+      if (tabId === 'dashboard') renderDashboard(container);
+      else if (tabId === 'input') renderInput(container);
+      else if (tabId === 'live') renderLive(container);
+      else if (tabId === 'rekap') renderRekap(container);
+      else if (tabId === 'migrasi') renderMigrasi(container);
 
-                    tbodyLuar.innerHTML += `
-                        <tr>
-                            <td>${item.tglFormatted}</td>
-                            <td>${item.nama}</td>
-                            <td>${item.kelas}</td>
-                            <td>${item.keterangan || '-'}</td>
-                            <td>${badgeLegal}</td>
-                            <td><button class="btn-danger" onclick="deleteItem(${item.id})">Hapus</button></td>
-                        </tr>`;
-                }
-            });
+      lucide.createIcons();
+    }
 
-            document.getElementById('totalHeaderCount').innerText = dataRekap.length;
-            document.getElementById('countSesuaiLive').innerText = countSesuai;
-            document.getElementById('countLuarLive').innerText = countLuar;
+    // --- DASHBOARD VIEW ---
+    function renderDashboard(container) {
+      const todayISO = new Date().toISOString().split('T')[0];
+      const todayIndex = new Date().getDay();
+      const kelasHariIni = jadwalHari[todayIndex] || [];
 
-            if (dataRekap.length > 0) {
-                const lastItem = dataRekap[dataRekap.length - 1];
-                const statusKat = lastItem.isSesuai 
-                    ? `<strong style="color:var(--success);">Sesuai Jadwal</strong>` 
-                    : `<strong style="color:var(--warning);">Di Luar Jadwal (${lastItem.keterangan || 'Tanpa Ket.'})</strong>`;
+      const todayData = dataRekap.filter(d => d.rawTanggal === todayISO);
+      const countSesuai = todayData.filter(d => d.isSesuai).length;
+      const countLuar = todayData.filter(d => !d.isSesuai).length;
 
-                lastInputDetail.innerHTML = `<strong>${lastItem.nama}</strong> (Kelas ${lastItem.kelas}) - ${lastItem.tglFormatted} | Status: ${statusKat}`;
-            } else {
-                lastInputDetail.innerText = "Belum ada data yang di-inputkan.";
-            }
-        }
+      let titleSambutan = `Selamat Datang, ${currentPetugas} 👋`;
+      let subSambutan = "Selamat bertugas! Rekap penerimaan paket siswa harian makin gampang, akurat, lan terorganisir.";
 
-        function filterRekap(periode, btn) {
-            document.querySelectorAll('.sub-tab-btn').forEach(el => el.classList.remove('active'));
-            if(btn) btn.classList.add('active');
+      if (currentPetugas === "Sultan Maulana") {
+        titleSambutan = "Yo watsap Bos Lanaa! 🚀";
+        subSambutan = "Siap rekap paket dina iki? Bikin kabeh data rapi, sat-set, lan terorganisir tanpa ribet!";
+      }
 
-            const now = new Date();
-            const todayStr = now.toISOString().split('T')[0];
+      document.getElementById('select-petugas').value = currentPetugas;
 
-            let filtered = dataRekap.filter(item => {
-                if (!item.rawTanggal) return false;
-                const itemDate = new Date(item.rawTanggal + "T00:00:00");
+      container.innerHTML = `
+        <div class="rg-gradient rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
+          <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="space-y-2">
+              <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Sistem Monitoring Paket Aktif</span>
+              </div>
+              <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">
+                ${titleSambutan}
+              </h2>
+              <p class="text-white/90 text-sm max-w-xl">
+                ${subSambutan}
+              </p>
+            </div>
+            <div class="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-2xl flex items-center gap-4 text-xs shrink-0">
+              <div class="w-12 h-12 rounded-xl bg-white text-sky-600 flex items-center justify-center font-bold text-lg shadow-sm">
+                <i data-lucide="calendar" class="w-6 h-6 text-sky-600"></i>
+              </div>
+              <div>
+                <span class="text-white/70 block text-[11px] font-semibold">Hari Ini: ${namaHari[todayIndex]}</span>
+                <span class="text-white font-bold text-sm block">Jadwal Kelas: ${kelasHariIni.length > 0 ? kelasHariIni.join(', ') : 'Libur Reguler'}</span>
+              </div>
+            </div>
+          </div>
+        </div>
 
-                if (periode === 'hari') {
-                    return item.rawTanggal === todayStr;
-                } else if (periode === 'minggu') {
-                    const diffTime = Math.abs(now - itemDate);
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                    return diffDays <= 7;
-                } else if (periode === 'bulan') {
-                    return itemDate.getMonth() === now.getMonth() && itemDate.getFullYear() === now.getFullYear();
-                }
-                return true;
-            });
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <div class="flex items-center justify-between text-slate-400 dark:text-slate-500 text-xs font-bold mb-2">
+              <span>TOTAL PAKET HARI INI</span>
+              <i data-lucide="package" class="w-4 h-4 text-sky-500"></i>
+            </div>
+            <div class="text-3xl font-black text-slate-900 dark:text-white">${todayData.length}</div>
+            <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Total masuk tanggal ${todayISO}</p>
+          </div>
 
-            const total = filtered.length;
-            const sesuai = filtered.filter(i => i.isSesuai).length;
-            const luar = total - sesuai;
+          <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <div class="flex items-center justify-between text-slate-400 dark:text-slate-500 text-xs font-bold mb-2">
+              <span>SESUAI JADWAL</span>
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
+            </div>
+            <div class="text-3xl font-black text-emerald-600 dark:text-emerald-400">${countSesuai}</div>
+            <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Sesuai kelas reguler</p>
+          </div>
 
-            document.getElementById('statTotal').innerText = total;
-            document.getElementById('statSesuai').innerText = sesuai;
-            document.getElementById('statLuar').innerText = luar;
+          <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <div class="flex items-center justify-between text-slate-400 dark:text-slate-500 text-xs font-bold mb-2">
+              <span>DI LUAR JADWAL / ONLINE</span>
+              <i data-lucide="alert-circle" class="w-4 h-4 text-amber-500"></i>
+            </div>
+            <div class="text-3xl font-black text-amber-600 dark:text-amber-400">${countLuar}</div>
+            <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Paket pengecualian/legalitas</p>
+          </div>
+        </div>
 
-            const tbody = document.getElementById('tabelRekapPeriodik');
-            tbody.innerHTML = '';
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Rekap Input Terbaru</h3>
+              <p class="text-xs text-slate-400 dark:text-slate-500">Data penerimaan paket terkini</p>
+            </div>
+            <button onclick="navigate('live')" class="text-xs font-bold text-sky-600 dark:text-sky-400 hover:text-sky-700 flex items-center gap-1">
+              Lihat Semua <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="text-slate-400 dark:text-slate-500 border-b border-slate-100 dark:border-slate-800 font-bold uppercase tracking-wider">
+                <tr>
+                  <th class="pb-3">Tanggal Rekap</th>
+                  <th class="pb-3">Nama Penerima</th>
+                  <th class="pb-3">Kelas</th>
+                  <th class="pb-3">Petugas</th>
+                  <th class="pb-3">Status / Legalitas</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+                ${dataRekap.slice(-5).reverse().map(d => `
+                  <tr>
+                    <td class="py-3 font-medium text-slate-500 dark:text-slate-400">${d.tglFormatted || d.rawTanggal}</td>
+                    <td class="py-3 font-bold text-slate-900 dark:text-white">${d.nama}</td>
+                    <td class="py-3 font-semibold text-slate-700 dark:text-slate-300">${d.kelas}</td>
+                    <td class="py-3 font-medium text-slate-500 dark:text-slate-400">${d.petugas || '-'}</td>
+                    <td class="py-3">
+                      ${d.isSesuai 
+                        ? `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400">Sesuai Jadwal</span>`
+                        : `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400">${d.keterangan ? 'Dilegalkan (' + d.keterangan + ')' : 'Luar Jadwal'}</span>`
+                      }
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
 
-            if(filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#94a3b8;">Ora ana data rekap kanggo periode kiye.</td></tr>`;
-                return;
-            }
+    // --- INPUT VIEW ---
+    function renderInput(container) {
+      selectedKelasInput = "";
+      const dateToUse = lastSelectedDate || new Date().toISOString().split('T')[0];
+      const lastRecord = dataRekap.length > 0 ? dataRekap[dataRekap.length - 1] : null;
 
-            filtered.forEach(item => {
-                let kat = item.isSesuai 
-                    ? `<span class="badge badge-success">Sesuai Jadwal</span>`
-                    : `<span class="badge badge-warning">Di Luar Jadwal</span>`;
+      container.innerHTML = `
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs p-6 sm:p-8 space-y-6">
+          <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">Input Paket Masuk</h2>
 
-                tbody.innerHTML += `
+          <form id="formPaket" onsubmit="handleSavePaket(event)" class="space-y-6">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Tanggal Rekap / Paket Masuk</label>
+              <input type="date" id="inp-tanggal" value="${dateToUse}" onchange="updateSelectedDate(this.value)" required class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 text-sm font-semibold focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Nama Penerima</label>
+              <input type="text" id="inp-nama" required placeholder="Masukkan nama siswa atau penerima" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 text-sm font-medium focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">Pilih Kelas</label>
+              <div id="kelas-btn-container" class="flex flex-wrap gap-2.5"></div>
+              <p class="text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-2">Hijau = sesuai jadwal (Diutamakan di atas). Merah = di luar jadwal.</p>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">Keterangan Paket</label>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-2">
+                <button type="button" onclick="setKeteranganQuick('Online')" class="py-2.5 px-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs transition">Online</button>
+                <button type="button" onclick="setKeteranganQuick('Non-online')" class="py-2.5 px-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs transition">Non-online</button>
+                <button type="button" onclick="setKeteranganQuick('HRL')" class="py-2.5 px-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs transition">HRL</button>
+                <button type="button" onclick="setKeteranganQuick('Food')" class="py-2.5 px-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs transition">Food</button>
+              </div>
+              <input type="text" id="inp-keterangan" placeholder="Atau ketik keterangan khusus di sini..." class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 text-xs font-medium focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
+            </div>
+
+            <button type="submit" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-xl text-sm shadow-md transition uppercase tracking-wider">
+              SIMPAN DATA PAKET
+            </button>
+          </form>
+
+          <!-- STATUS INPUT TERAKHIR (TANPA NOTIF POPUP) -->
+          <div id="card-last-record" class="bg-sky-50/60 dark:bg-sky-950/40 border border-sky-100 dark:border-sky-900 rounded-2xl p-4 flex items-center justify-between transition-all duration-300 ${lastRecord ? '' : 'hidden'}">
+            <div class="flex items-center gap-3">
+              <span class="text-lg">✅</span>
+              <div class="text-xs">
+                <span class="font-extrabold text-slate-800 dark:text-slate-200 block">Input Terakhir Terkini</span>
+                <span id="txt-last-record-detail" class="text-slate-500 dark:text-slate-400 font-medium">${lastRecord ? `${lastRecord.nama} — Kelas ${lastRecord.kelas} \vert{}${lastRecord.tglFormatted || lastRecord.rawTanggal}` : ''}</span>
+              </div>
+            </div>
+            <span class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950 px-2.5 py-1 rounded-full uppercase">Tersimpan</span>
+          </div>
+        </div>
+      `;
+
+      renderKelasButtons(dateToUse);
+    }
+
+    function updateSelectedDate(val) {
+      lastSelectedDate = val;
+      renderKelasButtons(val);
+    }
+
+    function renderKelasButtons(rawDate) {
+      const selectedDate = new Date(rawDate + "T00:00:00");
+      const dayIndex = selectedDate.getDay();
+      const kelasAllowed = jadwalHari[dayIndex] || [];
+      const container = document.getElementById('kelas-btn-container');
+
+      if (!container) return;
+
+      const sortedKelas = [...allKelasList].sort((a, b) => {
+        const aSesuai = kelasAllowed.includes(a);
+        const bSesuai = kelasAllowed.includes(b);
+        if (aSesuai && !bSesuai) return -1;
+        if (!aSesuai && bSesuai) return 1;
+        return 0;
+      });
+
+      container.innerHTML = sortedKelas.map(k => {
+        const isSesuai = kelasAllowed.includes(k);
+        const isSelected = selectedKelasInput === k;
+        
+        let bgClass = isSesuai ? "bg-emerald-600 hover:bg-emerald-700 text-white" : "bg-rose-500 hover:bg-rose-600 text-white";
+        let borderClass = isSelected ? "ring-4 ring-sky-300 dark:ring-sky-500 scale-105" : "";
+
+        return `
+          <button type="button" onclick="selectKelasBtn('${k}')" id="btn-k-${k}" class="w-12 h-10 sm:w-14 sm:h-11 rounded-xl font-extrabold text-xs sm:text-sm shadow-xs transition flex items-center justify-center ${bgClass} ${borderClass}">
+            ${k}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectKelasBtn(k) {
+      selectedKelasInput = k;
+      const rawDate = document.getElementById('inp-tanggal').value;
+      renderKelasButtons(rawDate);
+    }
+
+    function setKeteranganQuick(val) {
+      document.getElementById('inp-keterangan').value = val;
+    }
+
+    function handleSavePaket(e) {
+      e.preventDefault();
+
+      if (!selectedKelasInput) {
+        alert("⚠️ Harap pilih salah satu Kelas terlebih dahulu!");
+        return;
+      }
+
+      const rawTanggal = document.getElementById('inp-tanggal').value;
+      lastSelectedDate = rawTanggal; // Menjaga tanggal tetep padha pas disimpen
+
+      const selectedDate = new Date(rawTanggal + "T00:00:00");
+      const dayIndex = selectedDate.getDay();
+      const kelasAllowed = jadwalHari[dayIndex] || [];
+
+      const nama = document.getElementById('inp-nama').value.trim();
+      const kelas = selectedKelasInput;
+      const keterangan = document.getElementById('inp-keterangan').value.trim();
+
+      const tglFormatted = `${namaHari[dayIndex]}, ${selectedDate.toLocaleDateString('id-ID')}`;
+      const isSesuai = kelasAllowed.includes(kelas);
+
+      const newItem = {
+        id: Date.now(),
+        rawTanggal,
+        tglFormatted,
+        nama,
+        kelas,
+        keterangan,
+        isSesuai,
+        petugas: currentPetugas
+      };
+
+      dataRekap.push(newItem);
+      saveDB();
+
+      // Reset Isian Nama & Keterangan wae (Tanggal & Kelas Tetep Berada ing Posisine)
+      document.getElementById('inp-nama').value = '';
+      document.getElementById('inp-keterangan').value = '';
+      selectedKelasInput = "";
+      renderKelasButtons(rawTanggal);
+
+      // Update Card Status Input Terakhir Tanpa Alert Pop-up
+      const cardRecord = document.getElementById('card-last-record');
+      const txtRecord = document.getElementById('txt-last-record-detail');
+      
+      if (cardRecord && txtRecord) {
+        txtRecord.innerText = `${newItem.nama} — Kelas ${newItem.kelas} | ${newItem.tglFormatted || newItem.rawTanggal}`;
+        cardRecord.classList.remove('hidden');
+        
+        // Efek visual kedhep ijo sedhela minangka notifikasi sukses
+        cardRecord.classList.add('ring-2', 'ring-emerald-500');
+        setTimeout(() => {
+          cardRecord.classList.remove('ring-2', 'ring-emerald-500');
+        }, 1000);
+      }
+
+      // Fokuskan maneh marang input nama ben cepet
+      document.getElementById('inp-nama').focus();
+    }
+
+    // --- LIVE VIEW ---
+    function renderLive(container) {
+      const sesuai = dataRekap.filter(d => d.isSesuai);
+      const luar = dataRekap.filter(d => !d.isSesuai);
+
+      container.innerHTML = `
+        <div class="space-y-6">
+          <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white mb-4">✅ Data Sesuai Jadwal</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 dark:bg-slate-800 font-bold text-slate-400 dark:text-slate-400 uppercase">
+                  <tr><th class="p-3">Tanggal</th><th class="p-3">Nama</th><th class="p-3">Kelas</th><th class="p-3">Petugas</th><th class="p-3">Aksi</th></tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+                  ${sesuai.map(d => `
                     <tr>
-                        <td>${item.tglFormatted}</td>
-                        <td>${item.nama}</td>
-                        <td>${item.kelas}</td>
-                        <td>${kat}</td>
-                        <td>${item.keterangan || '-'}</td>
-                    </tr>`;
-            });
+                      <td class="p-3">${d.tglFormatted || d.rawTanggal}</td>
+                      <td class="p-3 font-bold text-slate-900 dark:text-white">${d.nama}</td>
+                      <td class="p-3 font-semibold">${d.kelas}</td>
+                      <td class="p-3 text-slate-500 dark:text-slate-400">${d.petugas || '-'}</td>
+                      <td class="p-3"><button onclick="deletePaket(${d.id})" class="text-rose-600 dark:text-rose-400 font-bold hover:underline">Hapus</button></td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white mb-4">⚠️ Data Di Luar Jadwal (Online/Izin)</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 dark:bg-slate-800 font-bold text-slate-400 dark:text-slate-400 uppercase">
+                  <tr><th class="p-3">Tanggal</th><th class="p-3">Nama</th><th class="p-3">Kelas</th><th class="p-3">Keterangan</th><th class="p-3">Petugas</th><th class="p-3">Status</th><th class="p-3">Aksi</th></tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+                  ${luar.map(d => `
+                    <tr>
+                      <td class="p-3">${d.tglFormatted || d.rawTanggal}</td>
+                      <td class="p-3 font-bold text-slate-900 dark:text-white">${d.nama}</td>
+                      <td class="p-3 font-semibold">${d.kelas}</td>
+                      <td class="p-3">${d.keterangan || '-'}</td>
+                      <td class="p-3 text-slate-500 dark:text-slate-400">${d.petugas || '-'}</td>
+                      <td class="p-3">
+                        <span class="px-2 py-0.5 rounded font-bold text-[10px] ${d.keterangan ? 'bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-400' : 'bg-rose-100 dark:bg-rose-950/80 text-rose-800 dark:text-rose-400'}">
+                          ${d.keterangan ? 'Dilegalkan' : 'Belum Dilegalkan'}
+                        </span>
+                      </td>
+                      <td class="p-3"><button onclick="deletePaket(${d.id})" class="text-rose-600 dark:text-rose-400 font-bold hover:underline">Hapus</button></td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function deletePaket(id) {
+      if (confirm('Apakah Bos yakin mau menghapus data ini?')) {
+        dataRekap = dataRekap.filter(d => d.id !== id);
+        saveDB();
+        navigate(currentTab);
+      }
+    }
+
+    // --- REKAP VIEW ---
+    function renderRekap(container) {
+      const todayISO = new Date().toISOString().split('T')[0];
+
+      container.innerHTML = `
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-6">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">📊</span>
+              <h2 class="text-lg font-extrabold text-slate-900 dark:text-white">Rekapitulasi Data Paket</h2>
+            </div>
+            <button onclick="exportCSV('semua')" class="px-5 py-2.5 bg-sky-500 hover:bg-sky-600 text-white font-extrabold rounded-xl text-xs shadow-sm transition">
+              Export Semua Data
+            </button>
+          </div>
+
+          <div class="flex flex-wrap gap-2 border-b border-slate-100 dark:border-slate-800 pb-4">
+            <button onclick="filterPeriodik('hari', this)" class="sub-filter-btn px-4 py-2 rounded-full text-xs font-extrabold transition bg-sky-500 text-white shadow-xs">Hari Ini</button>
+            <button onclick="filterPeriodik('minggu', this)" class="sub-filter-btn px-4 py-2 rounded-full text-xs font-extrabold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">Minggu Ini</button>
+            <button onclick="filterPeriodik('bulan', this)" class="sub-filter-btn px-4 py-2 rounded-full text-xs font-extrabold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">Bulan Ini</button>
+            <button onclick="filterPeriodik('semua', this)" class="sub-filter-btn px-4 py-2 rounded-full text-xs font-extrabold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">Semua Data</button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="bg-white dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs text-center space-y-1">
+              <span class="text-xs font-bold text-slate-400 dark:text-slate-400">Total Paket</span>
+              <div id="stat-total" class="text-3xl font-black text-slate-900 dark:text-white">0</div>
+            </div>
+            <div class="bg-white dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs text-center space-y-1">
+              <span class="text-xs font-bold text-slate-400 dark:text-slate-400">Sesuai Jadwal</span>
+              <div id="stat-sesuai" class="text-3xl font-black text-emerald-600 dark:text-emerald-400">0</div>
+            </div>
+            <div class="bg-white dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs text-center space-y-1">
+              <span class="text-xs font-bold text-slate-400 dark:text-slate-400">Di Luar Jadwal</span>
+              <div id="stat-luar" class="text-3xl font-black text-amber-600 dark:text-amber-400">0</div>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 dark:bg-slate-800/80 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="space-y-1">
+              <span class="text-xs font-extrabold text-slate-800 dark:text-slate-200 block">📅 Export Rentang Tanggal Khusus:</span>
+              <div class="flex items-center gap-2">
+                <input type="date" id="export-start" value="${todayISO}" class="bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100 rounded-lg p-2 text-xs font-bold" />
+                <span class="text-xs font-bold text-slate-400">s/d</span>
+                <input type="date" id="export-end" value="${todayISO}" class="bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100 rounded-lg p-2 text-xs font-bold" />
+              </div>
+            </div>
+            <button onclick="exportCSVByDateRange()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow-xs transition shrink-0">
+              Export Rentang Tanggal
+            </button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="text-slate-500 dark:text-slate-400 font-extrabold border-b border-slate-100 dark:border-slate-800">
+                <tr>
+                  <th class="pb-3 w-32">Tanggal</th>
+                  <th class="pb-3">Nama</th>
+                  <th class="pb-3 w-20">Kelas</th>
+                  <th class="pb-3 w-32">Kategori</th>
+                  <th class="pb-3">Keterangan</th>
+                </tr>
+              </thead>
+              <tbody id="tabel-rekap-body" class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300"></tbody>
+            </table>
+          </div>
+        </div>
+      `;
+
+      filterPeriodik('hari', document.querySelector('.sub-filter-btn'));
+    }
+
+    function filterPeriodik(period, btn) {
+      document.querySelectorAll('.sub-filter-btn').forEach(b => {
+        b.classList.remove('bg-sky-500', 'text-white', 'shadow-xs');
+        b.classList.add('text-slate-600', 'dark:text-slate-300', 'bg-slate-100', 'dark:bg-slate-800');
+      });
+      if(btn) {
+        btn.classList.add('bg-sky-500', 'text-white', 'shadow-xs');
+        btn.classList.remove('text-slate-600', 'dark:text-slate-300', 'bg-slate-100', 'dark:bg-slate-800');
+      }
+
+      activeFilterRekap = period;
+      const todayISO = new Date().toISOString().split('T')[0];
+      const now = new Date();
+
+      let filtered = dataRekap.filter(d => {
+        if (!d.rawTanggal) return false;
+        const itemDate = new Date(d.rawTanggal + "T00:00:00");
+
+        if (period === 'hari') return d.rawTanggal === todayISO;
+        if (period === 'minggu') {
+          const diffTime = Math.abs(now - itemDate);
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          return diffDays <= 7;
+        }
+        if (period === 'bulan') return itemDate.getMonth() === now.getMonth() && itemDate.getFullYear() === now.getFullYear();
+        return true;
+      });
+
+      document.getElementById('stat-total').innerText = filtered.length;
+      document.getElementById('stat-sesuai').innerText = filtered.filter(d => d.isSesuai).length;
+      document.getElementById('stat-luar').innerText = filtered.filter(d => !d.isSesuai).length;
+
+      const tbody = document.getElementById('tabel-rekap-body');
+      tbody.innerHTML = '';
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400 dark:text-slate-500 font-medium">Belum ada data untuk periode ini.</td></tr>`;
+        return;
+      }
+
+      filtered.forEach(d => {
+        tbody.innerHTML += `
+          <tr>
+            <td class="py-3 font-medium text-slate-500 dark:text-slate-400">${d.tglFormatted || d.rawTanggal}</td>
+            <td class="py-3 font-bold text-slate-900 dark:text-white">${d.nama}</td>
+            <td class="py-3 font-semibold text-slate-700 dark:text-slate-300">${d.kelas}</td>
+            <td class="py-3">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${d.isSesuai ? 'bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400' : 'bg-amber-50 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400'}">
+                ${d.isSesuai ? 'Sesuai Jadwal' : 'Di Luar Jadwal'}
+              </span>
+            </td>
+            <td class="py-3 text-slate-600 dark:text-slate-400">${d.keterangan || '-'}</td>
+          </tr>
+        `;
+      });
+    }
+
+    function exportCSV(tipe) {
+      if (!dataRekap.length) {
+        alert('Ora ana data sing bisa di-export, Bos!');
+        return;
+      }
+      generateCSVBlob(dataRekap, `Rekap_Paket_TOTAL_${new Date().toISOString().slice(0,10)}.csv`);
+    }
+
+    function exportCSVByDateRange() {
+      const start = document.getElementById('export-start').value;
+      const end = document.getElementById('export-end').value;
+
+      if (!start || !end) {
+        alert('⚠️ Harap pilih tanggal mulai dan tanggal akhir!');
+        return;
+      }
+
+      const filtered = dataRekap.filter(d => d.rawTanggal >= start && d.rawTanggal <= end);
+
+      if (!filtered.length) {
+        alert(`Ora ana data paket ing rentang tanggal ${start} s/d ${end}!`);
+        return;
+      }
+
+      generateCSVBlob(filtered, `Rekap_Paket_${start}_sd_${end}.csv`);
+    }
+
+    function generateCSVBlob(listData, filename) {
+      const BOM = "\uFEFF";
+      let csvRows = [["Tanggal Rekap", "Nama", "Kelas", "Kategori Rekap", "Keterangan", "Petugas", "Status Legalitas"].join(",")];
+
+      listData.forEach(i => {
+        let kategori = i.isSesuai ? "Sesuai Jadwal" : "Di Luar Jadwal";
+        let status = i.isSesuai ? "Sesuai Jadwal" : (i.keterangan ? `Dilegalkan (${i.keterangan})` : "Belum Dilegalkan");
+        csvRows.push([
+          `"${(i.tglFormatted || i.rawTanggal).replace(/"/g, '""')}"`,
+          `"${i.nama.replace(/"/g, '""')}"`,
+          `"${i.kelas}"`,
+          `"${kategori}"`,
+          `"${(i.keterangan || '-').replace(/"/g, '""')}"`,
+          `"${i.petugas || '-'}"`,
+          `"${status.replace(/"/g, '""')}"`
+        ].join(","));
+      });
+
+      const blob = new Blob([BOM + csvRows.join("\n")], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // --- TAB MIGRASI DATA ---
+    function renderMigrasi(container) {
+      const jsonString = JSON.stringify(dataRekap, null, 2);
+
+      container.innerHTML = `
+        <div class="space-y-6">
+          <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white mb-1">📤 Export / Copy Data Lokal</h3>
+            <p class="text-xs text-slate-400 dark:text-slate-500 mb-4">Salin kode JSON ing ngisor kiye kanggo disimpen utawa dipindah menyang piranti/web liyane.</p>
+            <textarea id="txt-export" readonly class="w-full h-36 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl p-3 font-mono text-[11px] focus:outline-none">${jsonString}</textarea>
+            <button onclick="copyExportJSON()" class="mt-2 px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl text-xs flex items-center gap-2">
+              <i data-lucide="copy" class="w-4 h-4"></i> Copy Kode JSON
+            </button>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white mb-1">📥 Import / Paste Data saka Canva Code</h3>
+            <p class="text-xs text-slate-400 dark:text-slate-500 mb-4">Paste kode JSON saka web Canva/backup lawas ing ngisor iki, banjur klik tombol **Import Data**.</p>
+            <textarea id="txt-import" placeholder='Paste kode JSON nang kene (Contoh: [{"nama":"Budi","kelas":"8A"...}])' class="w-full h-36 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl p-3 font-mono text-[11px] focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-amber-500 focus:outline-none"></textarea>
+            <button onclick="importJSONData()" class="mt-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-xs flex items-center gap-2">
+              <i data-lucide="download-cloud" class="w-4 h-4"></i> Import & Gabung Data
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function copyExportJSON() {
+      const copyText = document.getElementById("txt-export");
+      copyText.select();
+      document.execCommand("copy");
+      alert("✅ Kode JSON berhasil di-copy!");
+    }
+
+    function importJSONData() {
+      let importVal = document.getElementById("txt-import").value.trim();
+      if (!importVal) {
+        alert("⚠️ Tempelna (paste) kode JSON dhisik, Bos!");
+        return;
+      }
+      try {
+        const firstBracket = importVal.indexOf('[');
+        const lastBracket = importVal.lastIndexOf(']');
+        if (firstBracket !== -1 && lastBracket !== -1) {
+          importVal = importVal.substring(firstBracket, lastBracket + 1);
         }
 
-        // AI CHATBOT ENGINE
-        async function handleAiChatSubmit(e) {
-            e.preventDefault();
-            const inputEl = document.getElementById('aiChatInput');
-            const chatBox = document.getElementById('aiChatBox');
-            const text = inputEl.value.trim();
-            if(!text) return;
-
-            chatBox.innerHTML += `<div class="chat-msg chat-user">${text}</div>`;
-            inputEl.value = '';
-            chatBox.scrollTop = chatBox.scrollHeight;
-
-            const lower = text.toLowerCase();
-
-            // Direct Action 1: Input
-            if (lower.startsWith('input') || lower.startsWith('tambah')) {
-                const matchNama = text.match(/(?:paket|buat|nama)\s+([A-Za-z\s]+?)(?=\s+kelas|\s+ket|$)/i);
-                const matchKelas = text.match(/kelas\s+([0-9A-Ea-e]+)/i);
-                const matchKet = text.match(/ket(?:erangan)?\s+(.+)/i);
-
-                if (matchNama && matchKelas) {
-                    const nama = matchNama[1].trim();
-                    const kelas = matchKelas[1].toUpperCase();
-                    const keterangan = matchKet ? matchKet[1].trim() : '';
-                    const todayISO = new Date().toISOString().split('T')[0];
-                    const dayIndex = new Date().getDay();
-                    const kelasAllowed = jadwalHari[dayIndex] || [];
-                    const isSesuai = kelasAllowed.includes(kelas);
-
-                    dataRekap.push({
-                        id: Date.now(),
-                        rawTanggal: todayISO,
-                        tglFormatted: `${namaHari[dayIndex]}, ${new Date().toLocaleDateString('id-ID')}`,
-                        nama, kelas, keterangan, isSesuai
-                    });
-                    localStorage.setItem('rekapPaketData', JSON.stringify(dataRekap));
-                    renderTable();
-
-                    chatBox.innerHTML += `<div class="chat-msg chat-bot">✅ Sip Bos! Paket <strong>${nama}</strong> (Kelas ${kelas}) wis berhasil tak-inputna!</div>`;
-                    chatBox.scrollTop = chatBox.scrollHeight;
-                    return;
-                }
-            }
-
-            // Direct Action 2: Hapus
-            if (lower.startsWith('hapus') || lower.startsWith('delete')) {
-                const matchNama = text.match(/(?:paket|nama)\s+([A-Za-z\s]+)/i);
-                if (matchNama) {
-                    const targetNama = matchNama[1].trim().toLowerCase();
-                    const initLen = dataRekap.length;
-                    dataRekap = dataRekap.filter(d => !d.nama.toLowerCase().includes(targetNama));
-                    if (dataRekap.length < initLen) {
-                        localStorage.setItem('rekapPaketData', JSON.stringify(dataRekap));
-                        renderTable();
-                        chatBox.innerHTML += `<div class="chat-msg chat-bot">🗑️ Berhasil menghapus paket duweke "${targetNama}", Bos!</div>`;
-                        chatBox.scrollTop = chatBox.scrollHeight;
-                        return;
-                    }
-                }
-            }
-
-            if (!apiKey) {
-                chatBox.innerHTML += `<div class="chat-msg chat-bot">🤖 Siap Bos Lanaa! (Setel Gemini API Key nang ⚙️ yen kepengin ngobrol AI santai sing pinter).</div>`;
-            } else {
-                chatBox.innerHTML += `<div class="chat-msg chat-bot" id="aiLoading">AI lagi mikir...</div>`;
-                chatBox.scrollTop = chatBox.scrollHeight;
-
-                try {
-                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ contents: [{ parts: [{ text: `Kowe iku asisten AI gaul PaketBot kanggo Bos Lanaa. Tanggapi kanthi santai: "${text}"` }] }] })
-                    });
-                    const data = await res.json();
-                    document.getElementById('aiLoading')?.remove();
-                    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Aduh, AI-ne rada lemot Bos!";
-                    chatBox.innerHTML += `<div class="chat-msg chat-bot">${reply}</div>`;
-                } catch (err) {
-                    document.getElementById('aiLoading')?.remove();
-                    chatBox.innerHTML += `<div class="chat-msg chat-bot" style="color:var(--danger);">Gagal nyambung Gemini API, Bos!</div>`;
-                }
-            }
-            chatBox.scrollTop = chatBox.scrollHeight;
+        const parsed = JSON.parse(importVal);
+        if (Array.isArray(parsed)) {
+          dataRekap = parsed;
+          saveDB();
+          alert(`✅ Sukses! ${parsed.length} data berhasil di-import & dipindah.`);
+          navigate('dashboard');
+        } else {
+          alert("❌ Format JSON kudu wujud daftar/array.");
         }
+      } catch (err) {
+        alert("❌ Gagal maca JSON: " + err.message);
+      }
+    }
 
-        function setApiKey() {
-            const inputKey = prompt("Masukkan Gemini API Key milikmu (Opsional):", apiKey);
-            if (inputKey !== null) {
-                apiKey = inputKey.trim();
-                localStorage.setItem('gemini_api_key', apiKey);
-                alert("✅ API Key disimpen!");
-            }
-        }
-
-        function exportCSV(tipe) {
-            let filteredData = [];
-            if (tipe === 'semua') filteredData = dataRekap;
-            else if (tipe === 'sesuai') filteredData = dataRekap.filter(item => item.isSesuai);
-            else filteredData = dataRekap.filter(item => !item.isSesuai);
-
-            if (filteredData.length === 0) { alert("Ora ana data sing bisa di-export, Bos!"); return; }
-
-            let csvRows = [];
-            const BOM = "\uFEFF";
-            csvRows.push(["Tanggal Rekap", "Nama", "Kelas", "Kategori Rekap", "Keterangan"].join(","));
-            filteredData.forEach(i => {
-                let kategori = i.isSesuai ? "Sesuai Jadwal" : "Di Luar Jadwal";
-                csvRows.push([
-                    `"${i.tglFormatted.replace(/"/g, '""')}"`,
-                    `"${i.nama.replace(/"/g, '""')}"`,
-                    `"${i.kelas}"`,
-                    `"${kategori}"`,
-                    `"${(i.keterangan || '-').replace(/"/g, '""')}"`
-                ].join(","));
-            });
-
-            const csvString = BOM + csvRows.join("\n");
-            const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement("a");
-            const url = URL.createObjectURL(blob);
-            link.setAttribute("href", url);
-            link.setAttribute("download", `Rekap_Paket_${tipe.toUpperCase()}_${new Date().toISOString().slice(0,10)}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            setTimeout(() => URL.revokeObjectURL(url), 100);
-        }
-    </script>
+    window.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      updateOnlineStatus();
+      navigate('dashboard');
+    });
+  </script>
 </body>
 </html>
