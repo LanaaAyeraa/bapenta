@@ -103,16 +103,125 @@
     </div>
   </header>
 
-  <!-- MAIN CONTAINER -->
-  <main class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-    <div id="app-container"></div>
-  </main>
+  <!-- LAYOUT GRID DENGAN MUSIC PLAYER SIDEBAR DI SISIH KIWA -->
+  <div class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="flex flex-col lg:flex-row gap-6 items-start">
+      
+      <!-- 🎵 SIDEBAR MUSIC PLAYER (PAS NANG AREA SISI KIWA SING DITANDAHI ABANG) -->
+      <aside class="w-full lg:w-64 shrink-0 lg:sticky lg:top-28 space-y-4">
+        <div class="bg-white border border-slate-200/80 rounded-3xl p-4 shadow-xs">
+          <!-- PLAYER HEADER -->
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded-lg bg-rose-500 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+                <i data-lucide="music" class="w-4 h-4 animate-bounce"></i>
+              </div>
+              <span class="text-xs font-extrabold text-slate-800 tracking-tight">Music Player</span>
+            </div>
+            <span class="text-[10px] font-extrabold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full uppercase">Live Sync</span>
+          </div>
+
+          <!-- TAB PLAYER (YOUTUBE / SPOTIFY) -->
+          <div class="flex gap-1 bg-slate-100 p-1 rounded-xl text-[11px] font-bold mb-3">
+            <button onclick="switchMusicTab('yt')" id="tab-m-yt" class="flex-1 py-1 rounded-lg bg-white text-slate-800 shadow-2xs transition">YouTube</button>
+            <button onclick="switchMusicTab('sp')" id="tab-m-sp" class="flex-1 py-1 rounded-lg text-slate-500 hover:text-slate-800 transition">Spotify</button>
+          </div>
+
+          <!-- YOUTUBE PLAYER CONTAINER -->
+          <div id="player-yt-box" class="space-y-2">
+            <div class="aspect-video w-full rounded-2xl overflow-hidden bg-slate-900 shadow-inner border border-slate-200">
+              <iframe id="iframe-yt" class="w-full h-full" src="https://www.youtube.com/embed/jfKfPfyJRdk" title="YouTube Music Player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="space-y-1">
+              <label class="text-[10px] font-bold text-slate-400 block">Link/ID Video YouTube:</label>
+              <div class="flex gap-1">
+                <input type="text" id="input-yt-url" placeholder="Paste link YouTube..." class="flex-1 bg-slate-50 border border-slate-200 rounded-lg p-1.5 text-[10px] font-semibold focus:outline-none" />
+                <button onclick="loadYouTubeURL()" class="bg-rose-500 hover:bg-rose-600 text-white px-2 py-1 rounded-lg text-[10px] font-bold transition">Set</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- SPOTIFY PLAYER CONTAINER -->
+          <div id="player-sp-box" class="space-y-2 hidden">
+            <div class="h-[152px] w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 shadow-inner">
+              <iframe id="iframe-sp" class="w-full h-full" src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+            <div class="space-y-1">
+              <label class="text-[10px] font-bold text-slate-400 block">Link Track/Playlist Spotify:</label>
+              <div class="flex gap-1">
+                <input type="text" id="input-sp-url" placeholder="Paste link Spotify..." class="flex-1 bg-slate-50 border border-slate-200 rounded-lg p-1.5 text-[10px] font-semibold focus:outline-none" />
+                <button onclick="loadSpotifyURL()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-2 py-1 rounded-lg text-[10px] font-bold transition">Set</button>
+              </div>
+            </div>
+          </div>
+
+          <p class="text-[10px] text-slate-400 font-medium text-center mt-3">🎧 Musik tetep muter lan nyambung karo aktivitas rekap paket!</p>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTAINER UTAMA -->
+      <main class="flex-1 w-full space-y-6 min-w-0">
+        <div id="app-container"></div>
+      </main>
+
+    </div>
+  </div>
 
   <footer class="bg-white border-t border-slate-200/80 py-4 text-center text-xs text-slate-400">
     <p>“Streamlined Package Tracking System” • Rekap Paket Sekolah</p>
   </footer>
 
   <script>
+    // --- MUSIC PLAYER LOGIC ---
+    function switchMusicTab(type) {
+      const ytBox = document.getElementById('player-yt-box');
+      const spBox = document.getElementById('player-sp-box');
+      const btnYt = document.getElementById('tab-m-yt');
+      const btnSp = document.getElementById('tab-m-sp');
+
+      if (type === 'yt') {
+        ytBox.classList.remove('hidden');
+        spBox.classList.add('hidden');
+        btnYt.classList.add('bg-white', 'text-slate-800', 'shadow-2xs');
+        btnYt.classList.remove('text-slate-500');
+        btnSp.classList.remove('bg-white', 'text-slate-800', 'shadow-2xs');
+        btnSp.classList.add('text-slate-500');
+      } else {
+        spBox.classList.remove('hidden');
+        ytBox.classList.add('hidden');
+        btnSp.classList.add('bg-white', 'text-slate-800', 'shadow-2xs');
+        btnSp.classList.remove('text-slate-500');
+        btnYt.classList.remove('bg-white', 'text-slate-800', 'shadow-2xs');
+        btnYt.classList.add('text-slate-500');
+      }
+    }
+
+    function loadYouTubeURL() {
+      const val = document.getElementById('input-yt-url').value.trim();
+      if (!val) return;
+
+      let videoId = val;
+      if (val.includes('v=')) {
+        videoId = val.split('v=')[1].split('&')[0];
+      } else if (val.includes('youtu.be/')) {
+        videoId = val.split('youtu.be/')[1].split('?')[0];
+      }
+
+      document.getElementById('iframe-yt').src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+    }
+
+    function loadSpotifyURL() {
+      const val = document.getElementById('input-sp-url').value.trim();
+      if (!val) return;
+
+      let embedUrl = val;
+      if (!val.includes('/embed/')) {
+        embedUrl = val.replace('spotify.com/', 'spotify.com/embed/');
+      }
+
+      document.getElementById('iframe-sp').src = embedUrl;
+    }
+
     // --- JADWAL HARI ---
     const jadwalHari = {
       1: ["12"],                           // Senin
@@ -297,7 +406,7 @@
       const lastRecord = dataRekap.length > 0 ? dataRekap[dataRekap.length - 1] : null;
 
       container.innerHTML = `
-        <div class="max-w-3xl mx-auto bg-white rounded-3xl border border-slate-200/80 shadow-xs p-6 sm:p-8 space-y-6">
+        <div class="bg-white rounded-3xl border border-slate-200/80 shadow-xs p-6 sm:p-8 space-y-6">
           <h2 class="text-xl font-extrabold text-slate-900">Input Paket Masuk</h2>
 
           <form id="formPaket" onsubmit="handleSavePaket(event)" class="space-y-6">
@@ -356,7 +465,6 @@
 
       if (!container) return;
 
-      // KELAS IJO DIUTAMAKAN DI ATAS
       const sortedKelas = [...allKelasList].sort((a, b) => {
         const aSesuai = kelasAllowed.includes(a);
         const bSesuai = kelasAllowed.includes(b);
@@ -494,13 +602,12 @@
       }
     }
 
-    // --- REKAP VIEW (DISAMAKAN DENGAN SCREENSHOT BARU) ---
+    // --- REKAP VIEW ---
     function renderRekap(container) {
       const todayISO = new Date().toISOString().split('T')[0];
 
       container.innerHTML = `
         <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs space-y-6">
-          <!-- HEADER TAB REKAP -->
           <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div class="flex items-center gap-2">
               <span class="text-xl">📊</span>
@@ -511,7 +618,6 @@
             </button>
           </div>
 
-          <!-- SUB FILTER PERIODIK -->
           <div class="flex flex-wrap gap-2 border-b border-slate-100 pb-4">
             <button onclick="filterPeriodik('hari', this)" class="sub-filter-btn px-4 py-2 rounded-full text-xs font-extrabold transition bg-sky-500 text-white shadow-xs">Hari Ini</button>
             <button onclick="filterPeriodik('minggu', this)" class="sub-filter-btn px-4 py-2 rounded-full text-xs font-extrabold text-slate-600 bg-slate-100 hover:bg-slate-200 transition">Minggu Ini</button>
@@ -519,7 +625,6 @@
             <button onclick="filterPeriodik('semua', this)" class="sub-filter-btn px-4 py-2 rounded-full text-xs font-extrabold text-slate-600 bg-slate-100 hover:bg-slate-200 transition">Semua Data</button>
           </div>
 
-          <!-- CARDS STATISTIK -->
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-xs text-center space-y-1">
               <span class="text-xs font-bold text-slate-400">Total Paket</span>
@@ -535,7 +640,6 @@
             </div>
           </div>
 
-          <!-- DATE PICKER FILTER EXPORT KHUSUS -->
           <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div class="space-y-1">
               <span class="text-xs font-extrabold text-slate-800 block">📅 Export Rentang Tanggal Khusus:</span>
@@ -550,7 +654,6 @@
             </button>
           </div>
 
-          <!-- TABEL REKAP -->
           <div class="overflow-x-auto">
             <table class="w-full text-left text-xs">
               <thead class="text-slate-500 font-extrabold border-b border-slate-100">
@@ -718,12 +821,18 @@
     }
 
     function importJSONData() {
-      const importVal = document.getElementById("txt-import").value.trim();
+      let importVal = document.getElementById("txt-import").value.trim();
       if (!importVal) {
         alert("⚠️ Tempelna (paste) kode JSON dhisik, Bos!");
         return;
       }
       try {
+        const firstBracket = importVal.indexOf('[');
+        const lastBracket = importVal.lastIndexOf(']');
+        if (firstBracket !== -1 && lastBracket !== -1) {
+          importVal = importVal.substring(firstBracket, lastBracket + 1);
+        }
+
         const parsed = JSON.parse(importVal);
         if (Array.isArray(parsed)) {
           dataRekap = parsed;
@@ -731,7 +840,7 @@
           alert(`✅ Sukses! ${parsed.length} data berhasil di-import & dipindah.`);
           navigate('dashboard');
         } else {
-          alert("❌ Format JSON ora valid (kudu wujud Array/Daftar data).");
+          alert("❌ Format JSON kudu wujud daftar/array.");
         }
       } catch (err) {
         alert("❌ Gagal maca JSON: " + err.message);
