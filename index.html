@@ -61,17 +61,6 @@
         </div>
       </div>
 
-      <div class="hidden md:flex items-center relative w-80">
-        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3"></i>
-        <input 
-          type="text" 
-          id="global-search" 
-          oninput="handleGlobalSearch(this.value)"
-          placeholder="Cari nama penerima atau kelas..." 
-          class="w-full bg-slate-100/80 hover:bg-slate-100 focus:bg-white text-xs rounded-full pl-9 pr-4 py-2 border border-transparent focus:border-sky-400 focus:outline-none transition"
-        />
-      </div>
-
       <div class="flex items-center gap-3">
         <div class="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-full px-3 py-1.5 shadow-2xs">
           <div class="w-7 h-7 rounded-full bg-sky-500 text-white flex items-center justify-center font-bold text-xs">
@@ -101,6 +90,10 @@
           <i data-lucide="bar-chart-3" class="w-4 h-4 text-purple-500"></i>
           <span>Rekapitulasi & Export</span>
         </button>
+        <button onclick="navigate('migrasi')" id="nav-migrasi" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 hover:bg-slate-100 transition shrink-0">
+          <i data-lucide="arrow-left-right" class="w-4 h-4 text-amber-500"></i>
+          <span>Migrasi Data / Backup</span>
+        </button>
       </div>
     </div>
   </header>
@@ -127,11 +120,12 @@
     };
     const namaHari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
 
-    // Storage Engine
-    let dataRekap = JSON.parse(localStorage.getItem('rekapPaketData_UI')) || [];
+    // Multi-key support (Gaya Canva lawas + UI Anyar)
+    let dataRekap = JSON.parse(localStorage.getItem('rekapPaketData_UI')) || JSON.parse(localStorage.getItem('rekapPaketData')) || [];
 
     function saveDB() {
       localStorage.setItem('rekapPaketData_UI', JSON.stringify(dataRekap));
+      localStorage.setItem('rekapPaketData', JSON.stringify(dataRekap));
     }
 
     let currentTab = 'dashboard';
@@ -153,6 +147,7 @@
       else if (tabId === 'input') renderInput(container);
       else if (tabId === 'live') renderLive(container);
       else if (tabId === 'rekap') renderRekap(container);
+      else if (tabId === 'migrasi') renderMigrasi(container);
 
       lucide.createIcons();
     }
@@ -246,7 +241,7 @@
               <tbody class="divide-y divide-slate-100 text-slate-700">
                 ${dataRekap.slice(-5).reverse().map(d => `
                   <tr>
-                    <td class="py-3 font-medium text-slate-500">${d.tglFormatted}</td>
+                    <td class="py-3 font-medium text-slate-500">${d.tglFormatted || d.rawTanggal}</td>
                     <td class="py-3 font-bold text-slate-900">${d.nama}</td>
                     <td class="py-3 font-semibold text-slate-700">${d.kelas}</td>
                     <td class="py-3">
@@ -370,7 +365,7 @@
                 <tbody class="divide-y divide-slate-100">
                   ${sesuai.map(d => `
                     <tr>
-                      <td class="p-3">${d.tglFormatted}</td>
+                      <td class="p-3">${d.tglFormatted || d.rawTanggal}</td>
                       <td class="p-3 font-bold">${d.nama}</td>
                       <td class="p-3 font-semibold">${d.kelas}</td>
                       <td class="p-3"><button onclick="deletePaket(${d.id})" class="text-rose-600 font-bold hover:underline">Hapus</button></td>
@@ -391,7 +386,7 @@
                 <tbody class="divide-y divide-slate-100">
                   ${luar.map(d => `
                     <tr>
-                      <td class="p-3">${d.tglFormatted}</td>
+                      <td class="p-3">${d.tglFormatted || d.rawTanggal}</td>
                       <td class="p-3 font-bold">${d.nama}</td>
                       <td class="p-3 font-semibold">${d.kelas}</td>
                       <td class="p-3">${d.keterangan || '-'}</td>
@@ -419,7 +414,7 @@
       }
     }
 
-    // --- REKAP & EXPORT VIEW ---
+    // --- REKAP VIEW ---
     function renderRekap(container) {
       container.innerHTML = `
         <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs space-y-4">
@@ -446,7 +441,7 @@
         let kategori = i.isSesuai ? "Sesuai Jadwal" : "Di Luar Jadwal";
         let status = i.isSesuai ? "Sesuai Jadwal" : (i.keterangan ? `Dilegalkan (${i.keterangan})` : "Belum Dilegalkan");
         csvRows.push([
-          `"${i.tglFormatted.replace(/"/g, '""')}"`,
+          `"${(i.tglFormatted || i.rawTanggal).replace(/"/g, '""')}"`,
           `"${i.nama.replace(/"/g, '""')}"`,
           `"${i.kelas}"`,
           `"${kategori}"`,
@@ -463,6 +458,61 @@
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+    }
+
+    // --- TAB MIGRASI DATA / IMPORT EXPORT JSON ---
+    function renderMigrasi(container) {
+      const jsonString = JSON.stringify(dataRekap, null, 2);
+
+      container.innerHTML = `
+        <div class="space-y-6">
+          <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs">
+            <h3 class="text-sm font-extrabold text-slate-900 mb-1">📤 Export / Copy Data Lokal</h3>
+            <p class="text-xs text-slate-400 mb-4">Salin kode JSON ing ngisor kiye kanggo disimpen utawa dipindah menyang piranti/web liyane.</p>
+            <textarea id="txt-export" readonly class="w-full h-36 bg-slate-50 border border-slate-200 rounded-xl p-3 font-mono text-[11px] text-slate-700 focus:outline-none">${jsonString}</textarea>
+            <button onclick="copyExportJSON()" class="mt-2 px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl text-xs flex items-center gap-2">
+              <i data-lucide="copy" class="w-4 h-4"></i> Copy Kode JSON
+            </button>
+          </div>
+
+          <div class="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-xs">
+            <h3 class="text-sm font-extrabold text-slate-900 mb-1">📥 Import / Paste Data saka Canva Code</h3>
+            <p class="text-xs text-slate-400 mb-4">Paste kode JSON saka web Canva/backup lawas ing ngisor iki, banjur klik tombol **Import Data**.</p>
+            <textarea id="txt-import" placeholder='Paste kode JSON nang kene (Contoh: [{"nama":"Budi","kelas":"8A"...}])' class="w-full h-36 bg-slate-50 border border-slate-200 rounded-xl p-3 font-mono text-[11px] text-slate-700 focus:bg-white focus:ring-2 focus:ring-amber-500 focus:outline-none"></textarea>
+            <button onclick="importJSONData()" class="mt-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-xs flex items-center gap-2">
+              <i data-lucide="download-cloud" class="w-4 h-4"></i> Import & Gabung Data
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function copyExportJSON() {
+      const copyText = document.getElementById("txt-export");
+      copyText.select();
+      document.execCommand("copy");
+      alert("✅ Kode JSON berhasil di-copy!");
+    }
+
+    function importJSONData() {
+      const importVal = document.getElementById("txt-import").value.trim();
+      if (!importVal) {
+        alert("⚠️ Tempelna (paste) kode JSON dhisik, Bos!");
+        return;
+      }
+      try {
+        const parsed = JSON.parse(importVal);
+        if (Array.isArray(parsed)) {
+          dataRekap = parsed;
+          saveDB();
+          alert(`✅ Sukses! ${parsed.length} data berhasil di-import & dipindah.`);
+          navigate('dashboard');
+        } else {
+          alert("❌ Format JSON ora valid (kudu wujud Array/Daftar data).");
+        }
+      } catch (err) {
+        alert("❌ Gagal maca JSON: " + err.message);
+      }
     }
 
     window.addEventListener('DOMContentLoaded', () => {
