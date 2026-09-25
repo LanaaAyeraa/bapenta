@@ -1054,7 +1054,7 @@
       }
     }
 
-    // --- AI CHATBOT ENGINE LOGIC (BAHASA INDONESIA GAUL) ---
+    // --- AI CHATBOT ENGINE LOGIC (MODEL GROQ TERUPDATE: llama3-8b-8192) ---
     async function handleAiChatSubmit(e) {
       e.preventDefault();
       const inputEl = document.getElementById('aiChatInput');
@@ -1077,12 +1077,10 @@
         const words = text.split(/\s+/);
         let targetNama = "";
         
-        // Cari nama setelah kata "nama", "namanya", "paket", "punya", atau "data"
         const matchNama = text.match(/(?:nama|namanya|paket|punya|data|atas nama)\s+([A-Za-z0-9]+)/i);
         if (matchNama) {
           targetNama = matchNama[1].trim().toLowerCase();
         } else {
-          // Ambil kata terakhir sebagai asumsi nama jika tidak memakai kata kunci
           targetNama = words[words.length - 1].toLowerCase();
         }
 
@@ -1143,7 +1141,7 @@
         }
       }
 
-      // 3. CASUAL CHAT VIA GROQ API (MODEL: llama-3.1-8b-instant — SUPER FAST & BAHASA INDONESIA GAUL)
+      // 3. CASUAL CHAT VIA GROQ API (MODEL UTAMA: llama3-8b-8192)
       if (!groqApiKey) {
         chatBox.innerHTML += `
           <div class="bg-sky-50 dark:bg-sky-950/60 border border-sky-100 dark:border-sky-900 p-2.5 rounded-2xl text-slate-700 dark:text-slate-300 text-[11px]">
@@ -1157,15 +1155,16 @@
       chatBox.innerHTML += `<div id="aiLoading" class="text-slate-400 italic text-[10px]">Groq AI lagi mikir kilat...</div>`;
       chatBox.scrollTop = chatBox.scrollHeight;
 
-      try {
-        const res = await fetch(`https://api.groq.com/openai/v1/chat/completions`, {
+      // Function pendukung buat request
+      async function callGroqModel(modelName) {
+        return await fetch(`https://api.groq.com/openai/v1/chat/completions`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${groqApiKey}`
           },
           body: JSON.stringify({
-            model: "llama-3.1-8b-instant",
+            model: modelName,
             messages: [
               {
                 role: "system",
@@ -1179,8 +1178,18 @@
             temperature: 0.7
           })
         });
+      }
 
-        const data = await res.json();
+      try {
+        let res = await callGroqModel("llama3-8b-8192");
+        let data = await res.json();
+
+        // Fallback ke llama3-70b-8192 jika terjadi kendala
+        if (data.error && data.error.message && data.error.message.includes('does not exist')) {
+          res = await callGroqModel("llama3-70b-8192");
+          data = await res.json();
+        }
+
         document.getElementById('aiLoading')?.remove();
 
         if (data.error) {
