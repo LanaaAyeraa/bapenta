@@ -1054,7 +1054,7 @@
       }
     }
 
-    // --- AI CHATBOT ENGINE LOGIC (MODEL GROQ TERUPDATE: llama3-8b-8192) ---
+    // --- AI CHATBOT ENGINE LOGIC (MODEL GROQ TERBARU) ---
     async function handleAiChatSubmit(e) {
       e.preventDefault();
       const inputEl = document.getElementById('aiChatInput');
@@ -1141,7 +1141,7 @@
         }
       }
 
-      // 3. CASUAL CHAT VIA GROQ API (MODEL UTAMA: llama3-8b-8192)
+      // 3. CASUAL CHAT VIA GROQ API (MODEL AKTIF BARU: openai/gpt-oss-20b)
       if (!groqApiKey) {
         chatBox.innerHTML += `
           <div class="bg-sky-50 dark:bg-sky-950/60 border border-sky-100 dark:border-sky-900 p-2.5 rounded-2xl text-slate-700 dark:text-slate-300 text-[11px]">
@@ -1155,7 +1155,6 @@
       chatBox.innerHTML += `<div id="aiLoading" class="text-slate-400 italic text-[10px]">Groq AI lagi mikir kilat...</div>`;
       chatBox.scrollTop = chatBox.scrollHeight;
 
-      // Function pendukung buat request
       async function callGroqModel(modelName) {
         return await fetch(`https://api.groq.com/openai/v1/chat/completions`, {
           method: 'POST',
@@ -1181,12 +1180,12 @@
       }
 
       try {
-        let res = await callGroqModel("llama3-8b-8192");
+        let res = await callGroqModel("openai/gpt-oss-20b");
         let data = await res.json();
 
-        // Fallback ke llama3-70b-8192 jika terjadi kendala
+        // Fallback jika butuh model lain
         if (data.error && data.error.message && data.error.message.includes('does not exist')) {
-          res = await callGroqModel("llama3-70b-8192");
+          res = await callGroqModel("openai/gpt-oss-120b");
           data = await res.json();
         }
 
