@@ -177,7 +177,7 @@
         <div id="app-container"></div>
       </main>
 
-      <!-- 🤖 AI ASSISTANT SIDEBAR (SISIH TENGEN - SENSUS GAMBAR) -->
+      <!-- 🤖 AI ASSISTANT SIDEBAR (SISIH TENGEN) -->
       <aside class="w-full lg:w-72 shrink-0 lg:sticky lg:top-24 space-y-4">
         <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-4 shadow-xs flex flex-col h-[520px] transition-colors duration-300">
           <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 mb-3">
@@ -200,7 +200,7 @@
           <!-- Chat History Container -->
           <div id="aiChatBox" class="flex-1 overflow-y-auto space-y-2.5 pr-1 text-xs custom-scroll">
             <div class="bg-sky-50 dark:bg-sky-950/60 border border-sky-100 dark:border-sky-900 p-3 rounded-2xl text-slate-700 dark:text-slate-300 leading-relaxed text-[11px]">
-              👋 Halo! Aku siap diajak ngobrol santai utawa mbantu input/hapus/update web otomatis liwat chat kiye, Bos!
+              👋 Halo Bos Lanaa! Aku siap diajak ngobrol santai utawa mbantu input/hapus data paket otomatis liwat chat kiye!
             </div>
           </div>
 
@@ -339,7 +339,10 @@
     // Storage Engine & State
     let dataRekap = JSON.parse(localStorage.getItem('rekapPaketData_UI')) || JSON.parse(localStorage.getItem('rekapPaketData')) || [];
     let currentPetugas = localStorage.getItem('activePetugas_UI') || "Sultan Maulana";
-    let apiKey = localStorage.getItem('gemini_api_key') || '';
+    
+    // API KEY STORAGE
+    let apiKey = localStorage.getItem('gemini_api_key') || ''; 
+
     let selectedKelasInput = "";
     let lastSelectedDate = new Date().toISOString().split('T')[0];
     let activeFilterRekap = "hari";
@@ -1059,7 +1062,6 @@
       const text = inputEl.value.trim();
       if (!text) return;
 
-      // Render User Chat
       chatBox.innerHTML += `
         <div class="bg-sky-500 text-white p-2.5 rounded-2xl font-medium ml-4 text-right text-[11px]">
           ${text}
@@ -1070,9 +1072,9 @@
 
       const lower = text.toLowerCase();
 
-      // ACTION 1: INPUT PAKET OTW CHAT
-      if (lower.startsWith('input') || lower.startsWith('tambah')) {
-        const matchNama = text.match(/(?:paket|buat|nama)\s+([A-Za-z\s]+?)(?=\s+kelas|\s+ket|$)/i);
+      // PERINTAH 1: INPUT PAKET VIA CHAT (Format: input paket [nama] kelas [kelas] ket [keterangan])
+      if (lower.includes('input paket') || lower.includes('tambah paket')) {
+        const matchNama = text.match(/(?:paket|nama)\s+([A-Za-z\s]+?)(?=\s+kelas|\s+ket|$)/i);
         const matchKelas = text.match(/kelas\s+([0-9A-Ea-e]+)/i);
         const matchKet = text.match(/ket(?:erangan)?\s+(.+)/i);
 
@@ -1102,7 +1104,15 @@
 
           chatBox.innerHTML += `
             <div class="bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800 p-2.5 rounded-2xl text-emerald-800 dark:text-emerald-300 font-bold text-[11px]">
-              ✅ Sip Bos! Paket <strong>${nama}</strong> (Kelas ${kelas}) wis berhasil tak-inputna menyang tabel!
+              ✅ Sip Bos! Paket <strong>${nama}</strong> (Kelas ${kelas}) wis berhasil tak-inputna!
+            </div>
+          `;
+          chatBox.scrollTop = chatBox.scrollHeight;
+          return;
+        } else {
+          chatBox.innerHTML += `
+            <div class="bg-amber-50 dark:bg-amber-950/80 border border-amber-200 dark:border-amber-800 p-2.5 rounded-2xl text-amber-800 dark:text-amber-300 font-bold text-[11px]">
+              💡 Format perintah input: <br/><code>input paket [Nama] kelas [Kelas] ket [Keterangan]</code><br/>Contoh: <i>input paket Faza kelas 9D ket online</i>
             </div>
           `;
           chatBox.scrollTop = chatBox.scrollHeight;
@@ -1110,8 +1120,8 @@
         }
       }
 
-      // ACTION 2: HAPUS PAKET OTW CHAT
-      if (lower.startsWith('hapus') || lower.startsWith('delete')) {
+      // PERINTAH 2: HAPUS PAKET VIA CHAT (Format: hapus paket [nama])
+      if (lower.includes('hapus paket') || lower.includes('delete paket')) {
         const matchNama = text.match(/(?:paket|nama)\s+([A-Za-z\s]+)/i);
         if (matchNama) {
           const targetNama = matchNama[1].trim().toLowerCase();
@@ -1125,9 +1135,15 @@
                 🗑️ Berhasil menghapus paket duweke "${targetNama}", Bos!
               </div>
             `;
-            chatBox.scrollTop = chatBox.scrollHeight;
-            return;
+          } else {
+            chatBox.innerHTML += `
+              <div class="bg-amber-50 dark:bg-amber-950/80 border border-amber-200 dark:border-amber-800 p-2.5 rounded-2xl text-amber-800 dark:text-amber-300 font-bold text-[11px]">
+                ⚠️ Data paket nganggo nama "${targetNama}" ora ditemokake, Bos.
+              </div>
+            `;
           }
+          chatBox.scrollTop = chatBox.scrollHeight;
+          return;
         }
       }
 
@@ -1135,42 +1151,53 @@
       if (!apiKey) {
         chatBox.innerHTML += `
           <div class="bg-sky-50 dark:bg-sky-950/60 border border-sky-100 dark:border-sky-900 p-2.5 rounded-2xl text-slate-700 dark:text-slate-300 text-[11px]">
-            🤖 Siap Bos Lanaa! (Setel Gemini API Key ing tombol gear ⚙️ yen kepengin ngobrol AI santai sing pinter).
+            ⚙️ Bos Lanaa, klik tombol gear ing dhuwur banjur lebokake <strong>Gemini API Key</strong> sing bener (diwiwiti huruf <code>AIzaSy...</code>) supaya bisa ngobrol AI santai!
           </div>
         `;
-      } else {
-        chatBox.innerHTML += `<div id="aiLoading" class="text-slate-400 italic text-[10px]">AI lagi mikir...</div>`;
         chatBox.scrollTop = chatBox.scrollHeight;
+        return;
+      }
 
-        try {
-          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              contents: [{
-                parts: [{ text: `Kowe iku asisten AI gaul PaketBot kanggo Bos Lanaa. Tanggapi kanthi santai, ramah, lan lugas: "${text}"` }]
-              }]
-            })
-          });
-          const data = await res.json();
-          document.getElementById('aiLoading')?.remove();
-          const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Aduh, AI-ne rada lemot Bos!";
+      chatBox.innerHTML += `<div id="aiLoading" class="text-slate-400 italic text-[10px]">AI lagi mikir...</div>`;
+      chatBox.scrollTop = chatBox.scrollHeight;
 
+      try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{ text: `Kowe iku asisten AI gaul PaketBot kanggo Bos Lanaa ing Paket Control Center. Tanggapi kanthi santai, ramah, lan lugas nganggo basa Jawa/Indonesia gaul: "${text}"` }]
+            }]
+          })
+        });
+
+        const data = await res.json();
+        document.getElementById('aiLoading')?.remove();
+
+        if (data.error) {
+          chatBox.innerHTML += `
+            <div class="bg-rose-50 dark:bg-rose-950/80 p-2.5 rounded-2xl text-rose-600 dark:text-rose-300 text-[11px]">
+              ⚠️ API Key ora valid/error: ${data.error.message || 'Priksa API Key-mu'}. Klik gear ⚙️ kanggo nganti.
+            </div>
+          `;
+        } else {
+          const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Aduh, AI-ne bingung Bos!";
           chatBox.innerHTML += `
             <div class="bg-sky-50 dark:bg-sky-950/60 border border-sky-100 dark:border-sky-900 p-2.5 rounded-2xl text-slate-800 dark:text-slate-200 text-[11px]">
               ${reply}
             </div>
           `;
-        } catch (err) {
-          document.getElementById('aiLoading')?.remove();
-          chatBox.innerHTML += `<div class="bg-rose-50 dark:bg-rose-950/80 p-2.5 rounded-2xl text-rose-600 dark:text-rose-300 text-[11px]">Gagal nyambung Gemini API, Bos!</div>`;
         }
+      } catch (err) {
+        document.getElementById('aiLoading')?.remove();
+        chatBox.innerHTML += `<div class="bg-rose-50 dark:bg-rose-950/80 p-2.5 rounded-2xl text-rose-600 dark:text-rose-300 text-[11px]">Gagal nyambung Gemini API, Bos! Priksa koneksi internet-mu.</div>`;
       }
       chatBox.scrollTop = chatBox.scrollHeight;
     }
 
     function setApiKey() {
-      const inputKey = prompt("Masukkan Gemini API Key milikmu (Opsional):", apiKey);
+      const inputKey = prompt("Masukkan Gemini API Key milikmu (di awali AIzaSy...):", apiKey);
       if (inputKey !== null) {
         apiKey = inputKey.trim();
         localStorage.setItem('gemini_api_key', apiKey);
