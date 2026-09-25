@@ -120,11 +120,11 @@
     </div>
   </header>
 
-  <!-- LAYOUT GRID DENGAN MUSIC PLAYER SIDEBAR (KIWA), MAIN CONTENT (TENGAH), LAN AI CHAT (TENGEN) -->
+  <!-- LAYOUT GRID DENGAN MUSIC PLAYER SIDEBAR (KIRI), MAIN CONTENT (TENGAH), DAN AI CHAT (KANAN) -->
   <div class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
     <div class="flex flex-col lg:flex-row gap-6 items-start">
       
-      <!-- 🎵 SIDEBAR MUSIC PLAYER (SISIH KIWA) -->
+      <!-- 🎵 SIDEBAR MUSIC PLAYER (KIRI) -->
       <aside class="w-full lg:w-72 shrink-0 lg:sticky lg:top-24 space-y-4">
         <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-4 shadow-xs transition-colors duration-300">
           <div class="flex items-center justify-between mb-3">
@@ -168,16 +168,16 @@
             </div>
           </div>
 
-          <p class="text-[10px] text-slate-400 dark:text-slate-500 font-medium text-center mt-3">🎧 Musik tetep muter lan nyambung karo aktivitas rekap paket!</p>
+          <p class="text-[10px] text-slate-400 dark:text-slate-500 font-medium text-center mt-3">🎧 Musik tetap jalan sambil kamu rekap data paket!</p>
         </div>
       </aside>
 
-      <!-- MAIN CONTAINER UTAMA (SISIH TENGAH) -->
+      <!-- MAIN CONTAINER UTAMA (TENGAH) -->
       <main class="flex-1 w-full space-y-6 min-w-0">
         <div id="app-container"></div>
       </main>
 
-      <!-- 🤖 AI ASSISTANT SIDEBAR (SISIH TENGEN) -->
+      <!-- 🤖 AI ASSISTANT SIDEBAR (KANAN) -->
       <aside class="w-full lg:w-72 shrink-0 lg:sticky lg:top-24 space-y-4">
         <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-4 shadow-xs flex flex-col h-[520px] transition-colors duration-300">
           <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 mb-3">
@@ -186,9 +186,9 @@
                 <i data-lucide="zap" class="w-4 h-4"></i>
               </div>
               <div>
-                <h3 class="text-xs font-extrabold text-slate-800 dark:text-slate-100">AI GROQ FAST</h3>
+                <h3 class="text-xs font-extrabold text-slate-800 dark:text-slate-100">AI ASSISTANT GAUL</h3>
                 <p class="text-[9px] text-emerald-500 font-bold flex items-center gap-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Ultra Speed Ready
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Groq Fast Active
                 </p>
               </div>
             </div>
@@ -200,7 +200,7 @@
           <!-- Chat History Container -->
           <div id="aiChatBox" class="flex-1 overflow-y-auto space-y-2.5 pr-1 text-xs custom-scroll">
             <div class="bg-sky-50 dark:bg-sky-950/60 border border-sky-100 dark:border-sky-900 p-3 rounded-2xl text-slate-700 dark:text-slate-300 leading-relaxed text-[11px]">
-              ⚡ Halo Bos Lanaa! Groq Llama 3.3 Ultra Speed wis aktif! Takon-takon utawa input paket liwat chat saiki kilat banget!
+              👋 Yo watsap Bro Lanaa! Gue AI Assistant lo nih. Bebas mau ngobrol santai, nanya-nanya apa aja, atau minta kelola data paket (contoh: <i>"hapus paket yang namanya Lanaa"</i> atau <i>"input paket Budi kelas 9D"</i>). Langsung gass!
             </div>
           </div>
 
@@ -400,7 +400,7 @@
 
       if (currentPetugas === "Sultan Maulana") {
         titleSambutan = "Yo watsap Bos Lanaa! 🚀";
-        subSambutan = "Siap rekap paket dina iki? Bikin kabeh data rapi, sat-set, lan terorganisir tanpa ribet!";
+        subSambutan = "Siap rekap paket hari ini? Bikin semua data rapi, sat-set, dan terorganisir tanpa ribet!";
       }
 
       document.getElementById('select-petugas').value = currentPetugas;
@@ -940,7 +940,7 @@
 
     function exportCSV(tipe) {
       if (!dataRekap.length) {
-        alert('Ora ana data sing bisa di-export, Bos!');
+        alert('Gak ada data yang bisa di-export nih!');
         return;
       }
       generateCSVBlob(dataRekap, `Rekap_Paket_TOTAL_${new Date().toISOString().slice(0,10)}.csv`);
@@ -951,14 +951,14 @@
       const end = document.getElementById('export-end').value;
 
       if (!start || !end) {
-        alert('⚠️ Harap pilih tanggal mulai dan tanggal akhir!');
+        alert('⚠️ Pilih tanggal mulai dan tanggal akhir dulu ya!');
         return;
       }
 
       const filtered = dataRekap.filter(d => d.rawTanggal >= start && d.rawTanggal <= end);
 
       if (!filtered.length) {
-        alert(`Ora ana data paket ing rentang tanggal ${start} s/d ${end}!`);
+        alert(`Gak ada data paket di rentang tanggal ${start} s/d ${end}!`);
         return;
       }
 
@@ -1001,7 +1001,7 @@
         <div class="space-y-6">
           <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
             <h3 class="text-sm font-extrabold text-slate-900 dark:text-white mb-1">📤 Export / Copy Data Lokal</h3>
-            <p class="text-xs text-slate-400 dark:text-slate-500 mb-4">Salin kode JSON ing ngisor kiye kanggo disimpen utawa dipindah menyang piranti/web liyane.</p>
+            <p class="text-xs text-slate-400 dark:text-slate-500 mb-4">Salin kode JSON di bawah ini untuk disimpan atau dipindahkan ke device lain.</p>
             <textarea id="txt-export" readonly class="w-full h-36 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl p-3 font-mono text-[11px] focus:outline-none">${jsonString}</textarea>
             <button onclick="copyExportJSON()" class="mt-2 px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl text-xs flex items-center gap-2">
               <i data-lucide="copy" class="w-4 h-4"></i> Copy Kode JSON
@@ -1009,11 +1009,11 @@
           </div>
 
           <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
-            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white mb-1">📥 Import / Paste Data saka Canva Code</h3>
-            <p class="text-xs text-slate-400 dark:text-slate-500 mb-4">Paste kode JSON saka web Canva/backup lawas ing ngisor iki, banjur klik tombol **Import Data**.</p>
-            <textarea id="txt-import" placeholder='Paste kode JSON nang kene (Contoh: [{"nama":"Budi","kelas":"8A"...}])' class="w-full h-36 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl p-3 font-mono text-[11px] focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-amber-500 focus:outline-none"></textarea>
+            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white mb-1">📥 Import / Paste Data</h3>
+            <p class="text-xs text-slate-400 dark:text-slate-500 mb-4">Paste kode JSON dari backup lama ke bawah ini, lalu klik tombol **Import Data**.</p>
+            <textarea id="txt-import" placeholder='Paste kode JSON di sini (Contoh: [{"nama":"Budi","kelas":"8A"...}])' class="w-full h-36 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl p-3 font-mono text-[11px] focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-amber-500 focus:outline-none"></textarea>
             <button onclick="importJSONData()" class="mt-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-xs flex items-center gap-2">
-              <i data-lucide="download-cloud" class="w-4 h-4"></i> Import & Gabung Data
+              <i data-lucide="download-cloud" class="w-4 h-4"></i> Import Data
             </button>
           </div>
         </div>
@@ -1030,7 +1030,7 @@
     function importJSONData() {
       let importVal = document.getElementById("txt-import").value.trim();
       if (!importVal) {
-        alert("⚠️ Tempelna (paste) kode JSON dhisik, Bos!");
+        alert("⚠️ Tempel (paste) kode JSON dulu ya!");
         return;
       }
       try {
@@ -1044,17 +1044,17 @@
         if (Array.isArray(parsed)) {
           dataRekap = parsed;
           saveDB();
-          alert(`✅ Sukses! ${parsed.length} data berhasil di-import & dipindah.`);
+          alert(`✅ Sukses! ${parsed.length} data berhasil di-import.`);
           navigate('dashboard');
         } else {
-          alert("❌ Format JSON kudu wujud daftar/array.");
+          alert("❌ Format JSON harus berupa list/array.");
         }
       } catch (err) {
-        alert("❌ Gagal maca JSON: " + err.message);
+        alert("❌ Gagal membaca JSON: " + err.message);
       }
     }
 
-    // --- AI CHATBOT ENGINE LOGIC (GROQ API ENGINE) ---
+    // --- AI CHATBOT ENGINE LOGIC (BAHASA INDONESIA GAUL) ---
     async function handleAiChatSubmit(e) {
       e.preventDefault();
       const inputEl = document.getElementById('aiChatInput');
@@ -1072,9 +1072,40 @@
 
       const lower = text.toLowerCase();
 
-      // PERINTAH 1: INPUT PAKET VIA CHAT (Format: input paket [nama] kelas [kelas] ket [keterangan])
-      if (lower.includes('input paket') || lower.includes('tambah paket')) {
-        const matchNama = text.match(/(?:paket|nama)\s+([A-Za-z\s]+?)(?=\s+kelas|\s+ket|$)/i);
+      // 1. INTENT DETEKSI HAPUS DATA (BAHASA SANTAI/GAUL)
+      if (lower.includes('hapus') || lower.includes('hilangin') || lower.includes('delete') || lower.includes('buang')) {
+        const words = text.split(/\s+/);
+        let targetNama = "";
+        
+        // Cari nama setelah kata "nama", "namanya", "paket", "punya", atau "data"
+        const matchNama = text.match(/(?:nama|namanya|paket|punya|data|atas nama)\s+([A-Za-z0-9]+)/i);
+        if (matchNama) {
+          targetNama = matchNama[1].trim().toLowerCase();
+        } else {
+          // Ambil kata terakhir sebagai asumsi nama jika tidak memakai kata kunci
+          targetNama = words[words.length - 1].toLowerCase();
+        }
+
+        if (targetNama && targetNama.length > 1) {
+          const initLen = dataRekap.length;
+          dataRekap = dataRekap.filter(d => !d.nama.toLowerCase().includes(targetNama));
+          if (dataRekap.length < initLen) {
+            saveDB();
+            navigate(currentTab);
+            chatBox.innerHTML += `
+              <div class="bg-rose-50 dark:bg-rose-950/80 border border-rose-200 dark:border-rose-800 p-2.5 rounded-2xl text-rose-800 dark:text-rose-300 font-bold text-[11px]">
+                🗑️ Berhasil hapus semua data paket yang namanya "${targetNama}", Bro!
+              </div>
+            `;
+            chatBox.scrollTop = chatBox.scrollHeight;
+            return;
+          }
+        }
+      }
+
+      // 2. INTENT DETEKSI INPUT DATA (BAHASA SANTAI/GAUL)
+      if (lower.includes('input') || lower.includes('tambah') || lower.includes('masukin') || lower.includes('catat')) {
+        const matchNama = text.match(/(?:paket|nama|penerima)\s+([A-Za-z\s]+?)(?=\s+kelas|\s+ket|$)/i);
         const matchKelas = text.match(/kelas\s+([0-9A-Ea-e]+)/i);
         const matchKet = text.match(/ket(?:erangan)?\s+(.+)/i);
 
@@ -1104,15 +1135,7 @@
 
           chatBox.innerHTML += `
             <div class="bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800 p-2.5 rounded-2xl text-emerald-800 dark:text-emerald-300 font-bold text-[11px]">
-              ✅ Sip Bos! Paket <strong>${nama}</strong> (Kelas ${kelas}) wis berhasil tak-inputna!
-            </div>
-          `;
-          chatBox.scrollTop = chatBox.scrollHeight;
-          return;
-        } else {
-          chatBox.innerHTML += `
-            <div class="bg-amber-50 dark:bg-amber-950/80 border border-amber-200 dark:border-amber-800 p-2.5 rounded-2xl text-amber-800 dark:text-amber-300 font-bold text-[11px]">
-              💡 Format perintah input: <br/><code>input paket [Nama] kelas [Kelas] ket [Keterangan]</code><br/>Contoh: <i>input paket Faza kelas 9D ket online</i>
+              ✅ Berhasil diinput! Paket buat <strong>${nama}</strong> (Kelas ${kelas}) udah masuk ke tabel ya!
             </div>
           `;
           chatBox.scrollTop = chatBox.scrollHeight;
@@ -1120,38 +1143,11 @@
         }
       }
 
-      // PERINTAH 2: HAPUS PAKET VIA CHAT (Format: hapus paket [nama])
-      if (lower.includes('hapus paket') || lower.includes('delete paket')) {
-        const matchNama = text.match(/(?:paket|nama)\s+([A-Za-z\s]+)/i);
-        if (matchNama) {
-          const targetNama = matchNama[1].trim().toLowerCase();
-          const initLen = dataRekap.length;
-          dataRekap = dataRekap.filter(d => !d.nama.toLowerCase().includes(targetNama));
-          if (dataRekap.length < initLen) {
-            saveDB();
-            navigate(currentTab);
-            chatBox.innerHTML += `
-              <div class="bg-rose-50 dark:bg-rose-950/80 border border-rose-200 dark:border-rose-800 p-2.5 rounded-2xl text-rose-800 dark:text-rose-300 font-bold text-[11px]">
-                🗑️ Berhasil menghapus paket duweke "${targetNama}", Bos!
-              </div>
-            `;
-          } else {
-            chatBox.innerHTML += `
-              <div class="bg-amber-50 dark:bg-amber-950/80 border border-amber-200 dark:border-amber-800 p-2.5 rounded-2xl text-amber-800 dark:text-amber-300 font-bold text-[11px]">
-                ⚠️ Data paket nganggo nama "${targetNama}" ora ditemokake, Bos.
-              </div>
-            `;
-          }
-          chatBox.scrollTop = chatBox.scrollHeight;
-          return;
-        }
-      }
-
-      // CASUAL CHAT VIA GROQ API (LLAMA 3.3 70B - ULTRA FAST)
+      // 3. CASUAL CHAT VIA GROQ API (MODEL: llama-3.1-8b-instant — SUPER FAST & BAHASA INDONESIA GAUL)
       if (!groqApiKey) {
         chatBox.innerHTML += `
           <div class="bg-sky-50 dark:bg-sky-950/60 border border-sky-100 dark:border-sky-900 p-2.5 rounded-2xl text-slate-700 dark:text-slate-300 text-[11px]">
-            ⚙️ Bos Lanaa, klik tombol gear ing dhuwur banjur lebokake <strong>Groq API Key</strong>!
+            ⚙️ Bro Lanaa, klik ikon gear di atas buat masukin **Groq API Key** dulu ya!
           </div>
         `;
         chatBox.scrollTop = chatBox.scrollHeight;
@@ -1169,11 +1165,11 @@
             'Authorization': `Bearer ${groqApiKey}`
           },
           body: JSON.stringify({
-            model: "llama-3.3-70b-versatile",
+            model: "llama-3.1-8b-instant",
             messages: [
               {
                 role: "system",
-                content: "Kowe iku asisten AI gaul PaketBot kanggo Bos Lanaa ing web Paket Control Center. Tanggapi kanthi santai, ramah, lan lugas nganggo basa Jawa/Indonesia gaul."
+                content: "Kamu adalah AI Assistant gaul PaketBot untuk Bos Lanaa di aplikasi Paket Control Center. Selalu merespon menggunakan Bahasa Indonesia gaul, santai, akrab, ramah, dan cepat layaknya teman nongkrong. Dilarang menggunakan Bahasa Jawa."
               },
               {
                 role: "user",
@@ -1190,11 +1186,11 @@
         if (data.error) {
           chatBox.innerHTML += `
             <div class="bg-rose-50 dark:bg-rose-950/80 p-2.5 rounded-2xl text-rose-600 dark:text-rose-300 text-[11px]">
-              ⚠️ Groq API Error: ${data.error.message || 'Key ora valid'}.
+              ⚠️ Groq API Error: ${data.error.message || 'Key tidak valid'}.
             </div>
           `;
         } else {
-          const reply = data.choices?.[0]?.message?.content || "Aduh, Groq-ne bingung Bos!";
+          const reply = data.choices?.[0]?.message?.content || "Aduh, bingung nih mau jawab apa Bro!";
           chatBox.innerHTML += `
             <div class="bg-sky-50 dark:bg-sky-950/60 border border-sky-100 dark:border-sky-900 p-2.5 rounded-2xl text-slate-800 dark:text-slate-200 text-[11px]">
               ${reply}
@@ -1203,7 +1199,7 @@
         }
       } catch (err) {
         document.getElementById('aiLoading')?.remove();
-        chatBox.innerHTML += `<div class="bg-rose-50 dark:bg-rose-950/80 p-2.5 rounded-2xl text-rose-600 dark:text-rose-300 text-[11px]">Gagal nyambung Groq API, Bos! Priksa koneksi internet-mu.</div>`;
+        chatBox.innerHTML += `<div class="bg-rose-50 dark:bg-rose-950/80 p-2.5 rounded-2xl text-rose-600 dark:text-rose-300 text-[11px]">Gagal konek ke Groq API, Bro! Coba cek internet kamu deh.</div>`;
       }
       chatBox.scrollTop = chatBox.scrollHeight;
     }
@@ -1213,7 +1209,7 @@
       if (inputKey !== null) {
         groqApiKey = inputKey.trim();
         localStorage.setItem('groq_api_key', groqApiKey);
-        alert("✅ Groq API Key disimpen!");
+        alert("✅ Groq API Key tersimpan!");
       }
     }
 
