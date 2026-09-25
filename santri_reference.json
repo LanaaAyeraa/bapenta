@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "description": "Master referensi santri untuk saran pencarian dan koreksi typo Bapenta.",
+  "fields": ["nama", "kelas", "asrama"],
+  "students": []
+}
