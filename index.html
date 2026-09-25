@@ -49,12 +49,31 @@
     
     .dark .custom-scroll::-webkit-scrollbar-track { background: #0F172A; }
     .dark .custom-scroll::-webkit-scrollbar-thumb { background: #334155; }
-  </style>
+
+  .global-search-item[aria-selected="true"] { background: rgba(59, 130, 246, .10); }
+</style>
 </head>
 <body class="min-h-screen flex flex-col antialiased bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 custom-scroll">
 
   <!-- TOP APP BAR -->
   <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 shadow-xs transition-colors duration-300">
+<!-- Global Data Search: between Paket Control and theme toggle -->
+<div id="globalSearchWrap" class="relative w-full max-w-sm mx-2 hidden md:block">
+  <div class="relative">
+    <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+    <input
+      id="globalDataSearch"
+      type="search"
+      autocomplete="off"
+      placeholder="Cari data..."
+      class="w-full h-9 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 pl-9 pr-9 text-sm outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
+    />
+    <kbd class="absolute right-2 top-1/2 -translate-y-1/2 hidden lg:inline-flex items-center rounded border border-slate-200 dark:border-slate-600 px-1 py-0.5 text-[9px] text-slate-400">Ctrl K</kbd>
+  </div>
+  <div id="globalSearchResults" class="absolute z-[100] left-0 right-0 mt-2 hidden overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-xl"></div>
+</div>
+
+
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('dashboard')">
         <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-md">
@@ -1596,6 +1615,151 @@
       await loadSantriReference();
       navigate('dashboard');
     });
-  </script>
+  
+
+
+
+// ===== Global Data Search =====
+(function initGlobalDataSearch() {
+  const input = document.getElementById('globalDataSearch');
+  const box = document.getElementById('globalSearchResults');
+  if (!input || !box) return;
+
+  let activeIndex = -1;
+  let results = [];
+
+  const esc = (value) => String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;'
+  }[ch]));
+
+  const normalize = (value) => String(value ?? '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+  const getRows = () => {
+    if (Array.isArray(window.dataRekap)) return window.dataRekap;
+    if (typeof dataRekap !== 'undefined' && Array.isArray(dataRekap)) return dataRekap;
+    return [];
+  };
+
+  const render = () => {
+    if (!results.length) {
+      box.innerHTML = input.value.trim()
+        ? '<div class="p-4 text-sm text-slate-500">Data tidak ditemukan.</div>'
+        : '';
+      box.classList.toggle('hidden', !input.value.trim());
+      return;
+    }
+
+    box.innerHTML = results.slice(0, 8).map((item, i) => {
+      const row = item.row;
+      const name = row.nama || row.name || row.penerima || '-';
+      const kelas = row.kelas || row.class || '-';
+      const petugas = row.petugas || row.officer || '-';
+      const tanggal = row.tanggal || row.date || '-';
+      const ket = row.keterangan || row.description || '-';
+
+      return `
+        <button type="button" class="global-search-item w-full text-left px-4 py-3 border-b last:border-b-0 border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800" data-index="${i}" aria-selected="${i === activeIndex}">
+          <div class="flex items-center justify-between gap-3">
+            <div class="min-w-0">
+              <div class="font-semibold text-sm text-slate-800 dark:text-slate-100 truncate">${esc(name)}</div>
+              <div class="mt-0.5 text-xs text-slate-500 truncate">${esc(kelas)} · ${esc(ket)}</div>
+            </div>
+            <div class="shrink-0 text-[11px] text-slate-400">${esc(tanggal)}</div>
+          </div>
+          <div class="mt-1 text-[11px] text-slate-400">Petugas: ${esc(petugas)}</div>
+        </button>`;
+    }).join('');
+
+    box.classList.remove('hidden');
+    box.querySelectorAll('.global-search-item').forEach(btn => {
+      btn.addEventListener('mouseenter', () => {
+        activeIndex = Number(btn.dataset.index);
+        render();
+      });
+      btn.addEventListener('click', () => choose(Number(btn.dataset.index)));
+    });
+  };
+
+  const choose = (index) => {
+    const item = results[index];
+    if (!item) return;
+    box.classList.add('hidden');
+    input.value = item.query;
+
+    const rekapBtn = [...document.querySelectorAll('button, a')].find(el =>
+      /rekap/i.test((el.textContent || '').trim())
+    );
+    if (rekapBtn) rekapBtn.click();
+
+    const candidates = [
+      document.querySelector('#searchRekap'),
+      document.querySelector('input[placeholder*="Cari"][placeholder*="paket" i]'),
+      document.querySelector('input[placeholder*="Cari data" i]')
+    ].filter(Boolean);
+
+    if (candidates[0]) {
+      candidates[0].value = item.query;
+      candidates[0].dispatchEvent(new Event('input', { bubbles: true }));
+    }
+  };
+
+  const doSearch = () => {
+    const q = normalize(input.value.trim());
+    activeIndex = -1;
+    if (!q) {
+      results = [];
+      box.classList.add('hidden');
+      return;
+    }
+
+    results = getRows().map(row => {
+      const haystack = normalize([
+        row.nama, row.name, row.penerima, row.kelas, row.class,
+        row.petugas, row.officer, row.keterangan, row.description,
+        row.tanggal, row.date
+      ].join(' '));
+      const pos = haystack.indexOf(q);
+      return { row, score: pos === -1 ? Infinity : pos, query: input.value.trim() };
+    }).filter(x => x.score !== Infinity)
+      .sort((a,b) => a.score - b.score)
+      .slice(0, 8);
+
+    render();
+  };
+
+  input.addEventListener('input', doSearch);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown' && results.length) {
+      e.preventDefault();
+      activeIndex = (activeIndex + 1) % Math.min(results.length, 8);
+      render();
+    } else if (e.key === 'ArrowUp' && results.length) {
+      e.preventDefault();
+      activeIndex = activeIndex <= 0 ? Math.min(results.length, 8) - 1 : activeIndex - 1;
+      render();
+    } else if (e.key === 'Enter' && results.length) {
+      e.preventDefault();
+      choose(activeIndex >= 0 ? activeIndex : 0);
+    } else if (e.key === 'Escape') {
+      box.classList.add('hidden');
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!input.contains(e.target) && !box.contains(e.target)) box.classList.add('hidden');
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      input.focus();
+      input.select();
+    }
+  });
+
+  if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+})();
+
+</script>
 </body>
 </html>
