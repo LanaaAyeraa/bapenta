@@ -50,49 +50,52 @@
     .dark .custom-scroll::-webkit-scrollbar-track { background: #0F172A; }
     .dark .custom-scroll::-webkit-scrollbar-thumb { background: #334155; }
 
-  .global-search-item[aria-selected="true"] { background: rgba(59, 130, 246, .10); }
-</style>
+    .global-search-item[aria-selected="true"] { background: rgba(59, 130, 246, .10); }
+  </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 custom-scroll">
 
   <!-- TOP APP BAR -->
   <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 shadow-xs transition-colors duration-300">
-<!-- Global Data Search: between Paket Control and theme toggle -->
-<div id="globalSearchWrap" class="relative w-full max-w-sm mx-2 hidden md:block">
-  <div class="relative">
-    <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
-    <input
-      id="globalDataSearch"
-      type="search"
-      autocomplete="off"
-      placeholder="Cari data..."
-      class="w-full h-9 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 pl-9 pr-9 text-sm outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500"
-    />
-    <kbd class="absolute right-2 top-1/2 -translate-y-1/2 hidden lg:inline-flex items-center rounded border border-slate-200 dark:border-slate-600 px-1 py-0.5 text-[9px] text-slate-400">Ctrl K</kbd>
-  </div>
-  <div id="globalSearchResults" class="absolute z-[100] left-0 right-0 mt-2 hidden overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-xl"></div>
-</div>
-
-
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('dashboard')">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-md">
-          <i data-lucide="package-check" class="w-5 h-5"></i>
-        </div>
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="text-base font-extrabold tracking-tight text-slate-900 dark:text-white">PAKET<span class="text-sky-500">CONTROL</span></span>
-            <span id="badge-online-status" class="text-[10px] bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              ONLINE
-            </span>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      
+      <!-- LOGO + GLOBAL SEARCH BAR (PINDAH KE SEBELAH LOGO SESUAI TANDA MERAH) -->
+      <div class="flex items-center gap-4 flex-1 max-w-2xl min-w-0">
+        <div class="flex items-center gap-3 cursor-pointer shrink-0" onclick="navigate('dashboard')">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-md">
+            <i data-lucide="package-check" class="w-5 h-5"></i>
           </div>
-          <p class="text-[11px] text-slate-400 dark:text-slate-500 font-medium">Package Management & Verification</p>
+          <div class="hidden sm:block">
+            <div class="flex items-center gap-2">
+              <span class="text-base font-extrabold tracking-tight text-slate-900 dark:text-white">PAKET<span class="text-sky-500">CONTROL</span></span>
+              <span id="badge-online-status" class="text-[10px] bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                ONLINE
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-400 dark:text-slate-500 font-medium">Package Management & Verification</p>
+          </div>
+        </div>
+
+        <!-- Global Data Search (Posisi Tanda Merah) -->
+        <div id="globalSearchWrap" class="relative w-full max-w-md">
+          <div class="relative">
+            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+            <input
+              id="globalDataSearch"
+              type="search"
+              autocomplete="off"
+              placeholder="Cari data untuk diedit/dihapus..."
+              class="w-full h-9 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 pl-9 pr-9 text-xs sm:text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 text-slate-800 dark:text-slate-100"
+            />
+            <kbd class="absolute right-2 top-1/2 -translate-y-1/2 hidden md:inline-flex items-center rounded border border-slate-200 dark:border-slate-600 px-1 py-0.5 text-[9px] text-slate-400">Ctrl K</kbd>
+          </div>
+          <div id="globalSearchResults" class="absolute z-[100] left-0 right-0 mt-2 hidden overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-xl max-h-96 overflow-y-auto custom-scroll"></div>
         </div>
       </div>
 
       <!-- RIGHT TOP BAR: PETUGAS & DARK MODE TOGGLE -->
-      <div class="flex items-center gap-2 sm:gap-3">
+      <div class="flex items-center gap-2 sm:gap-3 shrink-0">
         <!-- TOGGLE DARK MODE BUTTON -->
         <button onclick="toggleDarkMode()" id="btn-theme-toggle" title="Ubah Mode Tampilan" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-amber-400 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition border border-slate-200 dark:border-slate-700">
           <i data-lucide="moon" id="icon-theme" class="w-4 h-4"></i>
@@ -236,20 +239,68 @@
     </div>
   </div>
 
+  <!-- MODAL EDIT / HAPUS PAKET -->
+  <div id="editModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs hidden p-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-5 animate-in fade-in zoom-in duration-200">
+      <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold">
+            <i data-lucide="edit-3" class="w-4 h-4"></i>
+          </div>
+          <h3 class="text-base font-extrabold text-slate-900 dark:text-white">Edit / Kelola Data Paket</h3>
+        </div>
+        <button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <input type="hidden" id="edit-id" />
+
+      <div class="space-y-4 text-xs font-medium">
+        <div>
+          <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Nama Penerima</label>
+          <input type="text" id="edit-nama" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-sky-500 focus:outline-none" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Kelas</label>
+            <input type="text" id="edit-kelas" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 font-semibold focus:ring-2 focus:ring-sky-500 focus:outline-none uppercase" />
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Tanggal Rekap</label>
+            <input type="date" id="edit-tanggal" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 font-semibold focus:ring-2 focus:ring-sky-500 focus:outline-none" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-slate-700 dark:text-slate-300 mb-1">Keterangan Paket</label>
+          <input type="text" id="edit-keterangan" placeholder="Contoh: Online, Non-online, HRL, Food..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 focus:ring-2 focus:ring-sky-500 focus:outline-none" />
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
+        <button onclick="deletePaketFromModal()" class="px-4 py-2.5 bg-rose-500 hover:bg-rose-600 text-white font-extrabold rounded-xl text-xs flex items-center gap-1.5 transition">
+          <i data-lucide="trash-2" class="w-4 h-4"></i> Hapus Data
+        </button>
+
+        <div class="flex items-center gap-2">
+          <button onclick="closeEditModal()" class="px-4 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold rounded-xl text-xs transition">
+            Batal
+          </button>
+          <button onclick="saveEditModal()" class="px-5 py-2.5 bg-sky-500 hover:bg-sky-600 text-white font-extrabold rounded-xl text-xs transition shadow-xs flex items-center gap-1.5">
+            <i data-lucide="save" class="w-4 h-4"></i> Simpan Perubahan
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <footer class="bg-white dark:bg-slate-900 border-t border-slate-200/80 dark:border-slate-800 py-4 text-center text-xs text-slate-400 dark:text-slate-500 transition-colors duration-300">
     <p>“Streamlined Package Tracking System” • Rekap Paket Sekolah</p>
   </footer>
 
   <script>
-    // --- SERVICE WORKER REGISTRATION (OFFLINE MODE) ---
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then(() => console.log('✅ Offline Mode Ready!'))
-          .catch((err) => console.log('Offline SW Error:', err));
-      });
-    }
-
     // --- NETWORK STATUS DETECTOR ---
     function updateOnlineStatus() {
       const badge = document.getElementById('badge-online-status');
@@ -434,12 +485,9 @@
     dataRekap = dataRekap.filter(isValidPackageRecord).map(normalizePackageRecord);
     let currentPetugas = localStorage.getItem('activePetugas_UI') || "Sultan Maulana";
     if (typeof currentPetugas !== 'string' || !currentPetugas.trim()) currentPetugas = "Sultan Maulana";
-    
 
-    // --- MASTER REFERENSI SANTRI (Nama + Kelas + Asrama) ---
-    // Dipakai hanya untuk saran pencarian/koreksi typo. Tidak mengubah data paket.
-    // Data referensi ditanam langsung agar aplikasi tetap jalan sebagai satu file.
-    const santriReference = [{"nama":"Abimanyu Surendra Latif","kelas":"8C","asrama":"Abdul Aziz 201"},{"nama":"Abrisam Khaalish Dzahin","kelas":"8A","asrama":"Abdul Aziz 201"},{"nama":"Afwan Maulana Azidane","kelas":"8D","asrama":"Abdul Aziz 201"},{"nama":"Ahmad Tajun Arifin","kelas":"8C","asrama":"Abdul Aziz 201"},{"nama":"Akhtar Arghanismara Elfaradis","kelas":"8E","asrama":"Abdul Aziz 201"},{"nama":"Anjas Izzul Haq","kelas":"8D","asrama":"Abdul Aziz 201"},{"nama":"Anugrah Syahrial Muzaki","kelas":"8B","asrama":"Abdul Aziz 201"},{"nama":"Arshavan Wijaya Prakoso","kelas":"8A","asrama":"Abdul Aziz 201"},{"nama":"Banyu El Faruq Putra Hidayat","kelas":"8C","asrama":"Abdul Aziz 201"},{"nama":"Daffa Setya Arezky Warsito","kelas":"8D","asrama":"Abdul Aziz 201"},{"nama":"Dinan Al Khalifi","kelas":"8D","asrama":"Abdul Aziz 201"},{"nama":"Emir Firjatunafis","kelas":"8C","asrama":"Abdul Aziz 201"},{"nama":"Faris Bachtiar Usman","kelas":"8B","asrama":"Abdul Aziz 201"},{"nama":"Galang Van Dirga Asyrafiqoh","kelas":"8A","asrama":"Abdul Aziz 201"},{"nama":"Ihsan Fadil Rahmani","kelas":"8E","asrama":"Abdul Aziz 201"},{"nama":"Naufal Azzam Ardhani Sufa","kelas":"8C","asrama":"Abdul Aziz 201"},{"nama":"Naufal Eigas Fadhillah","kelas":"8B","asrama":"Abdul Aziz 201"},{"nama":"Rafa Al Fathin Rosyadi","kelas":"8E","asrama":"Abdul Aziz 201"},{"nama":"Rafif Azka Khamdani","kelas":"8B","asrama":"Abdul Aziz 201"},{"nama":"Restu Kukuh Wicaksono","kelas":"8A","asrama":"Abdul Aziz 201"},{"nama":"Sangguwan Aptana Elgin","kelas":"8A","asrama":"Abdul Aziz 201"},{"nama":"Faiz Muhammad Musyafi","kelas":"11A","asrama":"Abdul Aziz 201"},{"nama":"Muhammad Hamdan Maulana","kelas":"11A","asrama":"Abdul Aziz 201"},{"nama":"Abdullah Al Harits","kelas":"8D","asrama":"Abdul Aziz 202"},{"nama":"Afkar Zain Muzhaffar","kelas":"8D","asrama":"Abdul Aziz 202"},{"nama":"Aksel Adiv Cakradara","kelas":"8A","asrama":"Abdul Aziz 202"},{"nama":"Athaa Zaid","kelas":"8B","asrama":"Abdul Aziz 202"},{"nama":"Bagas Trustha Nugraha","kelas":"8E","asrama":"Abdul Aziz 202"},{"nama":"Bagoes Najdzil Mukhsinin","kelas":"8A","asrama":"Abdul Aziz 202"},{"nama":"Baskara Akhtar Prabowo","kelas":"8B","asrama":"Abdul Aziz 202"},{"nama":"Biru Tsabita Rizkiadi","kelas":"8D","asrama":"Abdul Aziz 202"},{"nama":"Faatih Mahya Izdihar","kelas":"8D","asrama":"Abdul Aziz 202"},{"nama":"Falakh Nur Ilmi S Firori","kelas":"8E","asrama":"Abdul Aziz 202"},{"nama":"Fathan Yusuf Arfai","kelas":"8D","asrama":"Abdul Aziz 202"},{"nama":"Gavin Aska Pratama","kelas":"8C","asrama":"Abdul Aziz 202"},{"nama":"Ghafar Dhuha Arrasyid","kelas":"8A","asrama":"Abdul Aziz 202"},{"nama":"Haykal Afsar Ramadhan","kelas":"8E","asrama":"Abdul Aziz 202"},{"nama":"Ibrahim Fathan Raif Arifin","kelas":"8A","asrama":"Abdul Aziz 202"},{"nama":"Lathif Yafli Sanyoto","kelas":"8B","asrama":"Abdul Aziz 202"},{"nama":"Lintang Qudsi Assyaqieb","kelas":"8C","asrama":"Abdul Aziz 202"},{"nama":"Mahardika Daffa Setya Imani","kelas":"8B","asrama":"Abdul Aziz 202"},{"nama":"Maulana Najwan Ramadhan","kelas":"8B","asrama":"Abdul Aziz 202"},{"nama":"Miko Pradipta Wibowo","kelas":"8C","asrama":"Abdul Aziz 202"},{"nama":"Muhammad Fawwaaz Muhibbullah","kelas":"8E","asrama":"Abdul Aziz 202"},{"nama":"Muhammad Fawwaz Alzena","kelas":"8A","asrama":"Abdul Aziz 202"},{"nama":"Praditia Fayyadhi Gesangputra","kelas":"8E","asrama":"Abdul Aziz 202"},{"nama":"Raditya Early Abiyu","kelas":"8B","asrama":"Abdul Aziz 202"},{"nama":"Athaya Zidhane Putra Daryadi","kelas":"11A","asrama":"Abdul Aziz 202"},{"nama":"Fairuz Bimpi Azzami","kelas":"11A","asrama":"Abdul Aziz 202"},{"nama":"Fazli Ahnaf Faiq Yuswandani","kelas":"8C","asrama":"Abdul Aziz 203"},{"nama":"Ghiffari Ghatan Syazani","kelas":"8B","asrama":"Abdul Aziz 203"},{"nama":"Haikal Fawwaz Azzaki","kelas":"8A","asrama":"Abdul Aziz 203"},{"nama":"Hanafian Bima Santri","kelas":"8A","asrama":"Abdul Aziz 203"},{"nama":"Hanif","kelas":"8C","asrama":"Abdul Aziz 203"},{"nama":"Hanif Asyam Ramadhan","kelas":"8C","asrama":"Abdul Aziz 203"},{"nama":"Hisyam Hilmi Effendy","kelas":"8B","asrama":"Abdul Aziz 203"},{"nama":"Hokian Arya Pradipta","kelas":"8C","asrama":"Abdul Aziz 203"},{"nama":"Kenzie Suryo Putro Wardhana","kelas":"8C","asrama":"Abdul Aziz 203"},{"nama":"Kenzie Zulfadhly Nasywan","kelas":"8D","asrama":"Abdul Aziz 203"},{"nama":"Khalif Rafi Attaqiy","kelas":"8C","asrama":"Abdul Aziz 203"},{"nama":"Khiar Nabhan Ar Rahman","kelas":"8C","asrama":"Abdul Aziz 203"},{"nama":"Kian Apta Alvaro","kelas":"8B","asrama":"Abdul Aziz 203"},{"nama":"Mahardika Banyu Raya","kelas":"8C","asrama":"Abdul Aziz 203"},{"nama":"Maulana Hafizh","kelas":"8D","asrama":"Abdul Aziz 203"},{"nama":"Muhammad Ammar Khaan","kelas":"8C","asrama":"Abdul Aziz 203"},{"nama":"Mukhammad Hasyim Akhtar Haidar","kelas":"8E","asrama":"Abdul Aziz 203"},{"nama":"Muzakki Al Fatih","kelas":"8A","asrama":"Abdul Aziz 203"},{"nama":"Nur Adzaky Anugrahtama","kelas":"8D","asrama":"Abdul Aziz 203"},{"nama":"Pamor Rozzaq Subkhi","kelas":"8C","asrama":"Abdul Aziz 203"},{"nama":"Rafiq Abdur Razzaq","kelas":"8B","asrama":"Abdul Aziz 203"},{"nama":"Zenifa Venzakila Darmawan","kelas":"8A","asrama":"Abdul Aziz 203"},{"nama":"Avon Dzakwan Al Hakim","kelas":"11B","asrama":"Abdul Aziz 203"},{"nama":"Azra Abdul Malik","kelas":"11A","asrama":"Abdul Aziz 203"},{"nama":"Arfa Hikamy Alvarez","kelas":"8B","asrama":"Abdul Aziz 204"},{"nama":"Aufa Jafni Harraz","kelas":"8E","asrama":"Abdul Aziz 204"},{"nama":"Azka Willyen Restiadi","kelas":"8E","asrama":"Abdul Aziz 204"},{"nama":"Fayrell Atharizza Uqailah","kelas":"8E","asrama":"Abdul Aziz 204"},{"nama":"First Amri Darryl Chamdani","kelas":"8B","asrama":"Abdul Aziz 204"},{"nama":"Gesid Ath Thoriq","kelas":"8B","asrama":"Abdul Aziz 204"},{"nama":"Haikal Alfareza Usman","kelas":"8E","asrama":"Abdul Aziz 204"},{"nama":"Haikal Keenan Fachrizal","kelas":"8D","asrama":"Abdul Aziz 204"},{"nama":"Hammam Farros Muttaqin","kelas":"8A","asrama":"Abdul Aziz 204"},{"nama":"Iqbal Cahya Maulana","kelas":"8E","asrama":"Abdul Aziz 204"},{"nama":"Juna Amalul Abdillah","kelas":"8C","asrama":"Abdul Aziz 204"},{"nama":"Kafi A'mal Falah","kelas":"8D","asrama":"Abdul Aziz 204"},{"nama":"Kalea Ibra Sasiki","kelas":"8D","asrama":"Abdul Aziz 204"},{"nama":"Muhammad Farsan Tijani","kelas":"8E","asrama":"Abdul Aziz 204"},{"nama":"Muhammad Indo Zabrajad","kelas":"8D","asrama":"Abdul Aziz 204"},{"nama":"Muhammad Rizky Syahputra","kelas":"8D","asrama":"Abdul Aziz 204"},{"nama":"Rafa Vicky Pratama","kelas":"8A","asrama":"Abdul Aziz 204"},{"nama":"Rafka Aydin Syazwan","kelas":"8C","asrama":"Abdul Aziz 204"},{"nama":"Raihaan Sabhi Romadon","kelas":"8E","asrama":"Abdul Aziz 204"},{"nama":"Rajendra Edgar Gibran","kelas":"8A","asrama":"Abdul Aziz 204"},{"nama":"Reyhan Yasid Asyraf Alfakhry","kelas":"8A","asrama":"Abdul Aziz 204"},{"nama":"Reza Iqbal Maulana","kelas":"8A","asrama":"Abdul Aziz 204"},{"nama":"Royhan Al Ghazali","kelas":"8D","asrama":"Abdul Aziz 204"},{"nama":"Thufail Rijal Jadid","kelas":"8A","asrama":"Abdul Aziz 204"},{"nama":"Faiz Muhtaz Wardoyo","kelas":"11B","asrama":"Abdul Aziz 204"},{"nama":"Arya Satya Nugraha","kelas":"11A","asrama":"Abdul Aziz 204"},{"nama":"Adeeva Kenzie Saverio","kelas":"8B","asrama":"Abdul Aziz 205"},{"nama":"Ahnaf Zhafif Barikly","kelas":"8D","asrama":"Abdul Aziz 205"},{"nama":"Akhtar Rafif Mahira Dzikra","kelas":"8C","asrama":"Abdul Aziz 205"},{"nama":"Arsyad Basim","kelas":"8B","asrama":"Abdul Aziz 205"},{"nama":"Bilal Nur Ramadhan","kelas":"8D","asrama":"Abdul Aziz 205"},{"nama":"Dinu Afkar Raqilla Syahmi","kelas":"8A","asrama":"Abdul Aziz 205"},{"nama":"Durran Kenzie Altito","kelas":"8D","asrama":"Abdul Aziz 205"},{"nama":"Ezra Aydin Ruhan","kelas":"8E","asrama":"Abdul Aziz 205"},{"nama":"Fatwa Giga Anugerah","kelas":"8C","asrama":"Abdul Aziz 205"},{"nama":"Hikari Al Farik Nurtedo","kelas":"8B","asrama":"Abdul Aziz 205"},{"nama":"Mozilla Yusma Mubarok","kelas":"8A","asrama":"Abdul Aziz 205"},{"nama":"Muhammad Albisefano Abraham","kelas":"8B","asrama":"Abdul Aziz 205"},{"nama":"Muhammad Azka Al-Faradist","kelas":"8E","asrama":"Abdul Aziz 205"},{"nama":"Muhammad Farel Sutiyon","kelas":"8A","asrama":"Abdul Aziz 205"},{"nama":"Muhammad Faza El Kautsara","kelas":"8A","asrama":"Abdul Aziz 205"},{"nama":"Muhammad Rayyan Athallah Fahrudin","kelas":"8D","asrama":"Abdul Aziz 205"},{"nama":"Naufal Tsaqif Alkhalifi","kelas":"8B","asrama":"Abdul Aziz 205"},{"nama":"Nayaka Pradita Hutama","kelas":"8B","asrama":"Abdul Aziz 205"},{"nama":"Pranav Cavalin Nurdhyanto","kelas":"8B","asrama":"Abdul Aziz 205"},{"nama":"Rasyananda Muhammad Haykel","kelas":"8D","asrama":"Abdul Aziz 205"},{"nama":"Regan Syafiq Hafiz Fazila","kelas":"8C","asrama":"Abdul Aziz 205"},{"nama":"Rofik Al Rizki","kelas":"8E","asrama":"Abdul Aziz 205"},{"nama":"Syafiq Hafizudin Aqeel","kelas":"8A","asrama":"Abdul Aziz 205"},{"nama":"Syarif Farisqi Oktafiangga","kelas":"8D","asrama":"Abdul Aziz 205"},{"nama":"Yoda Alan Pramudita","kelas":"8C","asrama":"Abdul Aziz 205"},{"nama":"Zain Argia Putra Riyadi","kelas":"8D","asrama":"Abdul Aziz 205"},{"nama":"Fadhiil Hilmi Nashrulloh","kelas":"11A","asrama":"Abdul Aziz 205"},{"nama":"Muhammad Mirza Galan Ramadhan","kelas":"11B","asrama":"Abdul Aziz 205"},{"nama":"Abdullah Abdul Mughni Az-Zam Zami","kelas":"9C","asrama":"Abdul Aziz 104"},{"nama":"Arjuna Qori Islami","kelas":"9B","asrama":"Abdul Aziz 104"},{"nama":"Arkan Hidayat","kelas":"9C","asrama":"Abdul Aziz 104"},{"nama":"Assyam Nadhif Mudzaky","kelas":"9A","asrama":"Abdul Aziz 104"},{"nama":"Azka Faeyza Sasongko","kelas":"9C","asrama":"Abdul Aziz 104"},{"nama":"Azka Naufal Yusuf","kelas":"9B","asrama":"Abdul Aziz 104"},{"nama":"Banyu Alkhalifi Riyanto","kelas":"9C","asrama":"Abdul Aziz 104"},{"nama":"Bintang Putra Peradaban","kelas":"9A","asrama":"Abdul Aziz 104"},{"nama":"Denendra Kenzi Azka Fadhilah","kelas":"9E","asrama":"Abdul Aziz 104"},{"nama":"Daniswara Bayanaka Arezki","kelas":"9E","asrama":"Abdul Aziz 104"},{"nama":"Dzaka Purnama Abiyyu","kelas":"9B","asrama":"Abdul Aziz 104"},{"nama":"Fadlan Haris Aizar","kelas":"9D","asrama":"Abdul Aziz 104"},{"nama":"Ghulam Adika Maiza","kelas":"9A","asrama":"Abdul Aziz 104"},{"nama":"Guinandra Azkalby Maruto","kelas":"9E","asrama":"Abdul Aziz 104"},{"nama":"Haikal Arisky","kelas":"9D","asrama":"Abdul Aziz 104"},{"nama":"Hamizan El Fawwaz","kelas":"9C","asrama":"Abdul Aziz 104"},{"nama":"Haykal Bangkit Samudra","kelas":"9B","asrama":"Abdul Aziz 104"},{"nama":"Maher Mayza Karim","kelas":"9C","asrama":"Abdul Aziz 104"},{"nama":"Maher Muhammad Ibrahim","kelas":"9C","asrama":"Abdul Aziz 104"},{"nama":"Mayland Zaki Pasulung","kelas":"9B","asrama":"Abdul Aziz 104"},{"nama":"Muhammad Akbar Rafif Pangestu","kelas":"9E","asrama":"Abdul Aziz 104"},{"nama":"Muhammad Arif Alfatih","kelas":"9E","asrama":"Abdul Aziz 104"},{"nama":"Rasya Abrar Nugraha","kelas":"9B","asrama":"Abdul Aziz 104"},{"nama":"Rifki Pratama","kelas":"9C","asrama":"Abdul Aziz 104"},{"nama":"Wildan Pramudya Rachman","kelas":"9A","asrama":"Abdul Aziz 104"},{"nama":"Farhan Yusuf Naufal","kelas":"11A","asrama":"Abdul Aziz 104"},{"nama":"Refanly Iqbal Nurmansyah","kelas":"11A","asrama":"Abdul Aziz 104"},{"nama":"Alfath Mahardika Atmaja","kelas":"9A","asrama":"Abdul Aziz 105"},{"nama":"Aqeela Ziyan El Hijazi","kelas":"9E","asrama":"Abdul Aziz 105"},{"nama":"Arraffa Nur Zakin","kelas":"9A","asrama":"Abdul Aziz 105"},{"nama":"Arviyan Arkan Naufal","kelas":"9D","asrama":"Abdul Aziz 105"},{"nama":"Barra Jibran Pradana","kelas":"9C","asrama":"Abdul Aziz 105"},{"nama":"Bisma Arrafa Yanuar Daniswara","kelas":"9A","asrama":"Abdul Aziz 105"},{"nama":"Brikly Biyan Mananta","kelas":"9B","asrama":"Abdul Aziz 105"},{"nama":"Dzaky Azzam Alvaro","kelas":"9C","asrama":"Abdul Aziz 105"},{"nama":"Evan Ragil Aufa","kelas":"9A","asrama":"Abdul Aziz 105"},{"nama":"Fadillah Rafif Khairullah","kelas":"9A","asrama":"Abdul Aziz 105"},{"nama":"Faizullah Alfarizky","kelas":"9E","asrama":"Abdul Aziz 105"},{"nama":"Fetra Alkindy","kelas":"9E","asrama":"Abdul Aziz 105"},{"nama":"Hafiz Alwafi Ayyasy","kelas":"9D","asrama":"Abdul Aziz 105"},{"nama":"Hassan Wahid Ar Rosyid","kelas":"9B","asrama":"Abdul Aziz 105"},{"nama":"Hibrizi Bima Ferdinand Tsaqif","kelas":"9C","asrama":"Abdul Aziz 105"},{"nama":"Husein Itsnan Ar Rosyid","kelas":"9B","asrama":"Abdul Aziz 105"},{"nama":"Irnizar Purwadijaya","kelas":"9B","asrama":"Abdul Aziz 105"},{"nama":"Ismail Hanan Husada","kelas":"9E","asrama":"Abdul Aziz 105"},{"nama":"Kafka Akbar Hafizy","kelas":"9A","asrama":"Abdul Aziz 105"},{"nama":"Manggala Tegar Syahfaeral","kelas":"9C","asrama":"Abdul Aziz 105"},{"nama":"Muhammad Arjuna Yk Setya Almilati","kelas":"9A","asrama":"Abdul Aziz 105"},{"nama":"Muhammad Farras Subandono","kelas":"9A","asrama":"Abdul Aziz 105"},{"nama":"Muhammad Faza Hamizan","kelas":"9A","asrama":"Abdul Aziz 105"},{"nama":"Muhammad Gibran Saviero","kelas":"9E","asrama":"Abdul Aziz 105"},{"nama":"Kautsar Ramadhana Arzaneta","kelas":"11B","asrama":"Abdul Aziz 105"},{"nama":"Ahmad Anis Alfayad Tauda","kelas":"11A","asrama":"Abdul Aziz 105"},{"nama":"Afkar Sakti Fathoni","kelas":"9A","asrama":"Abdul Aziz 106"},{"nama":"Asnanta Hafidz Haris","kelas":"9D","asrama":"Abdul Aziz 106"},{"nama":"Chesyl Ferdinad Pratama","kelas":"9E","asrama":"Abdul Aziz 106"},{"nama":"Chiquillo Devara El Shadiq","kelas":"9B","asrama":"Abdul Aziz 106"},{"nama":"Desten Ibnu Syafi'i","kelas":"9D","asrama":"Abdul Aziz 106"},{"nama":"Emir Adwa' Hufuza","kelas":"9C","asrama":"Abdul Aziz 106"},{"nama":"Fayi Dhuha","kelas":"9E","asrama":"Abdul Aziz 106"},{"nama":"Galent Nidriz Alfaridzi","kelas":"9D","asrama":"Abdul Aziz 106"},{"nama":"Ghossaniy Isyrof Destowikrama","kelas":"9B","asrama":"Abdul Aziz 106"},{"nama":"Gibran Mirza Atallah","kelas":"9D","asrama":"Abdul Aziz 106"},{"nama":"Kaisan Putra Pratama","kelas":"9D","asrama":"Abdul Aziz 106"},{"nama":"Kanza Satria Winoto","kelas":"9C","asrama":"Abdul Aziz 106"},{"nama":"Khoerul Ummam","kelas":"9D","asrama":"Abdul Aziz 106"},{"nama":"Mirza Azzam Musafir","kelas":"9B","asrama":"Abdul Aziz 106"},{"nama":"Muhammad Danish Nabhan Al Farzan","kelas":"9B","asrama":"Abdul Aziz 106"},{"nama":"Muhammad Dirga Pratama","kelas":"9C","asrama":"Abdul Aziz 106"},{"nama":"Muhammad Hafizh Ubaidullah","kelas":"9B","asrama":"Abdul Aziz 106"},{"nama":"Muhammad Haykal Iman","kelas":"9C","asrama":"Abdul Aziz 106"},{"nama":"Muhammad Rasya El Ibrahim","kelas":"9C","asrama":"Abdul Aziz 106"},{"nama":"Muhammad Syahid Abdul Fatah","kelas":"9C","asrama":"Abdul Aziz 106"},{"nama":"Muhammad Umar Ukassyah","kelas":"9A","asrama":"Abdul Aziz 106"},{"nama":"Nabil Sakha Fauzan","kelas":"9D","asrama":"Abdul Aziz 106"},{"nama":"Rafif Aby Ararya","kelas":"9A","asrama":"Abdul Aziz 106"},{"nama":"Raziq Hanan","kelas":"9D","asrama":"Abdul Aziz 106"},{"nama":"Wildan Rafi Tiko Fatan Kholik","kelas":"11B","asrama":"Abdul Aziz 106"},{"nama":"Alden Zidane Wijayananggara","kelas":"11A","asrama":"Abdul Aziz 106"},{"nama":"Abdul Jabbar","kelas":"9A","asrama":"Abdul Aziz 107"},{"nama":"Abyan Fachry Manahilul Kama","kelas":"9E","asrama":"Abdul Aziz 107"},{"nama":"Ahmad Shaddam Azziyaad","kelas":"9D","asrama":"Abdul Aziz 107"},{"nama":"Ahnaf Nabihan Mubarak","kelas":"9B","asrama":"Abdul Aziz 107"},{"nama":"Akmal Yusuf Al-Qushayiqushayi","kelas":"9E","asrama":"Abdul Aziz 107"},{"nama":"Alfari Hanun Ikhsan Pranoto","kelas":"9A","asrama":"Abdul Aziz 107"},{"nama":"Algana Ziggy Saverio","kelas":"9E","asrama":"Abdul Aziz 107"},{"nama":"Anandito Muhadzib Fayadhi","kelas":"9E","asrama":"Abdul Aziz 107"},{"nama":"Arva Firdaus Maliki","kelas":"9D","asrama":"Abdul Aziz 107"},{"nama":"Arya Hanif Maydika","kelas":"9B","asrama":"Abdul Aziz 107"},{"nama":"Arya Rizqi Anugrah","kelas":"9C","asrama":"Abdul Aziz 107"},{"nama":"Athar Hanan Yusuf","kelas":"9D","asrama":"Abdul Aziz 107"},{"nama":"Azrial Dimitra Daud","kelas":"9E","asrama":"Abdul Aziz 107"},{"nama":"Galang Prasetyo","kelas":"9D","asrama":"Abdul Aziz 107"},{"nama":"Mohammad Endra Yusran Zulfandy","kelas":"9B","asrama":"Abdul Aziz 107"},{"nama":"Muhamad Firdaus Rasyidan","kelas":"9B","asrama":"Abdul Aziz 107"},{"nama":"Muhammad Danish Al Azka","kelas":"9B","asrama":"Abdul Aziz 107"},{"nama":"Muhammad Juan Ardana Wijaya","kelas":"9C","asrama":"Abdul Aziz 107"},{"nama":"Muhammad Ramzi Rahmana","kelas":"9A","asrama":"Abdul Aziz 107"},{"nama":"Muhammad Syamil Syauqillah","kelas":"9E","asrama":"Abdul Aziz 107"},{"nama":"Nizam Zulfikar Daryadi","kelas":"9C","asrama":"Abdul Aziz 107"},{"nama":"Pradipta Aqila Tegar","kelas":"9E","asrama":"Abdul Aziz 107"},{"nama":"Rafandra Ghani Putranto","kelas":"9C","asrama":"Abdul Aziz 107"},{"nama":"Rafif Hilmi Alvaro","kelas":"9B","asrama":"Abdul Aziz 107"},{"nama":"Alvino Gifa'iq Budiarto","kelas":"11A","asrama":"Abdul Aziz 107"},{"nama":"Fakhri Ilham Al-Faruq","kelas":"11B","asrama":"Abdul Aziz 107"},{"nama":"Abyaz Putra Aditya","kelas":"9A","asrama":"Abdul Aziz 108"},{"nama":"Ahmad Rojab Al Kafi","kelas":"9A","asrama":"Abdul Aziz 108"},{"nama":"Faiz Khalif Muhammad","kelas":"9E","asrama":"Abdul Aziz 108"},{"nama":"Fayyad Fityan Attaqi","kelas":"9E","asrama":"Abdul Aziz 108"},{"nama":"Hudzaifah Ibnu Yaman","kelas":"9C","asrama":"Abdul Aziz 108"},{"nama":"Kenzie Muktabar","kelas":"9A","asrama":"Abdul Aziz 108"},{"nama":"Khayru Ghafi Elfatih Iskandar","kelas":"9D","asrama":"Abdul Aziz 108"},{"nama":"Lingga Prabaswara Arkana","kelas":"9E","asrama":"Abdul Aziz 108"},{"nama":"Lintang Pamungkas","kelas":"9A","asrama":"Abdul Aziz 108"},{"nama":"Muhammad Fathan Mubiina","kelas":"9D","asrama":"Abdul Aziz 108"},{"nama":"Muhammad Hanif Kurniawan","kelas":"9A","asrama":"Abdul Aziz 108"},{"nama":"Muhammad Lathiif Ayyasy","kelas":"9D","asrama":"Abdul Aziz 108"},{"nama":"Muhammad Raihan Kenzie Raharjo","kelas":"9D","asrama":"Abdul Aziz 108"},{"nama":"Muhammad Risqi Al Farizi","kelas":"9C","asrama":"Abdul Aziz 108"},{"nama":"Muhammad Sakti Aqmar Alfarizqi","kelas":"9A","asrama":"Abdul Aziz 108"},{"nama":"Muhammad Wilson Dwiana","kelas":"9A","asrama":"Abdul Aziz 108"},{"nama":"Raziq Maulana Syahmi","kelas":"9B","asrama":"Abdul Aziz 108"},{"nama":"Riham Ibni Sabrisamala","kelas":"9E","asrama":"Abdul Aziz 108"},{"nama":"Rizki Furqon Subkhiy","kelas":"9C","asrama":"Abdul Aziz 108"},{"nama":"Shain Nafal Ya'isy","kelas":"9D","asrama":"Abdul Aziz 108"},{"nama":"Tamam Atha' Khiyarullah","kelas":"9D","asrama":"Abdul Aziz 108"},{"nama":"Widyan Nafiis Aushaf","kelas":"9D","asrama":"Abdul Aziz 108"},{"nama":"Yaqdhan Abi Nasrullah","kelas":"9E","asrama":"Abdul Aziz 108"},{"nama":"Zaidan Halif Khairi","kelas":"9D","asrama":"Abdul Aziz 108"},{"nama":"Muhammad Ibnu Abas","kelas":"11B","asrama":"Abdul Aziz 108"},{"nama":"Ibrahim Hammam Khairulhuda","kelas":"11A","asrama":"Abdul Aziz 108"},{"nama":"Althan Alief Adiyatama","kelas":"9B","asrama":"Abdul Aziz 206"},{"nama":"Aqila Maulana Zaidan","kelas":"9B","asrama":"Abdul Aziz 206"},{"nama":"Aufaa Galur Prabowo","kelas":"9C","asrama":"Abdul Aziz 206"},{"nama":"Azza Ramadhan Pribadi","kelas":"9A","asrama":"Abdul Aziz 206"},{"nama":"Azzan Fadhlurrahman Handoko","kelas":"9E","asrama":"Abdul Aziz 206"},{"nama":"Bagas Aimar Dary Abiyyu","kelas":"9B","asrama":"Abdul Aziz 206"},{"nama":"Daffa Naufal Adz Dzaki","kelas":"9C","asrama":"Abdul Aziz 206"},{"nama":"Dzaky Alkhalifi","kelas":"9D","asrama":"Abdul Aziz 206"},{"nama":"Farhan Abdurrozak","kelas":"9B","asrama":"Abdul Aziz 206"},{"nama":"Fiza Najmi Khilu Cahyanie","kelas":"9B","asrama":"Abdul Aziz 206"},{"nama":"Muhammad Azka Kusno Diputro","kelas":"9B","asrama":"Abdul Aziz 206"},{"nama":"Muhammad Haidar Ali","kelas":"9B","asrama":"Abdul Aziz 206"},{"nama":"Muhammad Irgi Farras Al-Fatih","kelas":"9E","asrama":"Abdul Aziz 206"},{"nama":"Muhammad Syamil Ar-Royyan","kelas":"9D","asrama":"Abdul Aziz 206"},{"nama":"Muhammad Wildan Kaylanee","kelas":"9A","asrama":"Abdul Aziz 206"},{"nama":"Nabil Rafif Maulana","kelas":"9D","asrama":"Abdul Aziz 206"},{"nama":"Qori Aqna Arroyan","kelas":"9A","asrama":"Abdul Aziz 206"},{"nama":"Rafa Athaillah Jusantos","kelas":"9C","asrama":"Abdul Aziz 206"},{"nama":"Rafa Ziggy Saviero","kelas":"9C","asrama":"Abdul Aziz 206"},{"nama":"Rakha Satria Putra","kelas":"9D","asrama":"Abdul Aziz 206"},{"nama":"Riffat Abudrrahman Aris Maulana","kelas":"9E","asrama":"Abdul Aziz 206"},{"nama":"Royyan Nafis Muzhaffar","kelas":"9D","asrama":"Abdul Aziz 206"},{"nama":"Xavier Eldani Rahmat","kelas":"9B","asrama":"Abdul Aziz 206"},{"nama":"Zahar Ata Falahi","kelas":"9A","asrama":"Abdul Aziz 206"},{"nama":"Fakhru Ilham Al-Faruq","kelas":"11A","asrama":"Abdul Aziz 206"},{"nama":"Bismo Dawud","kelas":"11A","asrama":"Abdul Aziz 206"},{"nama":"Aabid Arkana Safaraz","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Abdunnafi Patma Putra","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Athar Zehan Sasongko","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Bayu Hanun Mumtaza","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Devara Aryasatya Higuain","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Dida Asa Ismail","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Faiq Zidan Nurseha","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Fizfa Malika Al Fawwaz","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Muhammad Azka Kurniawan","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Muhammad Fadil Priatmanto","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Muhammad Fawwazz Hussein Dhiaulhaq","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Muhammad Rafka Putu Samsimar","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Muhammad Yahya Ashiddiq","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Wahyu Arya Putra","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Wahyu Firdaus Fatah Danuri","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Evan Abi Manyu","kelas":"11A","asrama":"Abdul Aziz 102"},{"nama":"Aryo Teguh Wijaya","kelas":"11A","asrama":"Abdul Aziz 102"},{"nama":"Abdullah Yusuf Pangestu","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Akbar Rasyid Abdul Hakim","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Alfatikhul Huda","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Arkana Wira Al Asif","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Bunayya Ahnaf Faizulhaq","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Haidar Ahnaf Purwa Ramdani","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Harlian Anugrah Ramadhan","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Kenzie Surya Pratama","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Muhammad Rizky Ageng Suprayogi","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Najwan Azhim Muntazhar","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Nevan Dzaki Maulana Raziq","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Pandya Arkananta Fatih","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Raffa Hanif Ramadhan","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Zain Afham Badiaji","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Keino Jozuhito Khairuazzam","kelas":"11A","asrama":"Abdul Aziz 103"},{"nama":"Adiapati Sultan Jaya","kelas":"11A","asrama":"Abdul Aziz 103"},{"nama":"Alvaro Faizi Nareswara","kelas":"12","asrama":"Syanggit 102"},{"nama":"Julian Antoni","kelas":"12","asrama":"Syanggit 102"},{"nama":"Shaquille Rafi Raynan","kelas":"12","asrama":"Syanggit 102"},{"nama":"Ridho Marik Kurniawan","kelas":"12","asrama":"Syanggit 102"},{"nama":"M Zaki Akbar Setiawan","kelas":"12","asrama":"Syanggit 102"},{"nama":"Noval Ariq Syauqi","kelas":"12","asrama":"Syanggit 102"},{"nama":"Alfi Hidayatussyarif","kelas":"12","asrama":"Syanggit 102"},{"nama":"Raihan Bintang Trianada","kelas":"12","asrama":"Syanggit 102"},{"nama":"Kenzie Leivi Shidqi","kelas":"12","asrama":"Syanggit 102"},{"nama":"Aufa Daffa Setiyawan","kelas":"12","asrama":"Syanggit 102"},{"nama":"Macheda Ubaydillah Dikaputra","kelas":"12","asrama":"Syanggit 102"},{"nama":"Rizky Insan Fadillah","kelas":"12","asrama":"Syanggit 102"},{"nama":"Abyan Hedit Suseto","kelas":"12","asrama":"Syanggit 102"},{"nama":"Yosef EL-Hamidi","kelas":"12","asrama":"Syanggit 102"},{"nama":"M Tristan Mahardika","kelas":"12","asrama":"Syanggit 102"},{"nama":"Stanly Alex Satria","kelas":"12","asrama":"Syanggit 102"},{"nama":"Daiyan Fari Afzal","kelas":"12","asrama":"Syanggit 102"},{"nama":"Bonanza Faiq Iffat Iskandar","kelas":"12","asrama":"Syanggit 102"},{"nama":"Daffa Al Fatih","kelas":"12","asrama":"Syanggit 102"},{"nama":"Rafi Hanan Ahksan Pranoto","kelas":"12","asrama":"Syanggit 102"},{"nama":"Dzulfikar Gading Kurniawan","kelas":"12","asrama":"Syanggit 102"},{"nama":"Ghani Rizky Putra Perwiranatama","kelas":"12","asrama":"Syanggit 102"},{"nama":"Usamah","kelas":"12","asrama":"Syanggit 103"},{"nama":"El-Rozeen Fazian Zamroni","kelas":"12","asrama":"Syanggit 103"},{"nama":"Pradipta Raditya Yusuf","kelas":"12","asrama":"Syanggit 103"},{"nama":"Raihan Arya Dirya","kelas":"12","asrama":"Syanggit 103"},{"nama":"Yaqdzoh Almadani","kelas":"12","asrama":"Syanggit 103"},{"nama":"Ahmad Faizul Abror","kelas":"12","asrama":"Syanggit 103"},{"nama":"Akmal Almisky Abunawan","kelas":"12","asrama":"Syanggit 103"},{"nama":"Anwarul Akbar Maulana","kelas":"12","asrama":"Syanggit 103"},{"nama":"Zoelva Tamami","kelas":"12","asrama":"Syanggit 103"},{"nama":"Sultan Attari Altraf","kelas":"12","asrama":"Syanggit 103"},{"nama":"Reyhan Ribka Pratama","kelas":"12","asrama":"Syanggit 103"},{"nama":"Dienika Arkananta","kelas":"12","asrama":"Syanggit 103"},{"nama":"Naufal Dzaky Ariqanza","kelas":"12","asrama":"Syanggit 103"},{"nama":"Dzaka Rozan Fuada","kelas":"12","asrama":"Syanggit 103"},{"nama":"Elam Rasendriya Ramdhani","kelas":"12","asrama":"Syanggit 103"},{"nama":"Valentara Aji Wishnutama","kelas":"12","asrama":"Syanggit 105"},{"nama":"Bachtiar Nur Ikhsan","kelas":"12","asrama":"Syanggit 105"},{"nama":"Maulana Shevano Putra","kelas":"12","asrama":"Syanggit 105"},{"nama":"Erza Azka Saputra","kelas":"12","asrama":"Syanggit 105"},{"nama":"Bintang Aryasatya Abd Al Aziz","kelas":"12","asrama":"Syanggit 105"},{"nama":"Muhammad Farhan Fauzan","kelas":"12","asrama":"Syanggit 105"},{"nama":"Muhammad Fatih Fakhrurroji","kelas":"12","asrama":"Syanggit 105"},{"nama":"Asyraf Zahirul Ubaid","kelas":"12","asrama":"Syanggit 105"},{"nama":"M. Rifqi Al Muzzammil","kelas":"12","asrama":"Syanggit 105"},{"nama":"Ilham Ahnaf Harbowo","kelas":"12","asrama":"Syanggit 105"},{"nama":"Mukhlas Yusuf Andito","kelas":"12","asrama":"Syanggit 105"},{"nama":"Zulfan Ali Akbar","kelas":"12","asrama":"Syanggit 105"},{"nama":"Ibni Fadhil Athallah","kelas":"12","asrama":"Syanggit 105"},{"nama":"Ramadhanu Salman Alfarisi","kelas":"12","asrama":"Syanggit 105"},{"nama":"Roja Qurrota Addinil","kelas":"12","asrama":"Syanggit 105"},{"nama":"Zidane Putra Kusuma","kelas":"12","asrama":"Syanggit 105"},{"nama":"Rahmat Subianto","kelas":"12","asrama":"Syanggit 105"},{"nama":"Khoizuran Arfa Syazani","kelas":"12","asrama":"Syanggit 105"},{"nama":"Sultan Maulana Saladin Ibrahim","kelas":"12","asrama":"Syanggit 105"},{"nama":"M. Azka Alauddin Ismadi","kelas":"12","asrama":"Syanggit 105"},{"nama":"Aditia Nailal Furqon","kelas":"11B","asrama":"Syanggit 101"},{"nama":"Ahnaf Tsaqif Zuhdi","kelas":"11A","asrama":"Syanggit 101"},{"nama":"Aidhil Fathan Athary","kelas":"11B","asrama":"Syanggit 101"},{"nama":"Ayman Wibisono Effendy","kelas":"11A","asrama":"Syanggit 101"},{"nama":"Bagas Okasha Abrar El Khairy","kelas":"11B","asrama":"Syanggit 101"},{"nama":"Bagas Prabaswara","kelas":"11A","asrama":"Syanggit 101"},{"nama":"Erlangga Dwi Saputra","kelas":"11B","asrama":"Syanggit 101"},{"nama":"Faishal Azzan Muzakki","kelas":"11A","asrama":"Syanggit 101"},{"nama":"Ghozi Akbar Ramadhan","kelas":"11B","asrama":"Syanggit 101"},{"nama":"Haidar Adib Ghufran","kelas":"11A","asrama":"Syanggit 101"},{"nama":"Muhammad Aqsho Mufid","kelas":"11B","asrama":"Syanggit 101"},{"nama":"Muhammad Fawwaz Subandono","kelas":"11B","asrama":"Syanggit 101"},{"nama":"Muhammad Hafiz Rizqi Alam","kelas":"11A","asrama":"Syanggit 101"},{"nama":"Nauval Khairul Awwali","kelas":"11A","asrama":"Syanggit 101"},{"nama":"Quthub Rayyan Ghaisany","kelas":"11B","asrama":"Syanggit 101"},{"nama":"Reyzan Fadil Maulana","kelas":"11A","asrama":"Syanggit 101"}].map(s => ({nama: String(s.nama || '').trim(), kelas: String(s.kelas || '').trim().toUpperCase(), asrama: String(s.asrama || '').trim()}));
+    const santriReference = [{"nama":"Abimanyu Surendra Latif","kelas":"8C","asrama":"Abdul Aziz 201"},{"nama":"Abrisam Khaalish Dzahin","kelas":"8A","asrama":"Abdul Aziz 201"},{"nama":"Afwan Maulana Azidane","kelas":"8D","asrama":"Abdul Aziz 201"},{"nama":"Ahmad Tajun Arifin","kelas":"8C","asrama":"Abdul Aziz 201"},{"nama":"Akhtar Arghanismara Elfaradis","kelas":"8E","asrama":"Abdul Aziz 201"},{"nama":"Anjas Izzul Haq","kelas":"8D","asrama":"Abdul Aziz 201"},{"nama":"Anugrah Syahrial Muzaki","kelas":"8B","asrama":"Abdul Aziz 201"},{"nama":"Arshavan Wijaya Prakoso","kelas":"8A","asrama":"Abdul Aziz 201"},{"nama":"Banyu El Faruq Putra Hidayat","kelas":"8C","asrama":"Abdul Aziz 201"},{"nama":"Daffa Setya Arezky Warsito","kelas":"8D","asrama":"Abdul Aziz 201"},{"nama":"Dinan Al Khalifi","kelas":"8D","asrama":"Abdul Aziz 201"},{"nama":"Emir Firjatunafis","kelas":"8C","asrama":"Abdul Aziz 201"},{"nama":"Faris Bachtiar Usman","kelas":"8B","asrama":"Abdul Aziz 201"},{"nama":"Galang Van Dirga Asyrafiqoh","kelas":"8A","asrama":"Abdul Aziz 201"},{"nama":"Ihsan Fadil Rahmani","kelas":"8E","asrama":"Abdul Aziz 201"},{"nama":"Naufal Azzam Ardhani Sufa","kelas":"8C","asrama":"Abdul Aziz 201"},{"nama":"Naufal Eigas Fadhillah","kelas":"8B","asrama":"Abdul Aziz 201"},{"nama":"Rafa Al Fathin Rosyadi","kelas":"8E","asrama":"Abdul Aziz 201"},{"nama":"Rafif Azka Khamdani","kelas":"8B","asrama":"Abdul Aziz 201"},{"nama":"Restu Kukuh Wicaksono","kelas":"8A","asrama":"Abdul Aziz 201"},{"nama":"Sangguwan Aptana Elgin","kelas":"8A","asrama":"Abdul Aziz 201"},{"nama":"Faiz Muhammad Musyafi","kelas":"11A","asrama":"Abdul Aziz 201"},{"nama":"Muhammad Hamdan Maulana","kelas":"11A","asrama":"Abdul Aziz 201"},{"nama":"Abdullah Al Harits","kelas":"8D","asrama":"Abdul Aziz 202"},{"nama":"Afkar Zain Muzhaffar","kelas":"8D","asrama":"Abdul Aziz 202"},{"nama":"Aksel Adiv Cakradara","kelas":"8A","asrama":"Abdul Aziz 202"},{"nama":"Athaa Zaid","kelas":"8B","asrama":"Abdul Aziz 202"},{"nama":"Bagas Trustha Nugraha","kelas":"8E","asrama":"Abdul Aziz 202"},{"nama":"Bagoes Najdzil Mukhsinin","kelas":"8A","asrama":"Abdul Aziz 202"},{"nama":"Baskara Akhtar Prabowo","kelas":"8B","asrama":"Abdul Aziz 202"},{"nama":"Biru Tsabita Rizkiadi","kelas":"8D","asrama":"Abdul Aziz 202"},{"nama":"Faatih Mahya Izdihar","kelas":"8D","asrama":"Abdul Aziz 202"},{"nama":"Falakh Nur Ilmi S Firori","kelas":"8E","asrama":"Abdul Aziz 202"},{"nama":"Fathan Yusuf Arfai","kelas":"8D","asrama":"Abdul Aziz 202"},{"nama":"Gavin Aska Pratama","kelas":"8C","asrama":"Abdul Aziz 202"},{"nama":"Ghafar Dhuha Arrasyid","kelas":"8A","asrama":"Abdul Aziz 202"},{"nama":"Haykal Afsar Ramadhan","kelas":"8E","asrama":"Abdul Aziz 202"},{"nama":"Ibrahim Fathan Raif Arifin","kelas":"8A","asrama":"Abdul Aziz 202"},{"nama":"Lathif Yafli Sanyoto","kelas":"8B","asrama":"Abdul Aziz 202"},{"nama":"Lintang Qudsi Assyaqieb","kelas":"8C","asrama":"Abdul Aziz 202"},{"nama":"Mahardika Daffa Setya Imani","kelas":"8B","asrama":"Abdul Aziz 202"},{"nama":"Maulana Najwan Ramadhan","kelas":"8B","asrama":"Abdul Aziz 202"},{"nama":"Miko Pradipta Wibowo","kelas":"8C","asrama":"Abdul Aziz 202"},{"nama":"Muhammad Fawwaaz Muhibbullah","kelas":"8E","asrama":"Abdul Aziz 202"},{"nama":"Muhammad Fawwaz Alzena","kelas":"8A","asrama":"Abdul Aziz 202"},{"nama":"Praditia Fayyadhi Gesangputra","kelas":"8E","asrama":"Abdul Aziz 202"},{"nama":"Raditya Early Abiyu","kelas":"8B","asrama":"Abdul Aziz 202"},{"nama":"Athaya Zidhane Putra Daryadi","kelas":"11A","asrama":"Abdul Aziz 202"},{"nama":"Fairuz Bimpi Azzami","kelas":"11A","asrama":"Abdul Aziz 202"},{"nama":"Sultan Maulana Saladin Ibrahim","kelas":"12","asrama":"Syanggit 105"}].map(s => ({nama: String(s.nama || '').trim(), kelas: String(s.kelas || '').trim().toUpperCase(), asrama: String(s.asrama || '').trim()}));
+
     window._santriSuggestionResults = [];
     window._santriActiveIndex = -1;
 
@@ -529,16 +577,12 @@
       const normalizedName = normalizeSearchText(student.nama);
       if (!normalizedQuery || !normalizedName) return '';
 
-      // Ghost completion is shown when the typed text is a true prefix.
-      // For fuzzy/typo matches, the dropdown still shows the suggestion,
-      // but we do not pretend that the remainder is an exact continuation.
       if (!normalizedName.startsWith(normalizedQuery)) return '';
 
       const qNoSpace = normalizedQuery.replace(/\s+/g, ' ');
       const nameNoSpace = normalizedName.replace(/\s+/g, ' ');
       if (!nameNoSpace.startsWith(qNoSpace)) return '';
 
-      // Preserve the user's typed text and append the remaining original name.
       const typedLength = Math.min(raw.length, student.nama.length);
       return student.nama.slice(typedLength);
     }
@@ -690,7 +734,6 @@
       localStorage.setItem('rekapPaketData', JSON.stringify(dataRekap));
     }
 
-    // Keep package data newest-first everywhere in the app.
     function sortDataRekapNewestFirst() {
       dataRekap.sort((a, b) => {
         const dateA = a.rawTanggal || '';
@@ -829,6 +872,7 @@
                   <th class="pb-3">Kelas</th>
                   <th class="pb-3">Petugas</th>
                   <th class="pb-3">Status / Legalitas</th>
+                  <th class="pb-3 text-right">Aksi</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
@@ -843,6 +887,9 @@
                         ? `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400">Sesuai Jadwal</span>`
                         : `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400">${d.keterangan ? 'Dilegalkan (' + escapeHTML(d.keterangan) + ')' : 'Luar Jadwal'}</span>`
                       }
+                    </td>
+                    <td class="py-3 text-right">
+                      <button onclick="openEditModal(${d.id})" class="px-2.5 py-1 bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 font-bold rounded-lg hover:bg-amber-100 transition text-[11px]">Edit / Hapus</button>
                     </td>
                   </tr>
                 `).join('')}
@@ -1110,7 +1157,7 @@
             <div class="overflow-x-auto">
               <table class="w-full text-left text-xs">
                 <thead class="bg-slate-50 dark:bg-slate-800 font-bold text-slate-400 dark:text-slate-400 uppercase">
-                  <tr><th class="p-3">Tanggal</th><th class="p-3">Nama</th><th class="p-3">Kelas</th><th class="p-3">Petugas</th><th class="p-3">Aksi</th></tr>
+                  <tr><th class="p-3">Tanggal</th><th class="p-3">Nama</th><th class="p-3">Kelas</th><th class="p-3">Petugas</th><th class="p-3 text-right">Aksi</th></tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
                   ${sesuai.map(d => `
@@ -1119,7 +1166,10 @@
                       <td class="p-3 font-bold text-slate-900 dark:text-white">${escapeHTML(d.nama)}</td>
                       <td class="p-3 font-semibold">${escapeHTML(d.kelas)}</td>
                       <td class="p-3 text-slate-500 dark:text-slate-400">${escapeHTML(d.petugas || '-')}</td>
-                      <td class="p-3"><button onclick="deletePaket(${d.id})" class="text-rose-600 dark:text-rose-400 font-bold hover:underline">Hapus</button></td>
+                      <td class="p-3 text-right">
+                        <button onclick="openEditModal(${d.id})" class="text-amber-600 dark:text-amber-400 font-bold hover:underline mr-3">Edit</button>
+                        <button onclick="deletePaket(${d.id})" class="text-rose-600 dark:text-rose-400 font-bold hover:underline">Hapus</button>
+                      </td>
                     </tr>
                   `).join('')}
                 </tbody>
@@ -1132,7 +1182,7 @@
             <div class="overflow-x-auto">
               <table class="w-full text-left text-xs">
                 <thead class="bg-slate-50 dark:bg-slate-800 font-bold text-slate-400 dark:text-slate-400 uppercase">
-                  <tr><th class="p-3">Tanggal</th><th class="p-3">Nama</th><th class="p-3">Kelas</th><th class="p-3">Keterangan</th><th class="p-3">Petugas</th><th class="p-3">Status</th><th class="p-3">Aksi</th></tr>
+                  <tr><th class="p-3">Tanggal</th><th class="p-3">Nama</th><th class="p-3">Kelas</th><th class="p-3">Keterangan</th><th class="p-3">Petugas</th><th class="p-3">Status</th><th class="p-3 text-right">Aksi</th></tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
                   ${luar.map(d => `
@@ -1147,7 +1197,10 @@
                           ${d.keterangan ? 'Dilegalkan' : 'Belum Dilegalkan'}
                         </span>
                       </td>
-                      <td class="p-3"><button onclick="deletePaket(${d.id})" class="text-rose-600 dark:text-rose-400 font-bold hover:underline">Hapus</button></td>
+                      <td class="p-3 text-right">
+                        <button onclick="openEditModal(${d.id})" class="text-amber-600 dark:text-amber-400 font-bold hover:underline mr-3">Edit</button>
+                        <button onclick="deletePaket(${d.id})" class="text-rose-600 dark:text-rose-400 font-bold hover:underline">Hapus</button>
+                      </td>
                     </tr>
                   `).join('')}
                 </tbody>
@@ -1162,6 +1215,77 @@
       if (confirm('Apakah Bos yakin mau menghapus data ini?')) {
         dataRekap = dataRekap.filter(d => String(d.id) !== String(id));
         saveDB();
+        navigate(currentTab);
+      }
+    }
+
+    // --- MODAL EDIT / HAPUS ENGINE ---
+    function openEditModal(id) {
+      const item = dataRekap.find(d => String(d.id) === String(id));
+      if (!item) return;
+
+      document.getElementById('edit-id').value = item.id;
+      document.getElementById('edit-nama').value = item.nama;
+      document.getElementById('edit-kelas').value = item.kelas;
+      document.getElementById('edit-tanggal').value = item.rawTanggal;
+      document.getElementById('edit-keterangan').value = item.keterangan || '';
+
+      const modal = document.getElementById('editModal');
+      modal.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function closeEditModal() {
+      document.getElementById('editModal').classList.add('hidden');
+    }
+
+    function saveEditModal() {
+      const id = document.getElementById('edit-id').value;
+      const nama = document.getElementById('edit-nama').value.trim();
+      const kelas = document.getElementById('edit-kelas').value.trim().toUpperCase();
+      const rawTanggal = document.getElementById('edit-tanggal').value;
+      const keterangan = document.getElementById('edit-keterangan').value.trim();
+
+      if (!nama || !kelas || !rawTanggal) {
+        alert("⚠️ Nama, Kelas, dan Tanggal tidak boleh kosong!");
+        return;
+      }
+
+      const selectedDate = parseLocalDate(rawTanggal);
+      if (!selectedDate) {
+        alert("⚠️ Tanggal tidak valid!");
+        return;
+      }
+
+      const dayIndex = selectedDate.getDay();
+      const kelasAllowed = jadwalHari[dayIndex] || [];
+      const isSesuai = kelasAllowed.includes(kelas);
+      const tglFormatted = `${namaHari[dayIndex]}, ${selectedDate.toLocaleDateString('id-ID')}`;
+
+      const index = dataRekap.findIndex(d => String(d.id) === String(id));
+      if (index !== -1) {
+        dataRekap[index] = {
+          ...dataRekap[index],
+          nama,
+          kelas,
+          rawTanggal,
+          tglFormatted,
+          keterangan,
+          isSesuai
+        };
+        sortDataRekapNewestFirst();
+        saveDB();
+        closeEditModal();
+        navigate(currentTab);
+      }
+    }
+
+    function deletePaketFromModal() {
+      const id = document.getElementById('edit-id').value;
+      if (confirm('Apakah Bos yakin mau menghapus data ini?')) {
+        dataRekap = dataRekap.filter(d => String(d.id) !== String(id));
+        saveDB();
+        closeEditModal();
         navigate(currentTab);
       }
     }
@@ -1228,6 +1352,7 @@
                   <th class="pb-3 w-20">Kelas</th>
                   <th class="pb-3 w-32">Kategori</th>
                   <th class="pb-3">Keterangan</th>
+                  <th class="pb-3 text-right">Aksi</th>
                 </tr>
               </thead>
               <tbody id="tabel-rekap-body" class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300"></tbody>
@@ -1277,7 +1402,7 @@
       tbody.innerHTML = '';
 
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400 dark:text-slate-500 font-medium">Belum ada data untuk periode ini.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-400 dark:text-slate-500 font-medium">Belum ada data untuk periode ini.</td></tr>`;
         return;
       }
 
@@ -1293,6 +1418,9 @@
               </span>
             </td>
             <td class="py-3 text-slate-600 dark:text-slate-400">${escapeHTML(d.keterangan || '-')}</td>
+            <td class="py-3 text-right">
+              <button onclick="openEditModal(${d.id})" class="px-2.5 py-1 bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 font-bold rounded-lg hover:bg-amber-100 transition text-[11px]">Edit / Hapus</button>
+            </td>
           </tr>
         `;
       });
@@ -1303,7 +1431,6 @@
         alert('Gak ada data yang bisa di-export nih!');
         return;
       }
-      // Export all records as separate CSV files per month, never combined.
       exportMonthlyCSVGroups(dataRekap, 'semua');
     }
 
@@ -1442,7 +1569,7 @@
       } catch (err) { alert("❌ Gagal membaca JSON: " + err.message); }
     }
 
-    // --- AI CHATBOT ENGINE LOGIC (MODEL GROQ TERBARU) ---
+    // --- AI CHATBOT ENGINE LOGIC ---
     async function handleAiChatSubmit(e) {
       e.preventDefault();
       const inputEl = document.getElementById('aiChatInput');
@@ -1460,7 +1587,7 @@
 
       const lower = text.toLowerCase();
 
-      // 1. INTENT DETEKSI HAPUS DATA (BAHASA SANTAI/GAUL)
+      // 1. INTENT DETEKSI HAPUS DATA
       if (lower.includes('hapus') || lower.includes('hilangin') || lower.includes('delete') || lower.includes('buang')) {
         const words = text.split(/\s+/);
         let targetNama = "";
@@ -1489,7 +1616,7 @@
         }
       }
 
-      // 2. INTENT DETEKSI INPUT DATA (BAHASA SANTAI/GAUL)
+      // 2. INTENT DETEKSI INPUT DATA
       if (lower.includes('input') || lower.includes('tambah') || lower.includes('masukin') || lower.includes('catat')) {
         const matchNama = text.match(/(?:paket|nama|penerima)\s+([A-Za-z\s]+?)(?=\s+kelas|\s+ket|$)/i);
         const matchKelas = text.match(/kelas\s+([0-9A-Ea-e]+)/i);
@@ -1529,7 +1656,7 @@
         }
       }
 
-      // 3. CASUAL CHAT VIA GROQ API (MODEL AKTIF BARU: openai/gpt-oss-20b)
+      // 3. CASUAL CHAT VIA GROQ API
       if (!groqApiKey) {
         chatBox.innerHTML += `
           <div class="bg-sky-50 dark:bg-sky-950/60 border border-sky-100 dark:border-sky-900 p-2.5 rounded-2xl text-slate-700 dark:text-slate-300 text-[11px]">
@@ -1571,7 +1698,6 @@
         let res = await callGroqModel("openai/gpt-oss-20b");
         let data = await res.json();
 
-        // Fallback jika butuh model lain
         if (data.error && data.error.message && data.error.message.includes('does not exist')) {
           res = await callGroqModel("openai/gpt-oss-120b");
           data = await res.json();
@@ -1612,154 +1738,139 @@
     window.addEventListener('DOMContentLoaded', async () => {
       initTheme();
       updateOnlineStatus();
-      await loadSantriReference();
       navigate('dashboard');
     });
-  
 
+    // ===== GLOBAL DATA SEARCH WITH EDIT & DELETE MODAL INTEGRATION =====
+    (function initGlobalDataSearch() {
+      const input = document.getElementById('globalDataSearch');
+      const box = document.getElementById('globalSearchResults');
+      if (!input || !box) return;
 
+      let activeIndex = -1;
+      let results = [];
 
-// ===== Global Data Search =====
-(function initGlobalDataSearch() {
-  const input = document.getElementById('globalDataSearch');
-  const box = document.getElementById('globalSearchResults');
-  if (!input || !box) return;
+      const esc = (value) => String(value ?? '').replace(/[&<>"']/g, ch => ({
+        '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;'
+      }[ch]));
 
-  let activeIndex = -1;
-  let results = [];
+      const normalize = (value) => String(value ?? '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
-  const esc = (value) => String(value ?? '').replace(/[&<>"']/g, ch => ({
-    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;'
-  }[ch]));
+      const getRows = () => {
+        if (Array.isArray(window.dataRekap)) return window.dataRekap;
+        if (typeof dataRekap !== 'undefined' && Array.isArray(dataRekap)) return dataRekap;
+        return [];
+      };
 
-  const normalize = (value) => String(value ?? '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      const render = () => {
+        if (!results.length) {
+          box.innerHTML = input.value.trim()
+            ? '<div class="p-4 text-xs font-semibold text-slate-400 dark:text-slate-500 text-center">Data paket tidak ditemukan.</div>'
+            : '';
+          box.classList.toggle('hidden', !input.value.trim());
+          return;
+        }
 
-  const getRows = () => {
-    if (Array.isArray(window.dataRekap)) return window.dataRekap;
-    if (typeof dataRekap !== 'undefined' && Array.isArray(dataRekap)) return dataRekap;
-    return [];
-  };
+        box.innerHTML = results.slice(0, 8).map((item, i) => {
+          const row = item.row;
+          const name = row.nama || '-';
+          const kelas = row.kelas || '-';
+          const petugas = row.petugas || '-';
+          const tanggal = row.tglFormatted || row.rawTanggal || '-';
+          const ket = row.keterangan || 'Tanpa Keterangan';
 
-  const render = () => {
-    if (!results.length) {
-      box.innerHTML = input.value.trim()
-        ? '<div class="p-4 text-sm text-slate-500">Data tidak ditemukan.</div>'
-        : '';
-      box.classList.toggle('hidden', !input.value.trim());
-      return;
-    }
+          return `
+            <div class="global-search-item w-full px-4 py-3 border-b last:border-b-0 border-slate-100 dark:border-slate-800 hover:bg-sky-50 dark:hover:bg-slate-800/80 transition flex items-center justify-between gap-3 cursor-pointer" data-index="${i}" aria-selected="${i === activeIndex}">
+              <div class="min-w-0 flex-1" onclick="selectAndEdit(${row.id})">
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-100 truncate">${esc(name)}</span>
+                  <span class="px-2 py-0.5 rounded-md bg-sky-100 dark:bg-sky-950 text-sky-700 dark:text-sky-300 text-[10px] font-bold shrink-0">Kelas ${esc(kelas)}</span>
+                </div>
+                <div class="mt-1 text-[11px] text-slate-400 dark:text-slate-500 truncate">
+                  ${esc(ket)} • Petugas: ${esc(petugas)}
+                </div>
+              </div>
+              <div class="shrink-0 flex items-center gap-2">
+                <span class="text-[10px] text-slate-400 dark:text-slate-500 hidden sm:inline">${esc(tanggal)}</span>
+                <button onclick="event.stopPropagation(); openEditModal(${row.id}); document.getElementById('globalSearchResults').classList.add('hidden');" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-lg text-[10px] transition">
+                  Edit/Hapus
+                </button>
+              </div>
+            </div>`;
+        }).join('');
 
-    box.innerHTML = results.slice(0, 8).map((item, i) => {
-      const row = item.row;
-      const name = row.nama || row.name || row.penerima || '-';
-      const kelas = row.kelas || row.class || '-';
-      const petugas = row.petugas || row.officer || '-';
-      const tanggal = row.tanggal || row.date || '-';
-      const ket = row.keterangan || row.description || '-';
+        box.classList.remove('hidden');
+        box.querySelectorAll('.global-search-item').forEach(btn => {
+          btn.addEventListener('mouseenter', () => {
+            activeIndex = Number(btn.dataset.index);
+          });
+        });
+      };
 
-      return `
-        <button type="button" class="global-search-item w-full text-left px-4 py-3 border-b last:border-b-0 border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800" data-index="${i}" aria-selected="${i === activeIndex}">
-          <div class="flex items-center justify-between gap-3">
-            <div class="min-w-0">
-              <div class="font-semibold text-sm text-slate-800 dark:text-slate-100 truncate">${esc(name)}</div>
-              <div class="mt-0.5 text-xs text-slate-500 truncate">${esc(kelas)} · ${esc(ket)}</div>
-            </div>
-            <div class="shrink-0 text-[11px] text-slate-400">${esc(tanggal)}</div>
-          </div>
-          <div class="mt-1 text-[11px] text-slate-400">Petugas: ${esc(petugas)}</div>
-        </button>`;
-    }).join('');
+      window.selectAndEdit = (id) => {
+        box.classList.add('hidden');
+        openEditModal(id);
+      };
 
-    box.classList.remove('hidden');
-    box.querySelectorAll('.global-search-item').forEach(btn => {
-      btn.addEventListener('mouseenter', () => {
-        activeIndex = Number(btn.dataset.index);
+      const doSearch = () => {
+        const q = normalize(input.value.trim());
+        activeIndex = -1;
+        if (!q) {
+          results = [];
+          box.classList.add('hidden');
+          return;
+        }
+
+        results = getRows().map(row => {
+          const haystack = normalize([
+            row.nama, row.kelas, row.petugas, row.keterangan,
+            row.rawTanggal, row.tglFormatted
+          ].join(' '));
+          const pos = haystack.indexOf(q);
+          return { row, score: pos === -1 ? Infinity : pos, query: input.value.trim() };
+        }).filter(x => x.score !== Infinity)
+          .sort((a,b) => a.score - b.score)
+          .slice(0, 8);
+
         render();
+      };
+
+      input.addEventListener('input', doSearch);
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown' && results.length) {
+          e.preventDefault();
+          activeIndex = (activeIndex + 1) % Math.min(results.length, 8);
+          render();
+        } else if (e.key === 'ArrowUp' && results.length) {
+          e.preventDefault();
+          activeIndex = activeIndex <= 0 ? Math.min(results.length, 8) - 1 : activeIndex - 1;
+          render();
+        } else if (e.key === 'Enter' && results.length) {
+          e.preventDefault();
+          const target = results[activeIndex >= 0 ? activeIndex : 0];
+          if (target) {
+            box.classList.add('hidden');
+            openEditModal(target.row.id);
+          }
+        } else if (e.key === 'Escape') {
+          box.classList.add('hidden');
+        }
       });
-      btn.addEventListener('click', () => choose(Number(btn.dataset.index)));
-    });
-  };
 
-  const choose = (index) => {
-    const item = results[index];
-    if (!item) return;
-    box.classList.add('hidden');
-    input.value = item.query;
+      document.addEventListener('click', (e) => {
+        if (!input.contains(e.target) && !box.contains(e.target)) box.classList.add('hidden');
+      });
 
-    const rekapBtn = [...document.querySelectorAll('button, a')].find(el =>
-      /rekap/i.test((el.textContent || '').trim())
-    );
-    if (rekapBtn) rekapBtn.click();
+      document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+          e.preventDefault();
+          input.focus();
+          input.select();
+        }
+      });
 
-    const candidates = [
-      document.querySelector('#searchRekap'),
-      document.querySelector('input[placeholder*="Cari"][placeholder*="paket" i]'),
-      document.querySelector('input[placeholder*="Cari data" i]')
-    ].filter(Boolean);
-
-    if (candidates[0]) {
-      candidates[0].value = item.query;
-      candidates[0].dispatchEvent(new Event('input', { bubbles: true }));
-    }
-  };
-
-  const doSearch = () => {
-    const q = normalize(input.value.trim());
-    activeIndex = -1;
-    if (!q) {
-      results = [];
-      box.classList.add('hidden');
-      return;
-    }
-
-    results = getRows().map(row => {
-      const haystack = normalize([
-        row.nama, row.name, row.penerima, row.kelas, row.class,
-        row.petugas, row.officer, row.keterangan, row.description,
-        row.tanggal, row.date
-      ].join(' '));
-      const pos = haystack.indexOf(q);
-      return { row, score: pos === -1 ? Infinity : pos, query: input.value.trim() };
-    }).filter(x => x.score !== Infinity)
-      .sort((a,b) => a.score - b.score)
-      .slice(0, 8);
-
-    render();
-  };
-
-  input.addEventListener('input', doSearch);
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowDown' && results.length) {
-      e.preventDefault();
-      activeIndex = (activeIndex + 1) % Math.min(results.length, 8);
-      render();
-    } else if (e.key === 'ArrowUp' && results.length) {
-      e.preventDefault();
-      activeIndex = activeIndex <= 0 ? Math.min(results.length, 8) - 1 : activeIndex - 1;
-      render();
-    } else if (e.key === 'Enter' && results.length) {
-      e.preventDefault();
-      choose(activeIndex >= 0 ? activeIndex : 0);
-    } else if (e.key === 'Escape') {
-      box.classList.add('hidden');
-    }
-  });
-
-  document.addEventListener('click', (e) => {
-    if (!input.contains(e.target) && !box.contains(e.target)) box.classList.add('hidden');
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-      e.preventDefault();
-      input.focus();
-      input.select();
-    }
-  });
-
-  if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
-})();
-
-</script>
+      if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+    })();
+  </script>
 </body>
 </html>
