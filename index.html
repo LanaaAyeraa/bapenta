@@ -7,7 +7,7 @@
   
   <!-- PWA Web App Meta -->
   <meta name="theme-color" content="#0F172A" />
-  <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlBBS0VUIENPTlRST0wgQ0VOVEVSIiwKICAic2hvcnRfbmFtZSI6ICJQYWtldENvbnRyb2wiLAogICJzdGFydF91cmwiOiAiLi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwRjE3MkEiLAogICJ0aGVtZV9jb2xvciI6ICIjMEYxNzJBIgp9" />
+  <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlBBS0VUIENPTlRST0wgQ0VOVEVSIiwKICAic2hvcnRfbmFtZSI6ICJQYWtldENvbnRyb2wiLAogICJzdGFydF91cmwiOiAiLi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwRjE3MkEiLAogICJ0aGVtZV_jb2xvciI6ICIjMEYxNzJBIgp9" />
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -183,16 +183,16 @@
           <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 mb-3">
             <div class="flex items-center gap-2">
               <div class="w-7 h-7 rounded-lg bg-sky-500 text-white flex items-center justify-center font-bold text-xs shadow-xs">
-                <i data-lucide="bot" class="w-4 h-4"></i>
+                <i data-lucide="zap" class="w-4 h-4"></i>
               </div>
               <div>
-                <h3 class="text-xs font-extrabold text-slate-800 dark:text-slate-100">AI ASSISTANT</h3>
+                <h3 class="text-xs font-extrabold text-slate-800 dark:text-slate-100">AI GROQ FAST</h3>
                 <p class="text-[9px] text-emerald-500 font-bold flex items-center gap-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Active & Ready
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Ultra Speed Ready
                 </p>
               </div>
             </div>
-            <button onclick="setApiKey()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition" title="Set Gemini API Key">
+            <button onclick="setApiKey()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition" title="Set Groq API Key">
               <i data-lucide="settings" class="w-4 h-4"></i>
             </button>
           </div>
@@ -200,7 +200,7 @@
           <!-- Chat History Container -->
           <div id="aiChatBox" class="flex-1 overflow-y-auto space-y-2.5 pr-1 text-xs custom-scroll">
             <div class="bg-sky-50 dark:bg-sky-950/60 border border-sky-100 dark:border-sky-900 p-3 rounded-2xl text-slate-700 dark:text-slate-300 leading-relaxed text-[11px]">
-              👋 Halo Bos Lanaa! Aku siap diajak ngobrol santai utawa mbantu input/hapus data paket otomatis liwat chat kiye!
+              ⚡ Halo Bos Lanaa! Groq Llama 3.3 Ultra Speed wis aktif! Takon-takon utawa input paket liwat chat saiki kilat banget!
             </div>
           </div>
 
@@ -340,8 +340,8 @@
     let dataRekap = JSON.parse(localStorage.getItem('rekapPaketData_UI')) || JSON.parse(localStorage.getItem('rekapPaketData')) || [];
     let currentPetugas = localStorage.getItem('activePetugas_UI') || "Sultan Maulana";
     
-    // API KEY STORAGE
-    let apiKey = localStorage.getItem('gemini_api_key') || ''; 
+    // --- GROQ API KEY HARDCODED ---
+    let groqApiKey = localStorage.getItem('groq_api_key') || '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';
 
     let selectedKelasInput = "";
     let lastSelectedDate = new Date().toISOString().split('T')[0];
@@ -1054,7 +1054,7 @@
       }
     }
 
-    // --- AI CHATBOT ENGINE LOGIC ---
+    // --- AI CHATBOT ENGINE LOGIC (GROQ API ENGINE) ---
     async function handleAiChatSubmit(e) {
       e.preventDefault();
       const inputEl = document.getElementById('aiChatInput');
@@ -1147,28 +1147,40 @@
         }
       }
 
-      // CASUAL CHAT VIA GEMINI API
-      if (!apiKey) {
+      // CASUAL CHAT VIA GROQ API (LLAMA 3.3 70B - ULTRA FAST)
+      if (!groqApiKey) {
         chatBox.innerHTML += `
           <div class="bg-sky-50 dark:bg-sky-950/60 border border-sky-100 dark:border-sky-900 p-2.5 rounded-2xl text-slate-700 dark:text-slate-300 text-[11px]">
-            ⚙️ Bos Lanaa, klik tombol gear ing dhuwur banjur lebokake <strong>Gemini API Key</strong> sing bener (diwiwiti huruf <code>AIzaSy...</code>) supaya bisa ngobrol AI santai!
+            ⚙️ Bos Lanaa, klik tombol gear ing dhuwur banjur lebokake <strong>Groq API Key</strong>!
           </div>
         `;
         chatBox.scrollTop = chatBox.scrollHeight;
         return;
       }
 
-      chatBox.innerHTML += `<div id="aiLoading" class="text-slate-400 italic text-[10px]">AI lagi mikir...</div>`;
+      chatBox.innerHTML += `<div id="aiLoading" class="text-slate-400 italic text-[10px]">Groq AI lagi mikir kilat...</div>`;
       chatBox.scrollTop = chatBox.scrollHeight;
 
       try {
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        const res = await fetch(`https://api.groq.com/openai/v1/chat/completions`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${groqApiKey}`
+          },
           body: JSON.stringify({
-            contents: [{
-              parts: [{ text: `Kowe iku asisten AI gaul PaketBot kanggo Bos Lanaa ing Paket Control Center. Tanggapi kanthi santai, ramah, lan lugas nganggo basa Jawa/Indonesia gaul: "${text}"` }]
-            }]
+            model: "llama-3.3-70b-versatile",
+            messages: [
+              {
+                role: "system",
+                content: "Kowe iku asisten AI gaul PaketBot kanggo Bos Lanaa ing web Paket Control Center. Tanggapi kanthi santai, ramah, lan lugas nganggo basa Jawa/Indonesia gaul."
+              },
+              {
+                role: "user",
+                content: text
+              }
+            ],
+            temperature: 0.7
           })
         });
 
@@ -1178,11 +1190,11 @@
         if (data.error) {
           chatBox.innerHTML += `
             <div class="bg-rose-50 dark:bg-rose-950/80 p-2.5 rounded-2xl text-rose-600 dark:text-rose-300 text-[11px]">
-              ⚠️ API Key ora valid/error: ${data.error.message || 'Priksa API Key-mu'}. Klik gear ⚙️ kanggo nganti.
+              ⚠️ Groq API Error: ${data.error.message || 'Key ora valid'}.
             </div>
           `;
         } else {
-          const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Aduh, AI-ne bingung Bos!";
+          const reply = data.choices?.[0]?.message?.content || "Aduh, Groq-ne bingung Bos!";
           chatBox.innerHTML += `
             <div class="bg-sky-50 dark:bg-sky-950/60 border border-sky-100 dark:border-sky-900 p-2.5 rounded-2xl text-slate-800 dark:text-slate-200 text-[11px]">
               ${reply}
@@ -1191,17 +1203,17 @@
         }
       } catch (err) {
         document.getElementById('aiLoading')?.remove();
-        chatBox.innerHTML += `<div class="bg-rose-50 dark:bg-rose-950/80 p-2.5 rounded-2xl text-rose-600 dark:text-rose-300 text-[11px]">Gagal nyambung Gemini API, Bos! Priksa koneksi internet-mu.</div>`;
+        chatBox.innerHTML += `<div class="bg-rose-50 dark:bg-rose-950/80 p-2.5 rounded-2xl text-rose-600 dark:text-rose-300 text-[11px]">Gagal nyambung Groq API, Bos! Priksa koneksi internet-mu.</div>`;
       }
       chatBox.scrollTop = chatBox.scrollHeight;
     }
 
     function setApiKey() {
-      const inputKey = prompt("Masukkan Gemini API Key milikmu (di awali AIzaSy...):", apiKey);
+      const inputKey = prompt("Masukkan Groq API Key milikmu:", groqApiKey);
       if (inputKey !== null) {
-        apiKey = inputKey.trim();
-        localStorage.setItem('gemini_api_key', apiKey);
-        alert("✅ API Key disimpen!");
+        groqApiKey = inputKey.trim();
+        localStorage.setItem('groq_api_key', groqApiKey);
+        alert("✅ Groq API Key disimpen!");
       }
     }
 
