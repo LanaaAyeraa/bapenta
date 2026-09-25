@@ -1,1231 +1,1231 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PAKET CONTROL CENTER — Package Data & Monitoring System</title>
-  
-  <!-- PWA Web App Meta -->
-  <meta name="theme-color" content="#0F172A" />
-  <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlBBS0VUIENPTlRST0wgQ0VOVEVSIiwKICAic2hvcnRfbmFtZSI6ICJQYWtldENvbnRyb2wiLAogICJzdGFydF91cmwiOiAiLi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwRjE3MkEiLAogICJ0aGVtZV_jb2xvciI6ICIjMEYxNzJBIgp9" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PAKET CONTROL CENTER — Package Data & Monitoring System</title>
+  
+  <!-- PWA Web App Meta -->
+  <meta name="theme-color" content="#0F172A" />
+  <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlBBS0VUIENPTlRST0wgQ0VOVEVSIiwKICAic2hvcnRfbmFtZSI6ICJQYWtldENvbnRyb2wiLAogICJzdGFydF91cmwiOiAiLi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwRjE3MkEiLAogICJ0aGVtZV_jb2xvciI6ICIjMEYxNzJBIgp9" />
 
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Google Fonts: Plus Jakarta Sans -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
-          colors: {
-            rg: {
-              cyan: '#1CB0F6',
-              teal: '#2BC0E4',
-              blue: '#0F52BA',
-              navy: '#0A2540',
-              orange: '#FF8A00',
-              peach: '#FFF4E5',
-              surface: '#F6F9FD',
-              border: '#E3ECF6'
-            }
-          }
-        }
-      }
-    }
-  </script>
-  <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; transition: background-color 0.3s, color 0.3s; }
-    .rg-gradient { background: linear-gradient(100deg, #18A4E0 0%, #20B6D5 45%, #6C63FF 100%); }
-    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
-    .custom-scroll::-webkit-scrollbar-track { background: #EDF3F9; }
-    .custom-scroll::-webkit-scrollbar-thumb { background: #CBD8E6; border-radius: 6px; }
-    
-    .dark .custom-scroll::-webkit-scrollbar-track { background: #0F172A; }
-    .dark .custom-scroll::-webkit-scrollbar-thumb { background: #334155; }
-  </style>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+          colors: {
+            rg: {
+              cyan: '#1CB0F6',
+              teal: '#2BC0E4',
+              blue: '#0F52BA',
+              navy: '#0A2540',
+              orange: '#FF8A00',
+              peach: '#FFF4E5',
+              surface: '#F6F9FD',
+              border: '#E3ECF6'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; transition: background-color 0.3s, color 0.3s; }
+    .rg-gradient { background: linear-gradient(100deg, #18A4E0 0%, #20B6D5 45%, #6C63FF 100%); }
+    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: #EDF3F9; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #CBD8E6; border-radius: 6px; }
+    
+    .dark .custom-scroll::-webkit-scrollbar-track { background: #0F172A; }
+    .dark .custom-scroll::-webkit-scrollbar-thumb { background: #334155; }
+  </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 custom-scroll">
 
-  <!-- TOP APP BAR -->
-  <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 shadow-xs transition-colors duration-300">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('dashboard')">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-md">
-          <i data-lucide="package-check" class="w-5 h-5"></i>
-        </div>
-        <div>
-          <div class="flex items-center gap-2">
-            <span class="text-base font-extrabold tracking-tight text-slate-900 dark:text-white">PAKET<span class="text-sky-500">CONTROL</span></span>
-            <span id="badge-online-status" class="text-[10px] bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              ONLINE
-            </span>
-          </div>
-          <p class="text-[11px] text-slate-400 dark:text-slate-500 font-medium">Package Management & Verification</p>
-        </div>
-      </div>
-
-      <!-- RIGHT TOP BAR: PETUGAS & DARK MODE TOGGLE -->
-      <div class="flex items-center gap-2 sm:gap-3">
-        <!-- TOGGLE DARK MODE BUTTON -->
-        <button onclick="toggleDarkMode()" id="btn-theme-toggle" title="Ubah Mode Tampilan" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-amber-400 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition border border-slate-200 dark:border-slate-700">
-          <i data-lucide="moon" id="icon-theme" class="w-4 h-4"></i>
-        </button>
-
-        <!-- PETUGAS PIKET SELECTOR -->
-        <div class="flex items-center gap-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-full px-3 py-1.5 shadow-2xs">
-          <div class="w-7 h-7 rounded-full bg-sky-500 text-white flex items-center justify-center font-bold text-xs">
-            <i data-lucide="user" class="w-3.5 h-3.5"></i>
-          </div>
-          <select id="select-petugas" onchange="changePetugas(this.value)" class="text-xs font-bold text-slate-700 dark:text-slate-200 bg-transparent focus:outline-none cursor-pointer">
-            <option value="Sultan Maulana" class="dark:bg-slate-900">Sultan Maulana</option>
-            <option value="Dzaka Rozan" class="dark:bg-slate-900">Dzaka Rozan</option>
-            <option value="Ghani Rizky" class="dark:bg-slate-900">Ghani Rizky</option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <!-- NAVIGATION PILLS -->
-    <div class="bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
-      <div class="max-w-7xl mx-auto flex items-center gap-2 overflow-x-auto py-2 custom-scroll text-xs font-semibold">
-        <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0">
-          <i data-lucide="layout-dashboard" class="w-4 h-4 text-sky-500"></i>
-          <span>Dashboard</span>
-        </button>
-        <button onclick="navigate('input')" id="nav-input" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0">
-          <i data-lucide="zap" class="w-4 h-4 text-emerald-500"></i>
-          <span>Input Paket Masuk</span>
-        </button>
-        <button onclick="navigate('live')" id="nav-live" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0">
-          <i data-lucide="list-checks" class="w-4 h-4 text-indigo-500"></i>
-          <span>Data Live Preview</span>
-        </button>
-        <button onclick="navigate('rekap')" id="nav-rekap" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0">
-          <i data-lucide="bar-chart-3" class="w-4 h-4 text-purple-500"></i>
-          <span>Rekapitulasi & Export</span>
-        </button>
-        <button onclick="navigate('migrasi')" id="nav-migrasi" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0">
-          <i data-lucide="arrow-left-right" class="w-4 h-4 text-amber-500"></i>
-          <span>Migrasi Data / Backup</span>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- LAYOUT GRID DENGAN MUSIC PLAYER SIDEBAR (KIRI), MAIN CONTENT (TENGAH), DAN AI CHAT (KANAN) -->
-  <div class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-    <div class="flex flex-col lg:flex-row gap-6 items-start">
-      
-      <!-- 🎵 SIDEBAR MUSIC PLAYER (KIRI) -->
-      <aside class="w-full lg:w-72 shrink-0 lg:sticky lg:top-24 space-y-4">
-        <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-4 shadow-xs transition-colors duration-300">
-          <div class="flex items-center justify-between mb-3">
-            <div class="flex items-center gap-2">
-              <div class="w-8 h-8 rounded-xl bg-rose-500 text-white flex items-center justify-center font-bold text-xs shadow-xs">
-                <i data-lucide="music" class="w-4 h-4 animate-bounce"></i>
-              </div>
-              <span class="text-xs font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">Music Player</span>
-            </div>
-            <span class="text-[10px] font-extrabold bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-full uppercase">Live Sync</span>
-          </div>
-
-          <div class="flex gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-[11px] font-bold mb-3">
-            <button onclick="switchMusicTab('yt')" id="tab-m-yt" class="flex-1 py-1.5 rounded-lg bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-2xs transition">YouTube</button>
-            <button onclick="switchMusicTab('sp')" id="tab-m-sp" class="flex-1 py-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition">Spotify</button>
-          </div>
-
-          <div id="player-yt-box" class="space-y-2.5">
-            <div class="w-full h-48 rounded-2xl overflow-hidden bg-slate-900 shadow-inner border border-slate-200 dark:border-slate-800">
-              <iframe id="iframe-yt" class="w-full h-full" src="https://www.youtube.com/embed/jfKfPfyJRdk" title="YouTube Music Player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-            <div class="space-y-1">
-              <label class="text-[10px] font-bold text-slate-400 dark:text-slate-500 block">Link/ID Video YouTube:</label>
-              <div class="flex gap-1">
-                <input type="text" id="input-yt-url" placeholder="Paste link YouTube..." class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-lg p-2 text-[10px] font-semibold focus:outline-none" />
-                <button onclick="loadYouTubeURL()" class="bg-rose-500 hover:bg-rose-600 text-white px-3 py-1 rounded-lg text-[10px] font-bold transition">Set</button>
-              </div>
-            </div>
-          </div>
-
-          <div id="player-sp-box" class="space-y-2.5 hidden">
-            <div class="h-52 w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-inner">
-              <iframe id="iframe-sp" class="w-full h-full" src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-            </div>
-            <div class="space-y-1">
-              <label class="text-[10px] font-bold text-slate-400 dark:text-slate-500 block">Link Track/Playlist Spotify:</label>
-              <div class="flex gap-1">
-                <input type="text" id="input-sp-url" placeholder="Paste link Spotify..." class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-lg p-2 text-[10px] font-semibold focus:outline-none" />
-                <button onclick="loadSpotifyURL()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1 rounded-lg text-[10px] font-bold transition">Set</button>
-              </div>
-            </div>
-          </div>
-
-          <p class="text-[10px] text-slate-400 dark:text-slate-500 font-medium text-center mt-3">🎧 Musik tetap jalan sambil kamu rekap data paket!</p>
-        </div>
-      </aside>
-
-      <!-- MAIN CONTAINER UTAMA (TENGAH) -->
-      <main class="flex-1 w-full space-y-6 min-w-0">
-        <div id="app-container"></div>
-      </main>
-
-      <!-- 🤖 AI ASSISTANT SIDEBAR (KANAN) -->
-      <aside class="w-full lg:w-72 shrink-0 lg:sticky lg:top-24 space-y-4">
-        <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-4 shadow-xs flex flex-col h-[520px] transition-colors duration-300">
-          <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 mb-3">
-            <div class="flex items-center gap-2">
-              <div class="w-7 h-7 rounded-lg bg-sky-500 text-white flex items-center justify-center font-bold text-xs shadow-xs">
-                <i data-lucide="zap" class="w-4 h-4"></i>
-              </div>
-              <div>
-                <h3 class="text-xs font-extrabold text-slate-800 dark:text-slate-100">AI ASSISTANT GAUL</h3>
-                <p class="text-[9px] text-emerald-500 font-bold flex items-center gap-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Groq Fast Active
-                </p>
-              </div>
-            </div>
-            <button onclick="setApiKey()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition" title="Set Groq API Key">
-              <i data-lucide="settings" class="w-4 h-4"></i>
-            </button>
-          </div>
-
-          <!-- Chat History Container -->
-          <div id="aiChatBox" class="flex-1 overflow-y-auto space-y-2.5 pr-1 text-xs custom-scroll">
-            <div class="bg-sky-50 dark:bg-sky-950/60 border border-sky-100 dark:border-sky-900 p-3 rounded-2xl text-slate-700 dark:text-slate-300 leading-relaxed text-[11px]">
-              👋 Yo watsap Bro Lanaa! Gue AI Assistant lo nih. Bebas mau ngobrol santai, nanya-nanya apa aja, atau minta kelola data paket (contoh: <i>"hapus paket yang namanya Lanaa"</i> atau <i>"input paket Budi kelas 9D"</i>). Langsung gass!
-            </div>
-          </div>
-
-          <!-- Chat Input Area -->
-          <form onsubmit="handleAiChatSubmit(event)" class="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
-            <input type="text" id="aiChatInput" placeholder="Ketik pesan / perintah..." class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-2.5 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-sky-500" />
-            <button type="submit" class="bg-sky-500 hover:bg-sky-600 text-white p-2.5 rounded-xl transition shrink-0">
-              <i data-lucide="send" class="w-3.5 h-3.5"></i>
-            </button>
-          </form>
-        </div>
-      </aside>
-
-    </div>
-  </div>
-
-  <footer class="bg-white dark:bg-slate-900 border-t border-slate-200/80 dark:border-slate-800 py-4 text-center text-xs text-slate-400 dark:text-slate-500 transition-colors duration-300">
-    <p>“Streamlined Package Tracking System” • Rekap Paket Sekolah</p>
-  </footer>
-
-  <script>
-    // --- SERVICE WORKER REGISTRATION (OFFLINE MODE) ---
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then(() => console.log('✅ Offline Mode Ready!'))
-          .catch((err) => console.log('Offline SW Error:', err));
-      });
-    }
-
-    // --- NETWORK STATUS DETECTOR ---
-    function updateOnlineStatus() {
-      const badge = document.getElementById('badge-online-status');
-      if (!badge) return;
-
-      if (navigator.onLine) {
-        badge.className = "text-[10px] bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1";
-        badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> ONLINE`;
-      } else {
-        badge.className = "text-[10px] bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-400 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1";
-        badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> OFFLINE MODE`;
-      }
-    }
-
-    window.addEventListener('online', updateOnlineStatus);
-    window.addEventListener('offline', updateOnlineStatus);
-
-    // --- DARK MODE SYSTEM ---
-    function initTheme() {
-      const isDark = localStorage.getItem('theme_mode') === 'dark';
-      if (isDark) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-      updateThemeIcon(isDark);
-    }
-
-    function toggleDarkMode() {
-      const isDark = document.documentElement.classList.toggle('dark');
-      localStorage.setItem('theme_mode', isDark ? 'dark' : 'light');
-      updateThemeIcon(isDark);
-    }
-
-    function updateThemeIcon(isDark) {
-      const icon = document.getElementById('icon-theme');
-      if (icon) {
-        icon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
-        lucide.createIcons();
-      }
-    }
-
-    // --- MUSIC PLAYER LOGIC ---
-    function switchMusicTab(type) {
-      const ytBox = document.getElementById('player-yt-box');
-      const spBox = document.getElementById('player-sp-box');
-      const btnYt = document.getElementById('tab-m-yt');
-      const btnSp = document.getElementById('tab-m-sp');
-
-      if (type === 'yt') {
-        ytBox.classList.remove('hidden');
-        spBox.classList.add('hidden');
-        btnYt.classList.add('bg-white', 'dark:bg-slate-700', 'text-slate-800', 'dark:text-white', 'shadow-2xs');
-        btnYt.classList.remove('text-slate-500', 'dark:text-slate-400');
-        btnSp.classList.remove('bg-white', 'dark:bg-slate-700', 'text-slate-800', 'dark:text-white', 'shadow-2xs');
-        btnSp.classList.add('text-slate-500', 'dark:text-slate-400');
-      } else {
-        spBox.classList.remove('hidden');
-        ytBox.classList.add('hidden');
-        btnSp.classList.add('bg-white', 'dark:bg-slate-700', 'text-slate-800', 'dark:text-white', 'shadow-2xs');
-        btnSp.classList.remove('text-slate-500', 'dark:text-slate-400');
-        btnYt.classList.remove('bg-white', 'dark:bg-slate-700', 'text-slate-800', 'dark:text-white', 'shadow-2xs');
-        btnYt.classList.add('text-slate-500', 'dark:text-slate-400');
-      }
-    }
-
-    function loadYouTubeURL() {
-      const val = document.getElementById('input-yt-url').value.trim();
-      if (!val) return;
-
-      let videoId = val;
-      if (val.includes('v=')) {
-        videoId = val.split('v=')[1].split('&')[0];
-      } else if (val.includes('youtu.be/')) {
-        videoId = val.split('youtu.be/')[1].split('?')[0];
-      }
-
-      document.getElementById('iframe-yt').src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-    }
-
-    function loadSpotifyURL() {
-      const val = document.getElementById('input-sp-url').value.trim();
-      if (!val) return;
-
-      let embedUrl = val;
-      if (!val.includes('/embed/')) {
-        embedUrl = val.replace('spotify.com/', 'spotify.com/embed/');
-      }
-
-      document.getElementById('iframe-sp').src = embedUrl;
-    }
-
-    // --- JADWAL HARI ---
-    const jadwalHari = {
-      1: ["12"],                           // Senin
-      2: ["11", "10"],                     // Selasa
-      3: ["9A", "9B"],                     // Rabu
-      4: ["9C", "9D", "9E"],               // Kamis
-      5: ["8A", "8B"],                     // Jumat
-      6: ["8C", "8D", "8E"],               // Sabtu
-      0: []                                // Minggu
-    };
-    const namaHari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-    const allKelasList = ["12", "11", "10", "9A", "9B", "9C", "9D", "9E", "8A", "8B", "8C", "8D", "8E"];
-
-    // Storage Engine & State
-    let dataRekap = JSON.parse(localStorage.getItem('rekapPaketData_UI')) || JSON.parse(localStorage.getItem('rekapPaketData')) || [];
-    let currentPetugas = localStorage.getItem('activePetugas_UI') || "Sultan Maulana";
-    
-    // --- GROQ API KEY HARDCODED ---
-    let groqApiKey = localStorage.getItem('groq_api_key') || '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';
-
-    let selectedKelasInput = "";
-    let lastSelectedDate = new Date().toISOString().split('T')[0];
-    let activeFilterRekap = "hari";
-    let sortedKelasListCurrent = [];
-
-    function saveDB() {
-      localStorage.setItem('rekapPaketData_UI', JSON.stringify(dataRekap));
-      localStorage.setItem('rekapPaketData', JSON.stringify(dataRekap));
-    }
-
-    function changePetugas(name) {
-      currentPetugas = name;
-      localStorage.setItem('activePetugas_UI', name);
-      if (currentTab === 'dashboard') {
-        renderDashboard(document.getElementById('app-container'));
-      }
-    }
-
-    let currentTab = 'dashboard';
-
-    function navigate(tabId) {
-      currentTab = tabId;
-      document.querySelectorAll('.nav-pill').forEach(btn => {
-        btn.classList.remove('bg-sky-500', 'text-white', 'shadow-sm');
-        btn.classList.add('text-slate-600', 'dark:text-slate-300');
-      });
-      const activeBtn = document.getElementById('nav-' + tabId);
-      if (activeBtn) {
-        activeBtn.classList.add('bg-sky-500', 'text-white', 'shadow-sm');
-        activeBtn.classList.remove('text-slate-600', 'dark:text-slate-300');
-      }
-
-      const container = document.getElementById('app-container');
-      if (tabId === 'dashboard') renderDashboard(container);
-      else if (tabId === 'input') renderInput(container);
-      else if (tabId === 'live') renderLive(container);
-      else if (tabId === 'rekap') renderRekap(container);
-      else if (tabId === 'migrasi') renderMigrasi(container);
-
-      lucide.createIcons();
-    }
-
-    // --- DASHBOARD VIEW ---
-    function renderDashboard(container) {
-      const todayISO = new Date().toISOString().split('T')[0];
-      const todayIndex = new Date().getDay();
-      const kelasHariIni = jadwalHari[todayIndex] || [];
-
-      const todayData = dataRekap.filter(d => d.rawTanggal === todayISO);
-      const countSesuai = todayData.filter(d => d.isSesuai).length;
-      const countLuar = todayData.filter(d => !d.isSesuai).length;
-
-      let titleSambutan = `Selamat Datang, ${currentPetugas} 👋`;
-      let subSambutan = "Selamat bertugas! Rekap penerimaan paket siswa harian makin gampang, akurat, lan terorganisir.";
-
-      if (currentPetugas === "Sultan Maulana") {
-        titleSambutan = "Yo watsap Bos Lanaa! 🚀";
-        subSambutan = "Siap rekap paket hari ini? Bikin semua data rapi, sat-set, dan terorganisir tanpa ribet!";
-      }
-
-      document.getElementById('select-petugas').value = currentPetugas;
-
-      container.innerHTML = `
-        <div class="rg-gradient rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
-          <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div class="space-y-2">
-              <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span>Sistem Monitoring Paket Aktif</span>
-              </div>
-              <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">
-                ${titleSambutan}
-              </h2>
-              <p class="text-white/90 text-sm max-w-xl">
-                ${subSambutan}
-              </p>
-            </div>
-            <div class="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-2xl flex items-center gap-4 text-xs shrink-0">
-              <div class="w-12 h-12 rounded-xl bg-white text-sky-600 flex items-center justify-center font-bold text-lg shadow-sm">
-                <i data-lucide="calendar" class="w-6 h-6 text-sky-600"></i>
-              </div>
-              <div>
-                <span class="text-white/70 block text-[11px] font-semibold">Hari Ini: ${namaHari[todayIndex]}</span>
-                <span class="text-white font-bold text-sm block">Jadwal Kelas: ${kelasHariIni.length > 0 ? kelasHariIni.join(', ') : 'Libur Reguler'}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
-            <div class="flex items-center justify-between text-slate-400 dark:text-slate-500 text-xs font-bold mb-2">
-              <span>TOTAL PAKET HARI INI</span>
-              <i data-lucide="package" class="w-4 h-4 text-sky-500"></i>
-            </div>
-            <div class="text-3xl font-black text-slate-900 dark:text-white">${todayData.length}</div>
-            <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Total masuk tanggal ${todayISO}</p>
-          </div>
-
-          <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
-            <div class="flex items-center justify-between text-slate-400 dark:text-slate-500 text-xs font-bold mb-2">
-              <span>SESUAI JADWAL</span>
-              <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
-            </div>
-            <div class="text-3xl font-black text-emerald-600 dark:text-emerald-400">${countSesuai}</div>
-            <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Sesuai kelas reguler</p>
-          </div>
-
-          <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
-            <div class="flex items-center justify-between text-slate-400 dark:text-slate-500 text-xs font-bold mb-2">
-              <span>DI LUAR JADWAL / ONLINE</span>
-              <i data-lucide="alert-circle" class="w-4 h-4 text-amber-500"></i>
-            </div>
-            <div class="text-3xl font-black text-amber-600 dark:text-amber-400">${countLuar}</div>
-            <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Paket pengecualian/legalitas</p>
-          </div>
-        </div>
-
-        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs p-6">
-          <div class="flex items-center justify-between mb-4">
-            <div>
-              <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Rekap Input Terbaru</h3>
-              <p class="text-xs text-slate-400 dark:text-slate-500">Data penerimaan paket terkini</p>
-            </div>
-            <button onclick="navigate('live')" class="text-xs font-bold text-sky-600 dark:text-sky-400 hover:text-sky-700 flex items-center gap-1">
-              Lihat Semua <i data-lucide="chevron-right" class="w-4 h-4"></i>
-            </button>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs">
-              <thead class="text-slate-400 dark:text-slate-500 border-b border-slate-100 dark:border-slate-800 font-bold uppercase tracking-wider">
-                <tr>
-                  <th class="pb-3">Tanggal Rekap</th>
-                  <th class="pb-3">Nama Penerima</th>
-                  <th class="pb-3">Kelas</th>
-                  <th class="pb-3">Petugas</th>
-                  <th class="pb-3">Status / Legalitas</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
-                ${dataRekap.slice(-5).reverse().map(d => `
-                  <tr>
-                    <td class="py-3 font-medium text-slate-500 dark:text-slate-400">${d.tglFormatted || d.rawTanggal}</td>
-                    <td class="py-3 font-bold text-slate-900 dark:text-white">${d.nama}</td>
-                    <td class="py-3 font-semibold text-slate-700 dark:text-slate-300">${d.kelas}</td>
-                    <td class="py-3 font-medium text-slate-500 dark:text-slate-400">${d.petugas || '-'}</td>
-                    <td class="py-3">
-                      ${d.isSesuai 
-                        ? `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400">Sesuai Jadwal</span>`
-                        : `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400">${d.keterangan ? 'Dilegalkan (' + d.keterangan + ')' : 'Luar Jadwal'}</span>`
-                      }
-                    </td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      `;
-    }
-
-    // --- INPUT VIEW WITH KEYBOARD SHORTCUTS ---
-    function renderInput(container) {
-      selectedKelasInput = "";
-      const dateToUse = lastSelectedDate || new Date().toISOString().split('T')[0];
-      const lastRecord = dataRekap.length > 0 ? dataRekap[dataRekap.length - 1] : null;
-
-      container.innerHTML = `
-        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs p-6 sm:p-8 space-y-6">
-          <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
-            <div>
-              <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">Input Paket Masuk</h2>
-              <p class="text-xs text-slate-400 dark:text-slate-500">Fast Keyboard Mode Active ⚡</p>
-            </div>
-            <span class="bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase">Full Shortcut</span>
-          </div>
-
-          <!-- SHORTCUT GUIDE BANNER -->
-          <div id="shortcut-guide-banner" class="bg-sky-50 dark:bg-sky-950/50 border border-sky-100 dark:border-sky-900 p-3.5 rounded-2xl text-xs space-y-1.5">
-            <div class="font-bold text-sky-800 dark:text-sky-300 flex items-center gap-1.5">
-              <i data-lucide="keyboard" class="w-4 h-4 text-sky-500"></i>
-              <span>Panduan Shortcut Keyboard Angka Hari Ini:</span>
-            </div>
-            <div id="shortcut-hint-list" class="flex flex-wrap gap-2 text-[11px] font-semibold text-slate-700 dark:text-slate-300"></div>
-          </div>
-
-          <form id="formPaket" onsubmit="handleSavePaket(event)" class="space-y-6">
-            <div>
-              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Tanggal Rekap / Paket Masuk</label>
-              <input type="date" id="inp-tanggal" value="${dateToUse}" onchange="updateSelectedDate(this.value)" required class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 text-sm font-semibold focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Nama Penerima <span class="text-rose-500">*</span></label>
-              <input type="text" id="inp-nama" required placeholder="Masukkan nama siswa (Ketik & Enter...)" onkeydown="handleNamaKeydown(event)" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">Pilih Kelas <span class="text-sky-500">(Tekan Angka 1, 2, 3...)</span></label>
-              <div id="kelas-btn-container" class="flex flex-wrap gap-2.5" tabindex="0" onkeydown="handleKelasContainerKeydown(event)"></div>
-              <p class="text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-2">Hijau = sesuai jadwal (Diutamakan paling kiri/atas). Merah = di luar jadwal.</p>
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">Keterangan Paket</label>
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-2">
-                <button type="button" onclick="setKeteranganQuick('Online')" class="py-2.5 px-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs transition">Online</button>
-                <button type="button" onclick="setKeteranganQuick('Non-online')" class="py-2.5 px-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs transition">Non-online</button>
-                <button type="button" onclick="setKeteranganQuick('HRL')" class="py-2.5 px-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs transition">HRL</button>
-                <button type="button" onclick="setKeteranganQuick('Food')" class="py-2.5 px-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs transition">Food</button>
-              </div>
-              <input type="text" id="inp-keterangan" placeholder="Atau ketik keterangan khusus di sini (Enter simpan)..." onkeydown="handleKetKeydown(event)" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 text-xs font-medium focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
-            </div>
-
-            <button type="submit" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-xl text-sm shadow-md transition uppercase tracking-wider">
-              SIMPAN DATA PAKET (ENTER)
-            </button>
-          </form>
-
-          <!-- STATUS INPUT TERAKHIR -->
-          <div id="card-last-record" class="bg-sky-50/60 dark:bg-sky-950/40 border border-sky-100 dark:border-sky-900 rounded-2xl p-4 flex items-center justify-between transition-all duration-300 ${lastRecord ? '' : 'hidden'}">
-            <div class="flex items-center gap-3">
-              <span class="text-lg">✅</span>
-              <div class="text-xs">
-                <span class="font-extrabold text-slate-800 dark:text-slate-200 block">Input Terakhir Terkini</span>
-                <span id="txt-last-record-detail" class="text-slate-500 dark:text-slate-400 font-medium">${lastRecord ? `${lastRecord.nama} — Kelas ${lastRecord.kelas} \vert{}${lastRecord.tglFormatted || lastRecord.rawTanggal}` : ''}</span>
-              </div>
-            </div>
-            <span class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950 px-2.5 py-1 rounded-full uppercase">Tersimpan</span>
-          </div>
-        </div>
-      `;
-
-      renderKelasButtons(dateToUse);
-
-      setTimeout(() => {
-        const inputNama = document.getElementById('inp-nama');
-        if (inputNama) inputNama.focus();
-      }, 100);
-    }
-
-    function updateSelectedDate(val) {
-      lastSelectedDate = val;
-      renderKelasButtons(val);
-    }
-
-    function renderKelasButtons(rawDate) {
-      const selectedDate = new Date(rawDate + "T00:00:00");
-      const dayIndex = selectedDate.getDay();
-      const kelasAllowed = jadwalHari[dayIndex] || [];
-      const container = document.getElementById('kelas-btn-container');
-
-      if (!container) return;
-
-      sortedKelasListCurrent = [...allKelasList].sort((a, b) => {
-        const aSesuai = kelasAllowed.includes(a);
-        const bSesuai = kelasAllowed.includes(b);
-        if (aSesuai && !bSesuai) return -1;
-        if (!aSesuai && bSesuai) return 1;
-        return 0;
-      });
-
-      const hintList = document.getElementById('shortcut-hint-list');
-      if (hintList) {
-        let hints = sortedKelasListCurrent.map((k, idx) => {
-          if (idx < 9) {
-            return `<span class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2 py-0.5 rounded-md">[ ${idx + 1} ] = ${k}</span>`;
-          }
-          return '';
-        }).join('');
-        hints += `<span class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2 py-0.5 rounded-md">[ 0 ] = 12</span>`;
-        hintList.innerHTML = hints;
-      }
-
-      container.innerHTML = sortedKelasListCurrent.map((k, idx) => {
-        const isSesuai = kelasAllowed.includes(k);
-        const isSelected = selectedKelasInput === k;
-        
-        let bgClass = isSesuai ? "bg-emerald-600 hover:bg-emerald-700 text-white" : "bg-rose-500 hover:bg-rose-600 text-white";
-        let borderClass = isSelected ? "ring-4 ring-sky-300 dark:ring-sky-500 scale-105" : "";
-        let badgeNum = idx < 9 ? `<span class="absolute -top-1 -right-1 bg-slate-900 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">${idx + 1}</span>` : '';
-
-        return `
-          <button type="button" onclick="selectKelasBtn('${k}')" id="btn-k-${k}" class="relative w-12 h-10 sm:w-14 sm:h-11 rounded-xl font-extrabold text-xs sm:text-sm shadow-xs transition flex items-center justify-center ${bgClass} ${borderClass}">
-            ${badgeNum}
-            ${k}
-          </button>
-        `;
-      }).join('');
-    }
-
-    function selectKelasBtn(k) {
-      selectedKelasInput = k;
-      const rawDate = document.getElementById('inp-tanggal').value;
-      renderKelasButtons(rawDate);
-    }
-
-    // --- KEYBOARD SHORTCUT ENGINE LOGIC ---
-    function handleNamaKeydown(e) {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        const namaVal = document.getElementById('inp-nama').value.trim();
-        if (namaVal) {
-          const container = document.getElementById('kelas-btn-container');
-          if (container) container.focus();
-        }
-      }
-    }
-
-    function handleKelasContainerKeydown(e) {
-      if (e.key >= '1' && e.key <= '9') {
-        e.preventDefault();
-        const idx = parseInt(e.key) - 1;
-        if (idx < sortedKelasListCurrent.length) {
-          selectKelasBtn(sortedKelasListCurrent[idx]);
-        }
-      } else if (e.key === '0') {
-        e.preventDefault();
-        selectKelasBtn("12");
-      }
-
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        if (selectedKelasInput) {
-          handleSavePaket(e);
-        }
-      }
-    }
-
-    function handleKetKeydown(e) {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        handleSavePaket(e);
-      }
-    }
-
-    function setKeteranganQuick(val) {
-      document.getElementById('inp-keterangan').value = val;
-    }
-
-    function handleSavePaket(e) {
-      if (e) e.preventDefault();
-
-      if (!selectedKelasInput) {
-        alert("⚠️ Harap pilih salah satu Kelas terlebih dahulu!");
-        return;
-      }
-
-      const rawTanggal = document.getElementById('inp-tanggal').value;
-      lastSelectedDate = rawTanggal;
-
-      const selectedDate = new Date(rawTanggal + "T00:00:00");
-      const dayIndex = selectedDate.getDay();
-      const kelasAllowed = jadwalHari[dayIndex] || [];
-
-      const nama = document.getElementById('inp-nama').value.trim();
-      if (!nama) return;
-
-      const kelas = selectedKelasInput;
-      const keterangan = document.getElementById('inp-keterangan').value.trim();
-
-      const tglFormatted = `${namaHari[dayIndex]}, ${selectedDate.toLocaleDateString('id-ID')}`;
-      const isSesuai = kelasAllowed.includes(kelas);
-
-      const newItem = {
-        id: Date.now(),
-        rawTanggal,
-        tglFormatted,
-        nama,
-        kelas,
-        keterangan,
-        isSesuai,
-        petugas: currentPetugas
-      };
-
-      dataRekap.push(newItem);
-      saveDB();
-
-      document.getElementById('inp-nama').value = '';
-      document.getElementById('inp-keterangan').value = '';
-      selectedKelasInput = "";
-      renderKelasButtons(rawTanggal);
-
-      const cardRecord = document.getElementById('card-last-record');
-      const txtRecord = document.getElementById('txt-last-record-detail');
-      
-      if (cardRecord && txtRecord) {
-        txtRecord.innerText = `${newItem.nama} — Kelas ${newItem.kelas} | ${newItem.tglFormatted || newItem.rawTanggal}`;
-        cardRecord.classList.remove('hidden');
-        cardRecord.classList.add('ring-2', 'ring-emerald-500');
-        setTimeout(() => {
-          cardRecord.classList.remove('ring-2', 'ring-emerald-500');
-        }, 1000);
-      }
-
-      document.getElementById('inp-nama').focus();
-    }
-
-    // --- LIVE VIEW ---
-    function renderLive(container) {
-      const sesuai = dataRekap.filter(d => d.isSesuai);
-      const luar = dataRekap.filter(d => !d.isSesuai);
-
-      container.innerHTML = `
-        <div class="space-y-6">
-          <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
-            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white mb-4">✅ Data Sesuai Jadwal</h3>
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs">
-                <thead class="bg-slate-50 dark:bg-slate-800 font-bold text-slate-400 dark:text-slate-400 uppercase">
-                  <tr><th class="p-3">Tanggal</th><th class="p-3">Nama</th><th class="p-3">Kelas</th><th class="p-3">Petugas</th><th class="p-3">Aksi</th></tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
-                  ${sesuai.map(d => `
-                    <tr>
-                      <td class="p-3">${d.tglFormatted || d.rawTanggal}</td>
-                      <td class="p-3 font-bold text-slate-900 dark:text-white">${d.nama}</td>
-                      <td class="p-3 font-semibold">${d.kelas}</td>
-                      <td class="p-3 text-slate-500 dark:text-slate-400">${d.petugas || '-'}</td>
-                      <td class="p-3"><button onclick="deletePaket(${d.id})" class="text-rose-600 dark:text-rose-400 font-bold hover:underline">Hapus</button></td>
-                    </tr>
-                  `).join('')}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
-            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white mb-4">⚠️ Data Di Luar Jadwal (Online/Izin)</h3>
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs">
-                <thead class="bg-slate-50 dark:bg-slate-800 font-bold text-slate-400 dark:text-slate-400 uppercase">
-                  <tr><th class="p-3">Tanggal</th><th class="p-3">Nama</th><th class="p-3">Kelas</th><th class="p-3">Keterangan</th><th class="p-3">Petugas</th><th class="p-3">Status</th><th class="p-3">Aksi</th></tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
-                  ${luar.map(d => `
-                    <tr>
-                      <td class="p-3">${d.tglFormatted || d.rawTanggal}</td>
-                      <td class="p-3 font-bold text-slate-900 dark:text-white">${d.nama}</td>
-                      <td class="p-3 font-semibold">${d.kelas}</td>
-                      <td class="p-3">${d.keterangan || '-'}</td>
-                      <td class="p-3 text-slate-500 dark:text-slate-400">${d.petugas || '-'}</td>
-                      <td class="p-3">
-                        <span class="px-2 py-0.5 rounded font-bold text-[10px] ${d.keterangan ? 'bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-400' : 'bg-rose-100 dark:bg-rose-950/80 text-rose-800 dark:text-rose-400'}">
-                          ${d.keterangan ? 'Dilegalkan' : 'Belum Dilegalkan'}
-                        </span>
-                      </td>
-                      <td class="p-3"><button onclick="deletePaket(${d.id})" class="text-rose-600 dark:text-rose-400 font-bold hover:underline">Hapus</button></td>
-                    </tr>
-                  `).join('')}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    function deletePaket(id) {
-      if (confirm('Apakah Bos yakin mau menghapus data ini?')) {
-        dataRekap = dataRekap.filter(d => d.id !== id);
-        saveDB();
-        navigate(currentTab);
-      }
-    }
-
-    // --- REKAP VIEW ---
-    function renderRekap(container) {
-      const todayISO = new Date().toISOString().split('T')[0];
-
-      container.innerHTML = `
-        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-6">
-          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div class="flex items-center gap-2">
-              <span class="text-xl">📊</span>
-              <h2 class="text-lg font-extrabold text-slate-900 dark:text-white">Rekapitulasi Data Paket</h2>
-            </div>
-            <button onclick="exportCSV('semua')" class="px-5 py-2.5 bg-sky-500 hover:bg-sky-600 text-white font-extrabold rounded-xl text-xs shadow-sm transition">
-              Export Semua Data
-            </button>
-          </div>
-
-          <div class="flex flex-wrap gap-2 border-b border-slate-100 dark:border-slate-800 pb-4">
-            <button onclick="filterPeriodik('hari', this)" class="sub-filter-btn px-4 py-2 rounded-full text-xs font-extrabold transition bg-sky-500 text-white shadow-xs">Hari Ini</button>
-            <button onclick="filterPeriodik('minggu', this)" class="sub-filter-btn px-4 py-2 rounded-full text-xs font-extrabold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">Minggu Ini</button>
-            <button onclick="filterPeriodik('bulan', this)" class="sub-filter-btn px-4 py-2 rounded-full text-xs font-extrabold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">Bulan Ini</button>
-            <button onclick="filterPeriodik('semua', this)" class="sub-filter-btn px-4 py-2 rounded-full text-xs font-extrabold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">Semua Data</button>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div class="bg-white dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs text-center space-y-1">
-              <span class="text-xs font-bold text-slate-400 dark:text-slate-400">Total Paket</span>
-              <div id="stat-total" class="text-3xl font-black text-slate-900 dark:text-white">0</div>
-            </div>
-            <div class="bg-white dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs text-center space-y-1">
-              <span class="text-xs font-bold text-slate-400 dark:text-slate-400">Sesuai Jadwal</span>
-              <div id="stat-sesuai" class="text-3xl font-black text-emerald-600 dark:text-emerald-400">0</div>
-            </div>
-            <div class="bg-white dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs text-center space-y-1">
-              <span class="text-xs font-bold text-slate-400 dark:text-slate-400">Di Luar Jadwal</span>
-              <div id="stat-luar" class="text-3xl font-black text-amber-600 dark:text-amber-400">0</div>
-            </div>
-          </div>
-
-          <div class="bg-slate-50 dark:bg-slate-800/80 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div class="space-y-1">
-              <span class="text-xs font-extrabold text-slate-800 dark:text-slate-200 block">📅 Export Rentang Tanggal Khusus:</span>
-              <div class="flex items-center gap-2">
-                <input type="date" id="export-start" value="${todayISO}" class="bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100 rounded-lg p-2 text-xs font-bold" />
-                <span class="text-xs font-bold text-slate-400">s/d</span>
-                <input type="date" id="export-end" value="${todayISO}" class="bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100 rounded-lg p-2 text-xs font-bold" />
-              </div>
-            </div>
-            <button onclick="exportCSVByDateRange()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow-xs transition shrink-0">
-              Export Rentang Tanggal
-            </button>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs">
-              <thead class="text-slate-500 dark:text-slate-400 font-extrabold border-b border-slate-100 dark:border-slate-800">
-                <tr>
-                  <th class="pb-3 w-32">Tanggal</th>
-                  <th class="pb-3">Nama</th>
-                  <th class="pb-3 w-20">Kelas</th>
-                  <th class="pb-3 w-32">Kategori</th>
-                  <th class="pb-3">Keterangan</th>
-                </tr>
-              </thead>
-              <tbody id="tabel-rekap-body" class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300"></tbody>
-            </table>
-          </div>
-        </div>
-      `;
-
-      filterPeriodik('hari', document.querySelector('.sub-filter-btn'));
-    }
-
-    function filterPeriodik(period, btn) {
-      document.querySelectorAll('.sub-filter-btn').forEach(b => {
-        b.classList.remove('bg-sky-500', 'text-white', 'shadow-xs');
-        b.classList.add('text-slate-600', 'dark:text-slate-300', 'bg-slate-100', 'dark:bg-slate-800');
-      });
-      if(btn) {
-        btn.classList.add('bg-sky-500', 'text-white', 'shadow-xs');
-        btn.classList.remove('text-slate-600', 'dark:text-slate-300', 'bg-slate-100', 'dark:bg-slate-800');
-      }
-
-      activeFilterRekap = period;
-      const todayISO = new Date().toISOString().split('T')[0];
-      const now = new Date();
-
-      let filtered = dataRekap.filter(d => {
-        if (!d.rawTanggal) return false;
-        const itemDate = new Date(d.rawTanggal + "T00:00:00");
-
-        if (period === 'hari') return d.rawTanggal === todayISO;
-        if (period === 'minggu') {
-          const diffTime = Math.abs(now - itemDate);
-          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-          return diffDays <= 7;
-        }
-        if (period === 'bulan') return itemDate.getMonth() === now.getMonth() && itemDate.getFullYear() === now.getFullYear();
-        return true;
-      });
-
-      document.getElementById('stat-total').innerText = filtered.length;
-      document.getElementById('stat-sesuai').innerText = filtered.filter(d => d.isSesuai).length;
-      document.getElementById('stat-luar').innerText = filtered.filter(d => !d.isSesuai).length;
-
-      const tbody = document.getElementById('tabel-rekap-body');
-      tbody.innerHTML = '';
-
-      if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400 dark:text-slate-500 font-medium">Belum ada data untuk periode ini.</td></tr>`;
-        return;
-      }
-
-      filtered.forEach(d => {
-        tbody.innerHTML += `
-          <tr>
-            <td class="py-3 font-medium text-slate-500 dark:text-slate-400">${d.tglFormatted || d.rawTanggal}</td>
-            <td class="py-3 font-bold text-slate-900 dark:text-white">${d.nama}</td>
-            <td class="py-3 font-semibold text-slate-700 dark:text-slate-300">${d.kelas}</td>
-            <td class="py-3">
-              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${d.isSesuai ? 'bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400' : 'bg-amber-50 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400'}">
-                ${d.isSesuai ? 'Sesuai Jadwal' : 'Di Luar Jadwal'}
-              </span>
-            </td>
-            <td class="py-3 text-slate-600 dark:text-slate-400">${d.keterangan || '-'}</td>
-          </tr>
-        `;
-      });
-    }
-
-    function exportCSV(tipe) {
-      if (!dataRekap.length) {
-        alert('Gak ada data yang bisa di-export nih!');
-        return;
-      }
-      generateCSVBlob(dataRekap, `Rekap_Paket_TOTAL_${new Date().toISOString().slice(0,10)}.csv`);
-    }
-
-    function exportCSVByDateRange() {
-      const start = document.getElementById('export-start').value;
-      const end = document.getElementById('export-end').value;
-
-      if (!start || !end) {
-        alert('⚠️ Pilih tanggal mulai dan tanggal akhir dulu ya!');
-        return;
-      }
-
-      const filtered = dataRekap.filter(d => d.rawTanggal >= start && d.rawTanggal <= end);
-
-      if (!filtered.length) {
-        alert(`Gak ada data paket di rentang tanggal ${start} s/d ${end}!`);
-        return;
-      }
-
-      generateCSVBlob(filtered, `Rekap_Paket_${start}_sd_${end}.csv`);
-    }
-
-    function generateCSVBlob(listData, filename) {
-      const BOM = "\uFEFF";
-      let csvRows = [["Tanggal Rekap", "Nama", "Kelas", "Kategori Rekap", "Keterangan", "Petugas", "Status Legalitas"].join(",")];
-
-      listData.forEach(i => {
-        let kategori = i.isSesuai ? "Sesuai Jadwal" : "Di Luar Jadwal";
-        let status = i.isSesuai ? "Sesuai Jadwal" : (i.keterangan ? `Dilegalkan (${i.keterangan})` : "Belum Dilegalkan");
-        csvRows.push([
-          `"${(i.tglFormatted || i.rawTanggal).replace(/"/g, '""')}"`,
-          `"${i.nama.replace(/"/g, '""')}"`,
-          `"${i.kelas}"`,
-          `"${kategori}"`,
-          `"${(i.keterangan || '-').replace(/"/g, '""')}"`,
-          `"${i.petugas || '-'}"`,
-          `"${status.replace(/"/g, '""')}"`
-        ].join(","));
-      });
-
-      const blob = new Blob([BOM + csvRows.join("\n")], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-
-    // --- TAB MIGRASI DATA ---
-    function renderMigrasi(container) {
-      const jsonString = JSON.stringify(dataRekap, null, 2);
-
-      container.innerHTML = `
-        <div class="space-y-6">
-          <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
-            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white mb-1">📤 Export / Copy Data Lokal</h3>
-            <p class="text-xs text-slate-400 dark:text-slate-500 mb-4">Salin kode JSON di bawah ini untuk disimpan atau dipindahkan ke device lain.</p>
-            <textarea id="txt-export" readonly class="w-full h-36 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl p-3 font-mono text-[11px] focus:outline-none">${jsonString}</textarea>
-            <button onclick="copyExportJSON()" class="mt-2 px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl text-xs flex items-center gap-2">
-              <i data-lucide="copy" class="w-4 h-4"></i> Copy Kode JSON
-            </button>
-          </div>
-
-          <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
-            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white mb-1">📥 Import / Paste Data</h3>
-            <p class="text-xs text-slate-400 dark:text-slate-500 mb-4">Paste kode JSON dari backup lama ke bawah ini, lalu klik tombol **Import Data**.</p>
-            <textarea id="txt-import" placeholder='Paste kode JSON di sini (Contoh: [{"nama":"Budi","kelas":"8A"...}])' class="w-full h-36 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl p-3 font-mono text-[11px] focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-amber-500 focus:outline-none"></textarea>
-            <button onclick="importJSONData()" class="mt-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-xs flex items-center gap-2">
-              <i data-lucide="download-cloud" class="w-4 h-4"></i> Import Data
-            </button>
-          </div>
-        </div>
-      `;
-    }
-
-    function copyExportJSON() {
-      const copyText = document.getElementById("txt-export");
-      copyText.select();
-      document.execCommand("copy");
-      alert("✅ Kode JSON berhasil di-copy!");
-    }
-
-    function importJSONData() {
-      let importVal = document.getElementById("txt-import").value.trim();
-      if (!importVal) {
-        alert("⚠️ Tempel (paste) kode JSON dulu ya!");
-        return;
-      }
-      try {
-        const firstBracket = importVal.indexOf('[');
-        const lastBracket = importVal.lastIndexOf(']');
-        if (firstBracket !== -1 && lastBracket !== -1) {
-          importVal = importVal.substring(firstBracket, lastBracket + 1);
-        }
-
-        const parsed = JSON.parse(importVal);
-        if (Array.isArray(parsed)) {
-          dataRekap = parsed;
-          saveDB();
-          alert(`✅ Sukses! ${parsed.length} data berhasil di-import.`);
-          navigate('dashboard');
-        } else {
-          alert("❌ Format JSON harus berupa list/array.");
-        }
-      } catch (err) {
-        alert("❌ Gagal membaca JSON: " + err.message);
-      }
-    }
-
-    // --- AI CHATBOT ENGINE LOGIC (MODEL GROQ TERBARU) ---
-    async function handleAiChatSubmit(e) {
-      e.preventDefault();
-      const inputEl = document.getElementById('aiChatInput');
-      const chatBox = document.getElementById('aiChatBox');
-      const text = inputEl.value.trim();
-      if (!text) return;
-
-      chatBox.innerHTML += `
-        <div class="bg-sky-500 text-white p-2.5 rounded-2xl font-medium ml-4 text-right text-[11px]">
-          ${text}
-        </div>
-      `;
-      inputEl.value = '';
-      chatBox.scrollTop = chatBox.scrollHeight;
-
-      const lower = text.toLowerCase();
-
-      // 1. INTENT DETEKSI HAPUS DATA (BAHASA SANTAI/GAUL)
-      if (lower.includes('hapus') || lower.includes('hilangin') || lower.includes('delete') || lower.includes('buang')) {
-        const words = text.split(/\s+/);
-        let targetNama = "";
-        
-        const matchNama = text.match(/(?:nama|namanya|paket|punya|data|atas nama)\s+([A-Za-z0-9]+)/i);
-        if (matchNama) {
-          targetNama = matchNama[1].trim().toLowerCase();
-        } else {
-          targetNama = words[words.length - 1].toLowerCase();
-        }
-
-        if (targetNama && targetNama.length > 1) {
-          const initLen = dataRekap.length;
-          dataRekap = dataRekap.filter(d => !d.nama.toLowerCase().includes(targetNama));
-          if (dataRekap.length < initLen) {
-            saveDB();
-            navigate(currentTab);
-            chatBox.innerHTML += `
-              <div class="bg-rose-50 dark:bg-rose-950/80 border border-rose-200 dark:border-rose-800 p-2.5 rounded-2xl text-rose-800 dark:text-rose-300 font-bold text-[11px]">
-                🗑️ Berhasil hapus semua data paket yang namanya "${targetNama}", Bro!
-              </div>
-            `;
-            chatBox.scrollTop = chatBox.scrollHeight;
-            return;
-          }
-        }
-      }
-
-      // 2. INTENT DETEKSI INPUT DATA (BAHASA SANTAI/GAUL)
-      if (lower.includes('input') || lower.includes('tambah') || lower.includes('masukin') || lower.includes('catat')) {
-        const matchNama = text.match(/(?:paket|nama|penerima)\s+([A-Za-z\s]+?)(?=\s+kelas|\s+ket|$)/i);
-        const matchKelas = text.match(/kelas\s+([0-9A-Ea-e]+)/i);
-        const matchKet = text.match(/ket(?:erangan)?\s+(.+)/i);
-
-        if (matchNama && matchKelas) {
-          const nama = matchNama[1].trim();
-          const kelas = matchKelas[1].toUpperCase();
-          const keterangan = matchKet ? matchKet[1].trim() : '';
-          const todayISO = new Date().toISOString().split('T')[0];
-          const dayIndex = new Date().getDay();
-          const kelasAllowed = jadwalHari[dayIndex] || [];
-          const isSesuai = kelasAllowed.includes(kelas);
-
-          const newItem = {
-            id: Date.now(),
-            rawTanggal: todayISO,
-            tglFormatted: `${namaHari[dayIndex]}, ${new Date().toLocaleDateString('id-ID')}`,
-            nama,
-            kelas,
-            keterangan,
-            isSesuai,
-            petugas: currentPetugas
-          };
-
-          dataRekap.push(newItem);
-          saveDB();
-          navigate(currentTab);
-
-          chatBox.innerHTML += `
-            <div class="bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800 p-2.5 rounded-2xl text-emerald-800 dark:text-emerald-300 font-bold text-[11px]">
-              ✅ Berhasil diinput! Paket buat <strong>${nama}</strong> (Kelas ${kelas}) udah masuk ke tabel ya!
-            </div>
-          `;
-          chatBox.scrollTop = chatBox.scrollHeight;
-          return;
-        }
-      }
-
-      // 3. CASUAL CHAT VIA GROQ API (MODEL AKTIF BARU: openai/gpt-oss-20b)
-      if (!groqApiKey) {
-        chatBox.innerHTML += `
-          <div class="bg-sky-50 dark:bg-sky-950/60 border border-sky-100 dark:border-sky-900 p-2.5 rounded-2xl text-slate-700 dark:text-slate-300 text-[11px]">
-            ⚙️ Bro Lanaa, klik ikon gear di atas buat masukin **Groq API Key** dulu ya!
-          </div>
-        `;
-        chatBox.scrollTop = chatBox.scrollHeight;
-        return;
-      }
-
-      chatBox.innerHTML += `<div id="aiLoading" class="text-slate-400 italic text-[10px]">Groq AI lagi mikir kilat...</div>`;
-      chatBox.scrollTop = chatBox.scrollHeight;
-
-      async function callGroqModel(modelName) {
-        return await fetch(`https://api.groq.com/openai/v1/chat/completions`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${groqApiKey}`
-          },
-          body: JSON.stringify({
-            model: modelName,
-            messages: [
-              {
-                role: "system",
-                content: "Kamu adalah AI Assistant gaul PaketBot untuk Bos Lanaa di aplikasi Paket Control Center. Selalu merespon menggunakan Bahasa Indonesia gaul, santai, akrab, ramah, dan cepat layaknya teman nongkrong. Dilarang menggunakan Bahasa Jawa."
-              },
-              {
-                role: "user",
-                content: text
-              }
-            ],
-            temperature: 0.7
-          })
-        });
-      }
-
-      try {
-        let res = await callGroqModel("openai/gpt-oss-20b");
-        let data = await res.json();
-
-        // Fallback jika butuh model lain
-        if (data.error && data.error.message && data.error.message.includes('does not exist')) {
-          res = await callGroqModel("openai/gpt-oss-120b");
-          data = await res.json();
-        }
-
-        document.getElementById('aiLoading')?.remove();
-
-        if (data.error) {
-          chatBox.innerHTML += `
-            <div class="bg-rose-50 dark:bg-rose-950/80 p-2.5 rounded-2xl text-rose-600 dark:text-rose-300 text-[11px]">
-              ⚠️ Groq API Error: ${data.error.message || 'Key tidak valid'}.
-            </div>
-          `;
-        } else {
-          const reply = data.choices?.[0]?.message?.content || "Aduh, bingung nih mau jawab apa Bro!";
-          chatBox.innerHTML += `
-            <div class="bg-sky-50 dark:bg-sky-950/60 border border-sky-100 dark:border-sky-900 p-2.5 rounded-2xl text-slate-800 dark:text-slate-200 text-[11px]">
-              ${reply}
-            </div>
-          `;
-        }
-      } catch (err) {
-        document.getElementById('aiLoading')?.remove();
-        chatBox.innerHTML += `<div class="bg-rose-50 dark:bg-rose-950/80 p-2.5 rounded-2xl text-rose-600 dark:text-rose-300 text-[11px]">Gagal konek ke Groq API, Bro! Coba cek internet kamu deh.</div>`;
-      }
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    function setApiKey() {
-      const inputKey = prompt("Masukkan Groq API Key milikmu:", groqApiKey);
-      if (inputKey !== null) {
-        groqApiKey = inputKey.trim();
-        localStorage.setItem('groq_api_key', groqApiKey);
-        alert("✅ Groq API Key tersimpan!");
-      }
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      initTheme();
-      updateOnlineStatus();
-      navigate('dashboard');
-    });
-  </script>
+  <!-- TOP APP BAR -->
+  <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 shadow-xs transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('dashboard')">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-md">
+          <i data-lucide="package-check" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-base font-extrabold tracking-tight text-slate-900 dark:text-white">PAKET<span class="text-sky-500">CONTROL</span></span>
+            <span id="badge-online-status" class="text-[10px] bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              ONLINE
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-400 dark:text-slate-500 font-medium">Package Management & Verification</p>
+        </div>
+      </div>
+
+      <!-- RIGHT TOP BAR: PETUGAS & DARK MODE TOGGLE -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- TOGGLE DARK MODE BUTTON -->
+        <button onclick="toggleDarkMode()" id="btn-theme-toggle" title="Ubah Mode Tampilan" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-amber-400 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition border border-slate-200 dark:border-slate-700">
+          <i data-lucide="moon" id="icon-theme" class="w-4 h-4"></i>
+        </button>
+
+        <!-- PETUGAS PIKET SELECTOR -->
+        <div class="flex items-center gap-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-full px-3 py-1.5 shadow-2xs">
+          <div class="w-7 h-7 rounded-full bg-sky-500 text-white flex items-center justify-center font-bold text-xs">
+            <i data-lucide="user" class="w-3.5 h-3.5"></i>
+          </div>
+          <select id="select-petugas" onchange="changePetugas(this.value)" class="text-xs font-bold text-slate-700 dark:text-slate-200 bg-transparent focus:outline-none cursor-pointer">
+            <option value="Sultan Maulana" class="dark:bg-slate-900">Sultan Maulana</option>
+            <option value="Dzaka Rozan" class="dark:bg-slate-900">Dzaka Rozan</option>
+            <option value="Ghani Rizky" class="dark:bg-slate-900">Ghani Rizky</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- NAVIGATION PILLS -->
+    <div class="bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
+      <div class="max-w-7xl mx-auto flex items-center gap-2 overflow-x-auto py-2 custom-scroll text-xs font-semibold">
+        <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0">
+          <i data-lucide="layout-dashboard" class="w-4 h-4 text-sky-500"></i>
+          <span>Dashboard</span>
+        </button>
+        <button onclick="navigate('input')" id="nav-input" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0">
+          <i data-lucide="zap" class="w-4 h-4 text-emerald-500"></i>
+          <span>Input Paket Masuk</span>
+        </button>
+        <button onclick="navigate('live')" id="nav-live" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0">
+          <i data-lucide="list-checks" class="w-4 h-4 text-indigo-500"></i>
+          <span>Data Live Preview</span>
+        </button>
+        <button onclick="navigate('rekap')" id="nav-rekap" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0">
+          <i data-lucide="bar-chart-3" class="w-4 h-4 text-purple-500"></i>
+          <span>Rekapitulasi & Export</span>
+        </button>
+        <button onclick="navigate('migrasi')" id="nav-migrasi" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0">
+          <i data-lucide="arrow-left-right" class="w-4 h-4 text-amber-500"></i>
+          <span>Migrasi Data / Backup</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- LAYOUT GRID DENGAN MUSIC PLAYER SIDEBAR (KIRI), MAIN CONTENT (TENGAH), DAN AI CHAT (KANAN) -->
+  <div class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="flex flex-col lg:flex-row gap-6 items-start">
+      
+      <!-- 🎵 SIDEBAR MUSIC PLAYER (KIRI) -->
+      <aside class="w-full lg:w-72 shrink-0 lg:sticky lg:top-24 space-y-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-4 shadow-xs transition-colors duration-300">
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <div class="w-8 h-8 rounded-xl bg-rose-500 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+                <i data-lucide="music" class="w-4 h-4 animate-bounce"></i>
+              </div>
+              <span class="text-xs font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">Music Player</span>
+            </div>
+            <span class="text-[10px] font-extrabold bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 px-2 py-0.5 rounded-full uppercase">Live Sync</span>
+          </div>
+
+          <div class="flex gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl text-[11px] font-bold mb-3">
+            <button onclick="switchMusicTab('yt')" id="tab-m-yt" class="flex-1 py-1.5 rounded-lg bg-white dark:bg-slate-700 text-slate-800 dark:text-white shadow-2xs transition">YouTube</button>
+            <button onclick="switchMusicTab('sp')" id="tab-m-sp" class="flex-1 py-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition">Spotify</button>
+          </div>
+
+          <div id="player-yt-box" class="space-y-2.5">
+            <div class="w-full h-48 rounded-2xl overflow-hidden bg-slate-900 shadow-inner border border-slate-200 dark:border-slate-800">
+              <iframe id="iframe-yt" class="w-full h-full" src="https://www.youtube.com/embed/jfKfPfyJRdk" title="YouTube Music Player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div class="space-y-1">
+              <label class="text-[10px] font-bold text-slate-400 dark:text-slate-500 block">Link/ID Video YouTube:</label>
+              <div class="flex gap-1">
+                <input type="text" id="input-yt-url" placeholder="Paste link YouTube..." class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-lg p-2 text-[10px] font-semibold focus:outline-none" />
+                <button onclick="loadYouTubeURL()" class="bg-rose-500 hover:bg-rose-600 text-white px-3 py-1 rounded-lg text-[10px] font-bold transition">Set</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="player-sp-box" class="space-y-2.5 hidden">
+            <div class="h-52 w-full rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-inner">
+              <iframe id="iframe-sp" class="w-full h-full" src="https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
+            <div class="space-y-1">
+              <label class="text-[10px] font-bold text-slate-400 dark:text-slate-500 block">Link Track/Playlist Spotify:</label>
+              <div class="flex gap-1">
+                <input type="text" id="input-sp-url" placeholder="Paste link Spotify..." class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-lg p-2 text-[10px] font-semibold focus:outline-none" />
+                <button onclick="loadSpotifyURL()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-3 py-1 rounded-lg text-[10px] font-bold transition">Set</button>
+              </div>
+            </div>
+          </div>
+
+          <p class="text-[10px] text-slate-400 dark:text-slate-500 font-medium text-center mt-3">🎧 Musik tetap jalan sambil kamu rekap data paket!</p>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTAINER UTAMA (TENGAH) -->
+      <main class="flex-1 w-full space-y-6 min-w-0">
+        <div id="app-container"></div>
+      </main>
+
+      <!-- 🤖 AI ASSISTANT SIDEBAR (KANAN) -->
+      <aside class="w-full lg:w-72 shrink-0 lg:sticky lg:top-24 space-y-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-4 shadow-xs flex flex-col h-[520px] transition-colors duration-300">
+          <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 mb-3">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded-lg bg-sky-500 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+                <i data-lucide="zap" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h3 class="text-xs font-extrabold text-slate-800 dark:text-slate-100">AI ASSISTANT GAUL</h3>
+                <p class="text-[9px] text-emerald-500 font-bold flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Groq Fast Active
+                </p>
+              </div>
+            </div>
+            <button onclick="setApiKey()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition" title="Set Groq API Key">
+              <i data-lucide="settings" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <!-- Chat History Container -->
+          <div id="aiChatBox" class="flex-1 overflow-y-auto space-y-2.5 pr-1 text-xs custom-scroll">
+            <div class="bg-sky-50 dark:bg-sky-950/60 border border-sky-100 dark:border-sky-900 p-3 rounded-2xl text-slate-700 dark:text-slate-300 leading-relaxed text-[11px]">
+              👋 Yo watsap Bro Lanaa! Gue AI Assistant lo nih. Bebas mau ngobrol santai, nanya-nanya apa aja, atau minta kelola data paket (contoh: <i>"hapus paket yang namanya Lanaa"</i> atau <i>"input paket Budi kelas 9D"</i>). Langsung gass!
+            </div>
+          </div>
+
+          <!-- Chat Input Area -->
+          <form onsubmit="handleAiChatSubmit(event)" class="mt-3 pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
+            <input type="text" id="aiChatInput" placeholder="Ketik pesan / perintah..." class="flex-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-2.5 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-sky-500" />
+            <button type="submit" class="bg-sky-500 hover:bg-sky-600 text-white p-2.5 rounded-xl transition shrink-0">
+              <i data-lucide="send" class="w-3.5 h-3.5"></i>
+            </button>
+          </form>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+
+  <footer class="bg-white dark:bg-slate-900 border-t border-slate-200/80 dark:border-slate-800 py-4 text-center text-xs text-slate-400 dark:text-slate-500 transition-colors duration-300">
+    <p>“Streamlined Package Tracking System” • Rekap Paket Sekolah</p>
+  </footer>
+
+  <script>
+    // --- SERVICE WORKER REGISTRATION (OFFLINE MODE) ---
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(() => console.log('✅ Offline Mode Ready!'))
+          .catch((err) => console.log('Offline SW Error:', err));
+      });
+    }
+
+    // --- NETWORK STATUS DETECTOR ---
+    function updateOnlineStatus() {
+      const badge = document.getElementById('badge-online-status');
+      if (!badge) return;
+
+      if (navigator.onLine) {
+        badge.className = "text-[10px] bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1";
+        badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> ONLINE`;
+      } else {
+        badge.className = "text-[10px] bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-400 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1";
+        badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> OFFLINE MODE`;
+      }
+    }
+
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+
+    // --- DARK MODE SYSTEM ---
+    function initTheme() {
+      const isDark = localStorage.getItem('theme_mode') === 'dark';
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      updateThemeIcon(isDark);
+    }
+
+    function toggleDarkMode() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme_mode', isDark ? 'dark' : 'light');
+      updateThemeIcon(isDark);
+    }
+
+    function updateThemeIcon(isDark) {
+      const icon = document.getElementById('icon-theme');
+      if (icon) {
+        icon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+        lucide.createIcons();
+      }
+    }
+
+    // --- MUSIC PLAYER LOGIC ---
+    function switchMusicTab(type) {
+      const ytBox = document.getElementById('player-yt-box');
+      const spBox = document.getElementById('player-sp-box');
+      const btnYt = document.getElementById('tab-m-yt');
+      const btnSp = document.getElementById('tab-m-sp');
+
+      if (type === 'yt') {
+        ytBox.classList.remove('hidden');
+        spBox.classList.add('hidden');
+        btnYt.classList.add('bg-white', 'dark:bg-slate-700', 'text-slate-800', 'dark:text-white', 'shadow-2xs');
+        btnYt.classList.remove('text-slate-500', 'dark:text-slate-400');
+        btnSp.classList.remove('bg-white', 'dark:bg-slate-700', 'text-slate-800', 'dark:text-white', 'shadow-2xs');
+        btnSp.classList.add('text-slate-500', 'dark:text-slate-400');
+      } else {
+        spBox.classList.remove('hidden');
+        ytBox.classList.add('hidden');
+        btnSp.classList.add('bg-white', 'dark:bg-slate-700', 'text-slate-800', 'dark:text-white', 'shadow-2xs');
+        btnSp.classList.remove('text-slate-500', 'dark:text-slate-400');
+        btnYt.classList.remove('bg-white', 'dark:bg-slate-700', 'text-slate-800', 'dark:text-white', 'shadow-2xs');
+        btnYt.classList.add('text-slate-500', 'dark:text-slate-400');
+      }
+    }
+
+    function loadYouTubeURL() {
+      const val = document.getElementById('input-yt-url').value.trim();
+      if (!val) return;
+
+      let videoId = val;
+      if (val.includes('v=')) {
+        videoId = val.split('v=')[1].split('&')[0];
+      } else if (val.includes('youtu.be/')) {
+        videoId = val.split('youtu.be/')[1].split('?')[0];
+      }
+
+      document.getElementById('iframe-yt').src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+    }
+
+    function loadSpotifyURL() {
+      const val = document.getElementById('input-sp-url').value.trim();
+      if (!val) return;
+
+      let embedUrl = val;
+      if (!val.includes('/embed/')) {
+        embedUrl = val.replace('spotify.com/', 'spotify.com/embed/');
+      }
+
+      document.getElementById('iframe-sp').src = embedUrl;
+    }
+
+    // --- JADWAL HARI ---
+    const jadwalHari = {
+      1: ["12"],                           // Senin
+      2: ["11", "10"],                     // Selasa
+      3: ["9A", "9B"],                     // Rabu
+      4: ["9C", "9D", "9E"],               // Kamis
+      5: ["8A", "8B"],                     // Jumat
+      6: ["8C", "8D", "8E"],               // Sabtu
+      0: []                                // Minggu
+    };
+    const namaHari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+    const allKelasList = ["12", "11", "10", "9A", "9B", "9C", "9D", "9E", "8A", "8B", "8C", "8D", "8E"];
+
+    // Storage Engine & State
+    let dataRekap = JSON.parse(localStorage.getItem('rekapPaketData_UI')) || JSON.parse(localStorage.getItem('rekapPaketData')) || [];
+    let currentPetugas = localStorage.getItem('activePetugas_UI') || "Sultan Maulana";
+    
+    // --- GROQ API KEY HARDCODED ---
+    let groqApiKey = localStorage.getItem('groq_api_key') || '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';
+
+    let selectedKelasInput = "";
+    let lastSelectedDate = new Date().toISOString().split('T')[0];
+    let activeFilterRekap = "hari";
+    let sortedKelasListCurrent = [];
+
+    function saveDB() {
+      localStorage.setItem('rekapPaketData_UI', JSON.stringify(dataRekap));
+      localStorage.setItem('rekapPaketData', JSON.stringify(dataRekap));
+    }
+
+    function changePetugas(name) {
+      currentPetugas = name;
+      localStorage.setItem('activePetugas_UI', name);
+      if (currentTab === 'dashboard') {
+        renderDashboard(document.getElementById('app-container'));
+      }
+    }
+
+    let currentTab = 'dashboard';
+
+    function navigate(tabId) {
+      currentTab = tabId;
+      document.querySelectorAll('.nav-pill').forEach(btn => {
+        btn.classList.remove('bg-sky-500', 'text-white', 'shadow-sm');
+        btn.classList.add('text-slate-600', 'dark:text-slate-300');
+      });
+      const activeBtn = document.getElementById('nav-' + tabId);
+      if (activeBtn) {
+        activeBtn.classList.add('bg-sky-500', 'text-white', 'shadow-sm');
+        activeBtn.classList.remove('text-slate-600', 'dark:text-slate-300');
+      }
+
+      const container = document.getElementById('app-container');
+      if (tabId === 'dashboard') renderDashboard(container);
+      else if (tabId === 'input') renderInput(container);
+      else if (tabId === 'live') renderLive(container);
+      else if (tabId === 'rekap') renderRekap(container);
+      else if (tabId === 'migrasi') renderMigrasi(container);
+
+      lucide.createIcons();
+    }
+
+    // --- DASHBOARD VIEW ---
+    function renderDashboard(container) {
+      const todayISO = new Date().toISOString().split('T')[0];
+      const todayIndex = new Date().getDay();
+      const kelasHariIni = jadwalHari[todayIndex] || [];
+
+      const todayData = dataRekap.filter(d => d.rawTanggal === todayISO);
+      const countSesuai = todayData.filter(d => d.isSesuai).length;
+      const countLuar = todayData.filter(d => !d.isSesuai).length;
+
+      let titleSambutan = `Selamat Datang, ${currentPetugas} 👋`;
+      let subSambutan = "Selamat bertugas! Rekap penerimaan paket siswa harian makin gampang, akurat, lan terorganisir.";
+
+      if (currentPetugas === "Sultan Maulana") {
+        titleSambutan = "Yo watsap Bos Lanaa! 🚀";
+        subSambutan = "Siap rekap paket hari ini? Bikin semua data rapi, sat-set, dan terorganisir tanpa ribet!";
+      }
+
+      document.getElementById('select-petugas').value = currentPetugas;
+
+      container.innerHTML = `
+        <div class="rg-gradient rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
+          <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div class="space-y-2">
+              <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Sistem Monitoring Paket Aktif</span>
+              </div>
+              <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">
+                ${titleSambutan}
+              </h2>
+              <p class="text-white/90 text-sm max-w-xl">
+                ${subSambutan}
+              </p>
+            </div>
+            <div class="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-2xl flex items-center gap-4 text-xs shrink-0">
+              <div class="w-12 h-12 rounded-xl bg-white text-sky-600 flex items-center justify-center font-bold text-lg shadow-sm">
+                <i data-lucide="calendar" class="w-6 h-6 text-sky-600"></i>
+              </div>
+              <div>
+                <span class="text-white/70 block text-[11px] font-semibold">Hari Ini: ${namaHari[todayIndex]}</span>
+                <span class="text-white font-bold text-sm block">Jadwal Kelas: ${kelasHariIni.length > 0 ? kelasHariIni.join(', ') : 'Libur Reguler'}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <div class="flex items-center justify-between text-slate-400 dark:text-slate-500 text-xs font-bold mb-2">
+              <span>TOTAL PAKET HARI INI</span>
+              <i data-lucide="package" class="w-4 h-4 text-sky-500"></i>
+            </div>
+            <div class="text-3xl font-black text-slate-900 dark:text-white">${todayData.length}</div>
+            <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Total masuk tanggal ${todayISO}</p>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <div class="flex items-center justify-between text-slate-400 dark:text-slate-500 text-xs font-bold mb-2">
+              <span>SESUAI JADWAL</span>
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
+            </div>
+            <div class="text-3xl font-black text-emerald-600 dark:text-emerald-400">${countSesuai}</div>
+            <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Sesuai kelas reguler</p>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <div class="flex items-center justify-between text-slate-400 dark:text-slate-500 text-xs font-bold mb-2">
+              <span>DI LUAR JADWAL / ONLINE</span>
+              <i data-lucide="alert-circle" class="w-4 h-4 text-amber-500"></i>
+            </div>
+            <div class="text-3xl font-black text-amber-600 dark:text-amber-400">${countLuar}</div>
+            <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Paket pengecualian/legalitas</p>
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Rekap Input Terbaru</h3>
+              <p class="text-xs text-slate-400 dark:text-slate-500">Data penerimaan paket terkini</p>
+            </div>
+            <button onclick="navigate('live')" class="text-xs font-bold text-sky-600 dark:text-sky-400 hover:text-sky-700 flex items-center gap-1">
+              Lihat Semua <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="text-slate-400 dark:text-slate-500 border-b border-slate-100 dark:border-slate-800 font-bold uppercase tracking-wider">
+                <tr>
+                  <th class="pb-3">Tanggal Rekap</th>
+                  <th class="pb-3">Nama Penerima</th>
+                  <th class="pb-3">Kelas</th>
+                  <th class="pb-3">Petugas</th>
+                  <th class="pb-3">Status / Legalitas</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+                ${dataRekap.slice(-5).reverse().map(d => `
+                  <tr>
+                    <td class="py-3 font-medium text-slate-500 dark:text-slate-400">${d.tglFormatted || d.rawTanggal}</td>
+                    <td class="py-3 font-bold text-slate-900 dark:text-white">${d.nama}</td>
+                    <td class="py-3 font-semibold text-slate-700 dark:text-slate-300">${d.kelas}</td>
+                    <td class="py-3 font-medium text-slate-500 dark:text-slate-400">${d.petugas || '-'}</td>
+                    <td class="py-3">
+                      ${d.isSesuai 
+                        ? `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400">Sesuai Jadwal</span>`
+                        : `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400">${d.keterangan ? 'Dilegalkan (' + d.keterangan + ')' : 'Luar Jadwal'}</span>`
+                      }
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    // --- INPUT VIEW WITH KEYBOARD SHORTCUTS ---
+    function renderInput(container) {
+      selectedKelasInput = "";
+      const dateToUse = lastSelectedDate || new Date().toISOString().split('T')[0];
+      const lastRecord = dataRekap.length > 0 ? dataRekap[dataRekap.length - 1] : null;
+
+      container.innerHTML = `
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs p-6 sm:p-8 space-y-6">
+          <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+            <div>
+              <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">Input Paket Masuk</h2>
+              <p class="text-xs text-slate-400 dark:text-slate-500">Fast Keyboard Mode Active ⚡</p>
+            </div>
+            <span class="bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase">Full Shortcut</span>
+          </div>
+
+          <!-- SHORTCUT GUIDE BANNER -->
+          <div id="shortcut-guide-banner" class="bg-sky-50 dark:bg-sky-950/50 border border-sky-100 dark:border-sky-900 p-3.5 rounded-2xl text-xs space-y-1.5">
+            <div class="font-bold text-sky-800 dark:text-sky-300 flex items-center gap-1.5">
+              <i data-lucide="keyboard" class="w-4 h-4 text-sky-500"></i>
+              <span>Panduan Shortcut Keyboard Angka Hari Ini:</span>
+            </div>
+            <div id="shortcut-hint-list" class="flex flex-wrap gap-2 text-[11px] font-semibold text-slate-700 dark:text-slate-300"></div>
+          </div>
+
+          <form id="formPaket" onsubmit="handleSavePaket(event)" class="space-y-6">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Tanggal Rekap / Paket Masuk</label>
+              <input type="date" id="inp-tanggal" value="${dateToUse}" onchange="updateSelectedDate(this.value)" required class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 text-sm font-semibold focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Nama Penerima <span class="text-rose-500">*</span></label>
+              <input type="text" id="inp-nama" required placeholder="Masukkan nama siswa (Ketik & Enter...)" onkeydown="handleNamaKeydown(event)" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">Pilih Kelas <span class="text-sky-500">(Tekan Angka 1, 2, 3...)</span></label>
+              <div id="kelas-btn-container" class="flex flex-wrap gap-2.5" tabindex="0" onkeydown="handleKelasContainerKeydown(event)"></div>
+              <p class="text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-2">Hijau = sesuai jadwal (Diutamakan paling kiri/atas). Merah = di luar jadwal.</p>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">Keterangan Paket</label>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-2">
+                <button type="button" onclick="setKeteranganQuick('Online')" class="py-2.5 px-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs transition">Online</button>
+                <button type="button" onclick="setKeteranganQuick('Non-online')" class="py-2.5 px-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs transition">Non-online</button>
+                <button type="button" onclick="setKeteranganQuick('HRL')" class="py-2.5 px-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs transition">HRL</button>
+                <button type="button" onclick="setKeteranganQuick('Food')" class="py-2.5 px-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs transition">Food</button>
+              </div>
+              <input type="text" id="inp-keterangan" placeholder="Atau ketik keterangan khusus di sini (Enter simpan)..." onkeydown="handleKetKeydown(event)" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 text-xs font-medium focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
+            </div>
+
+            <button type="submit" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-xl text-sm shadow-md transition uppercase tracking-wider">
+              SIMPAN DATA PAKET (ENTER)
+            </button>
+          </form>
+
+          <!-- STATUS INPUT TERAKHIR -->
+          <div id="card-last-record" class="bg-sky-50/60 dark:bg-sky-950/40 border border-sky-100 dark:border-sky-900 rounded-2xl p-4 flex items-center justify-between transition-all duration-300 ${lastRecord ? '' : 'hidden'}">
+            <div class="flex items-center gap-3">
+              <span class="text-lg">✅</span>
+              <div class="text-xs">
+                <span class="font-extrabold text-slate-800 dark:text-slate-200 block">Input Terakhir Terkini</span>
+                <span id="txt-last-record-detail" class="text-slate-500 dark:text-slate-400 font-medium">${lastRecord ? `${lastRecord.nama} — Kelas ${lastRecord.kelas} \vert{}${lastRecord.tglFormatted || lastRecord.rawTanggal}` : ''}</span>
+              </div>
+            </div>
+            <span class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950 px-2.5 py-1 rounded-full uppercase">Tersimpan</span>
+          </div>
+        </div>
+      `;
+
+      renderKelasButtons(dateToUse);
+
+      setTimeout(() => {
+        const inputNama = document.getElementById('inp-nama');
+        if (inputNama) inputNama.focus();
+      }, 100);
+    }
+
+    function updateSelectedDate(val) {
+      lastSelectedDate = val;
+      renderKelasButtons(val);
+    }
+
+    function renderKelasButtons(rawDate) {
+      const selectedDate = new Date(rawDate + "T00:00:00");
+      const dayIndex = selectedDate.getDay();
+      const kelasAllowed = jadwalHari[dayIndex] || [];
+      const container = document.getElementById('kelas-btn-container');
+
+      if (!container) return;
+
+      sortedKelasListCurrent = [...allKelasList].sort((a, b) => {
+        const aSesuai = kelasAllowed.includes(a);
+        const bSesuai = kelasAllowed.includes(b);
+        if (aSesuai && !bSesuai) return -1;
+        if (!aSesuai && bSesuai) return 1;
+        return 0;
+      });
+
+      const hintList = document.getElementById('shortcut-hint-list');
+      if (hintList) {
+        let hints = sortedKelasListCurrent.map((k, idx) => {
+          if (idx < 9) {
+            return `<span class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2 py-0.5 rounded-md">[ ${idx + 1} ] = ${k}</span>`;
+          }
+          return '';
+        }).join('');
+        hints += `<span class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2 py-0.5 rounded-md">[ 0 ] = 12</span>`;
+        hintList.innerHTML = hints;
+      }
+
+      container.innerHTML = sortedKelasListCurrent.map((k, idx) => {
+        const isSesuai = kelasAllowed.includes(k);
+        const isSelected = selectedKelasInput === k;
+        
+        let bgClass = isSesuai ? "bg-emerald-600 hover:bg-emerald-700 text-white" : "bg-rose-500 hover:bg-rose-600 text-white";
+        let borderClass = isSelected ? "ring-4 ring-sky-300 dark:ring-sky-500 scale-105" : "";
+        let badgeNum = idx < 9 ? `<span class="absolute -top-1 -right-1 bg-slate-900 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">${idx + 1}</span>` : '';
+
+        return `
+          <button type="button" onclick="selectKelasBtn('${k}')" id="btn-k-${k}" class="relative w-12 h-10 sm:w-14 sm:h-11 rounded-xl font-extrabold text-xs sm:text-sm shadow-xs transition flex items-center justify-center ${bgClass} ${borderClass}">
+            ${badgeNum}
+            ${k}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function selectKelasBtn(k) {
+      selectedKelasInput = k;
+      const rawDate = document.getElementById('inp-tanggal').value;
+      renderKelasButtons(rawDate);
+    }
+
+    // --- KEYBOARD SHORTCUT ENGINE LOGIC ---
+    function handleNamaKeydown(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const namaVal = document.getElementById('inp-nama').value.trim();
+        if (namaVal) {
+          const container = document.getElementById('kelas-btn-container');
+          if (container) container.focus();
+        }
+      }
+    }
+
+    function handleKelasContainerKeydown(e) {
+      if (e.key >= '1' && e.key <= '9') {
+        e.preventDefault();
+        const idx = parseInt(e.key) - 1;
+        if (idx < sortedKelasListCurrent.length) {
+          selectKelasBtn(sortedKelasListCurrent[idx]);
+        }
+      } else if (e.key === '0') {
+        e.preventDefault();
+        selectKelasBtn("12");
+      }
+
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (selectedKelasInput) {
+          handleSavePaket(e);
+        }
+      }
+    }
+
+    function handleKetKeydown(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleSavePaket(e);
+      }
+    }
+
+    function setKeteranganQuick(val) {
+      document.getElementById('inp-keterangan').value = val;
+    }
+
+    function handleSavePaket(e) {
+      if (e) e.preventDefault();
+
+      if (!selectedKelasInput) {
+        alert("⚠️ Harap pilih salah satu Kelas terlebih dahulu!");
+        return;
+      }
+
+      const rawTanggal = document.getElementById('inp-tanggal').value;
+      lastSelectedDate = rawTanggal;
+
+      const selectedDate = new Date(rawTanggal + "T00:00:00");
+      const dayIndex = selectedDate.getDay();
+      const kelasAllowed = jadwalHari[dayIndex] || [];
+
+      const nama = document.getElementById('inp-nama').value.trim();
+      if (!nama) return;
+
+      const kelas = selectedKelasInput;
+      const keterangan = document.getElementById('inp-keterangan').value.trim();
+
+      const tglFormatted = `${namaHari[dayIndex]}, ${selectedDate.toLocaleDateString('id-ID')}`;
+      const isSesuai = kelasAllowed.includes(kelas);
+
+      const newItem = {
+        id: Date.now(),
+        rawTanggal,
+        tglFormatted,
+        nama,
+        kelas,
+        keterangan,
+        isSesuai,
+        petugas: currentPetugas
+      };
+
+      dataRekap.push(newItem);
+      saveDB();
+
+      document.getElementById('inp-nama').value = '';
+      document.getElementById('inp-keterangan').value = '';
+      selectedKelasInput = "";
+      renderKelasButtons(rawTanggal);
+
+      const cardRecord = document.getElementById('card-last-record');
+      const txtRecord = document.getElementById('txt-last-record-detail');
+      
+      if (cardRecord && txtRecord) {
+        txtRecord.innerText = `${newItem.nama} — Kelas ${newItem.kelas} | ${newItem.tglFormatted || newItem.rawTanggal}`;
+        cardRecord.classList.remove('hidden');
+        cardRecord.classList.add('ring-2', 'ring-emerald-500');
+        setTimeout(() => {
+          cardRecord.classList.remove('ring-2', 'ring-emerald-500');
+        }, 1000);
+      }
+
+      document.getElementById('inp-nama').focus();
+    }
+
+    // --- LIVE VIEW ---
+    function renderLive(container) {
+      const sesuai = dataRekap.filter(d => d.isSesuai);
+      const luar = dataRekap.filter(d => !d.isSesuai);
+
+      container.innerHTML = `
+        <div class="space-y-6">
+          <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white mb-4">✅ Data Sesuai Jadwal</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 dark:bg-slate-800 font-bold text-slate-400 dark:text-slate-400 uppercase">
+                  <tr><th class="p-3">Tanggal</th><th class="p-3">Nama</th><th class="p-3">Kelas</th><th class="p-3">Petugas</th><th class="p-3">Aksi</th></tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+                  ${sesuai.map(d => `
+                    <tr>
+                      <td class="p-3">${d.tglFormatted || d.rawTanggal}</td>
+                      <td class="p-3 font-bold text-slate-900 dark:text-white">${d.nama}</td>
+                      <td class="p-3 font-semibold">${d.kelas}</td>
+                      <td class="p-3 text-slate-500 dark:text-slate-400">${d.petugas || '-'}</td>
+                      <td class="p-3"><button onclick="deletePaket(${d.id})" class="text-rose-600 dark:text-rose-400 font-bold hover:underline">Hapus</button></td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white mb-4">⚠️ Data Di Luar Jadwal (Online/Izin)</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 dark:bg-slate-800 font-bold text-slate-400 dark:text-slate-400 uppercase">
+                  <tr><th class="p-3">Tanggal</th><th class="p-3">Nama</th><th class="p-3">Kelas</th><th class="p-3">Keterangan</th><th class="p-3">Petugas</th><th class="p-3">Status</th><th class="p-3">Aksi</th></tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+                  ${luar.map(d => `
+                    <tr>
+                      <td class="p-3">${d.tglFormatted || d.rawTanggal}</td>
+                      <td class="p-3 font-bold text-slate-900 dark:text-white">${d.nama}</td>
+                      <td class="p-3 font-semibold">${d.kelas}</td>
+                      <td class="p-3">${d.keterangan || '-'}</td>
+                      <td class="p-3 text-slate-500 dark:text-slate-400">${d.petugas || '-'}</td>
+                      <td class="p-3">
+                        <span class="px-2 py-0.5 rounded font-bold text-[10px] ${d.keterangan ? 'bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-400' : 'bg-rose-100 dark:bg-rose-950/80 text-rose-800 dark:text-rose-400'}">
+                          ${d.keterangan ? 'Dilegalkan' : 'Belum Dilegalkan'}
+                        </span>
+                      </td>
+                      <td class="p-3"><button onclick="deletePaket(${d.id})" class="text-rose-600 dark:text-rose-400 font-bold hover:underline">Hapus</button></td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function deletePaket(id) {
+      if (confirm('Apakah Bos yakin mau menghapus data ini?')) {
+        dataRekap = dataRekap.filter(d => d.id !== id);
+        saveDB();
+        navigate(currentTab);
+      }
+    }
+
+    // --- REKAP VIEW ---
+    function renderRekap(container) {
+      const todayISO = new Date().toISOString().split('T')[0];
+
+      container.innerHTML = `
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-6">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">📊</span>
+              <h2 class="text-lg font-extrabold text-slate-900 dark:text-white">Rekapitulasi Data Paket</h2>
+            </div>
+            <button onclick="exportCSV('semua')" class="px-5 py-2.5 bg-sky-500 hover:bg-sky-600 text-white font-extrabold rounded-xl text-xs shadow-sm transition">
+              Export Semua Data
+            </button>
+          </div>
+
+          <div class="flex flex-wrap gap-2 border-b border-slate-100 dark:border-slate-800 pb-4">
+            <button onclick="filterPeriodik('hari', this)" class="sub-filter-btn px-4 py-2 rounded-full text-xs font-extrabold transition bg-sky-500 text-white shadow-xs">Hari Ini</button>
+            <button onclick="filterPeriodik('minggu', this)" class="sub-filter-btn px-4 py-2 rounded-full text-xs font-extrabold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">Minggu Ini</button>
+            <button onclick="filterPeriodik('bulan', this)" class="sub-filter-btn px-4 py-2 rounded-full text-xs font-extrabold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">Bulan Ini</button>
+            <button onclick="filterPeriodik('semua', this)" class="sub-filter-btn px-4 py-2 rounded-full text-xs font-extrabold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">Semua Data</button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="bg-white dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs text-center space-y-1">
+              <span class="text-xs font-bold text-slate-400 dark:text-slate-400">Total Paket</span>
+              <div id="stat-total" class="text-3xl font-black text-slate-900 dark:text-white">0</div>
+            </div>
+            <div class="bg-white dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs text-center space-y-1">
+              <span class="text-xs font-bold text-slate-400 dark:text-slate-400">Sesuai Jadwal</span>
+              <div id="stat-sesuai" class="text-3xl font-black text-emerald-600 dark:text-emerald-400">0</div>
+            </div>
+            <div class="bg-white dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs text-center space-y-1">
+              <span class="text-xs font-bold text-slate-400 dark:text-slate-400">Di Luar Jadwal</span>
+              <div id="stat-luar" class="text-3xl font-black text-amber-600 dark:text-amber-400">0</div>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 dark:bg-slate-800/80 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="space-y-1">
+              <span class="text-xs font-extrabold text-slate-800 dark:text-slate-200 block">📅 Export Rentang Tanggal Khusus:</span>
+              <div class="flex items-center gap-2">
+                <input type="date" id="export-start" value="${todayISO}" class="bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100 rounded-lg p-2 text-xs font-bold" />
+                <span class="text-xs font-bold text-slate-400">s/d</span>
+                <input type="date" id="export-end" value="${todayISO}" class="bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100 rounded-lg p-2 text-xs font-bold" />
+              </div>
+            </div>
+            <button onclick="exportCSVByDateRange()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow-xs transition shrink-0">
+              Export Rentang Tanggal
+            </button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="text-slate-500 dark:text-slate-400 font-extrabold border-b border-slate-100 dark:border-slate-800">
+                <tr>
+                  <th class="pb-3 w-32">Tanggal</th>
+                  <th class="pb-3">Nama</th>
+                  <th class="pb-3 w-20">Kelas</th>
+                  <th class="pb-3 w-32">Kategori</th>
+                  <th class="pb-3">Keterangan</th>
+                </tr>
+              </thead>
+              <tbody id="tabel-rekap-body" class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300"></tbody>
+            </table>
+          </div>
+        </div>
+      `;
+
+      filterPeriodik('hari', document.querySelector('.sub-filter-btn'));
+    }
+
+    function filterPeriodik(period, btn) {
+      document.querySelectorAll('.sub-filter-btn').forEach(b => {
+        b.classList.remove('bg-sky-500', 'text-white', 'shadow-xs');
+        b.classList.add('text-slate-600', 'dark:text-slate-300', 'bg-slate-100', 'dark:bg-slate-800');
+      });
+      if(btn) {
+        btn.classList.add('bg-sky-500', 'text-white', 'shadow-xs');
+        btn.classList.remove('text-slate-600', 'dark:text-slate-300', 'bg-slate-100', 'dark:bg-slate-800');
+      }
+
+      activeFilterRekap = period;
+      const todayISO = new Date().toISOString().split('T')[0];
+      const now = new Date();
+
+      let filtered = dataRekap.filter(d => {
+        if (!d.rawTanggal) return false;
+        const itemDate = new Date(d.rawTanggal + "T00:00:00");
+
+        if (period === 'hari') return d.rawTanggal === todayISO;
+        if (period === 'minggu') {
+          const diffTime = Math.abs(now - itemDate);
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          return diffDays <= 7;
+        }
+        if (period === 'bulan') return itemDate.getMonth() === now.getMonth() && itemDate.getFullYear() === now.getFullYear();
+        return true;
+      });
+
+      document.getElementById('stat-total').innerText = filtered.length;
+      document.getElementById('stat-sesuai').innerText = filtered.filter(d => d.isSesuai).length;
+      document.getElementById('stat-luar').innerText = filtered.filter(d => !d.isSesuai).length;
+
+      const tbody = document.getElementById('tabel-rekap-body');
+      tbody.innerHTML = '';
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400 dark:text-slate-500 font-medium">Belum ada data untuk periode ini.</td></tr>`;
+        return;
+      }
+
+      filtered.forEach(d => {
+        tbody.innerHTML += `
+          <tr>
+            <td class="py-3 font-medium text-slate-500 dark:text-slate-400">${d.tglFormatted || d.rawTanggal}</td>
+            <td class="py-3 font-bold text-slate-900 dark:text-white">${d.nama}</td>
+            <td class="py-3 font-semibold text-slate-700 dark:text-slate-300">${d.kelas}</td>
+            <td class="py-3">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${d.isSesuai ? 'bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400' : 'bg-amber-50 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400'}">
+                ${d.isSesuai ? 'Sesuai Jadwal' : 'Di Luar Jadwal'}
+              </span>
+            </td>
+            <td class="py-3 text-slate-600 dark:text-slate-400">${d.keterangan || '-'}</td>
+          </tr>
+        `;
+      });
+    }
+
+    function exportCSV(tipe) {
+      if (!dataRekap.length) {
+        alert('Gak ada data yang bisa di-export nih!');
+        return;
+      }
+      generateCSVBlob(dataRekap, `Rekap_Paket_TOTAL_${new Date().toISOString().slice(0,10)}.csv`);
+    }
+
+    function exportCSVByDateRange() {
+      const start = document.getElementById('export-start').value;
+      const end = document.getElementById('export-end').value;
+
+      if (!start || !end) {
+        alert('⚠️ Pilih tanggal mulai dan tanggal akhir dulu ya!');
+        return;
+      }
+
+      const filtered = dataRekap.filter(d => d.rawTanggal >= start && d.rawTanggal <= end);
+
+      if (!filtered.length) {
+        alert(`Gak ada data paket di rentang tanggal ${start} s/d ${end}!`);
+        return;
+      }
+
+      generateCSVBlob(filtered, `Rekap_Paket_${start}_sd_${end}.csv`);
+    }
+
+    function generateCSVBlob(listData, filename) {
+      const BOM = "\uFEFF";
+      let csvRows = [["Tanggal Rekap", "Nama", "Kelas", "Kategori Rekap", "Keterangan", "Petugas", "Status Legalitas"].join(",")];
+
+      listData.forEach(i => {
+        let kategori = i.isSesuai ? "Sesuai Jadwal" : "Di Luar Jadwal";
+        let status = i.isSesuai ? "Sesuai Jadwal" : (i.keterangan ? `Dilegalkan (${i.keterangan})` : "Belum Dilegalkan");
+        csvRows.push([
+          `"${(i.tglFormatted || i.rawTanggal).replace(/"/g, '""')}"`,
+          `"${i.nama.replace(/"/g, '""')}"`,
+          `"${i.kelas}"`,
+          `"${kategori}"`,
+          `"${(i.keterangan || '-').replace(/"/g, '""')}"`,
+          `"${i.petugas || '-'}"`,
+          `"${status.replace(/"/g, '""')}"`
+        ].join(","));
+      });
+
+      const blob = new Blob([BOM + csvRows.join("\n")], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // --- TAB MIGRASI DATA ---
+    function renderMigrasi(container) {
+      const jsonString = JSON.stringify(dataRekap, null, 2);
+
+      container.innerHTML = `
+        <div class="space-y-6">
+          <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white mb-1">📤 Export / Copy Data Lokal</h3>
+            <p class="text-xs text-slate-400 dark:text-slate-500 mb-4">Salin kode JSON di bawah ini untuk disimpan atau dipindahkan ke device lain.</p>
+            <textarea id="txt-export" readonly class="w-full h-36 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl p-3 font-mono text-[11px] focus:outline-none">${jsonString}</textarea>
+            <button onclick="copyExportJSON()" class="mt-2 px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl text-xs flex items-center gap-2">
+              <i data-lucide="copy" class="w-4 h-4"></i> Copy Kode JSON
+            </button>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white mb-1">📥 Import / Paste Data</h3>
+            <p class="text-xs text-slate-400 dark:text-slate-500 mb-4">Paste kode JSON dari backup lama ke bawah ini, lalu klik tombol **Import Data**.</p>
+            <textarea id="txt-import" placeholder='Paste kode JSON di sini (Contoh: [{"nama":"Budi","kelas":"8A"...}])' class="w-full h-36 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl p-3 font-mono text-[11px] focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-amber-500 focus:outline-none"></textarea>
+            <button onclick="importJSONData()" class="mt-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-xs flex items-center gap-2">
+              <i data-lucide="download-cloud" class="w-4 h-4"></i> Import Data
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function copyExportJSON() {
+      const copyText = document.getElementById("txt-export");
+      copyText.select();
+      document.execCommand("copy");
+      alert("✅ Kode JSON berhasil di-copy!");
+    }
+
+    function importJSONData() {
+      let importVal = document.getElementById("txt-import").value.trim();
+      if (!importVal) {
+        alert("⚠️ Tempel (paste) kode JSON dulu ya!");
+        return;
+      }
+      try {
+        const firstBracket = importVal.indexOf('[');
+        const lastBracket = importVal.lastIndexOf(']');
+        if (firstBracket !== -1 && lastBracket !== -1) {
+          importVal = importVal.substring(firstBracket, lastBracket + 1);
+        }
+
+        const parsed = JSON.parse(importVal);
+        if (Array.isArray(parsed)) {
+          dataRekap = parsed;
+          saveDB();
+          alert(`✅ Sukses! ${parsed.length} data berhasil di-import.`);
+          navigate('dashboard');
+        } else {
+          alert("❌ Format JSON harus berupa list/array.");
+        }
+      } catch (err) {
+        alert("❌ Gagal membaca JSON: " + err.message);
+      }
+    }
+
+    // --- AI CHATBOT ENGINE LOGIC (MODEL GROQ TERBARU) ---
+    async function handleAiChatSubmit(e) {
+      e.preventDefault();
+      const inputEl = document.getElementById('aiChatInput');
+      const chatBox = document.getElementById('aiChatBox');
+      const text = inputEl.value.trim();
+      if (!text) return;
+
+      chatBox.innerHTML += `
+        <div class="bg-sky-500 text-white p-2.5 rounded-2xl font-medium ml-4 text-right text-[11px]">
+          ${text}
+        </div>
+      `;
+      inputEl.value = '';
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      const lower = text.toLowerCase();
+
+      // 1. INTENT DETEKSI HAPUS DATA (BAHASA SANTAI/GAUL)
+      if (lower.includes('hapus') || lower.includes('hilangin') || lower.includes('delete') || lower.includes('buang')) {
+        const words = text.split(/\s+/);
+        let targetNama = "";
+        
+        const matchNama = text.match(/(?:nama|namanya|paket|punya|data|atas nama)\s+([A-Za-z0-9]+)/i);
+        if (matchNama) {
+          targetNama = matchNama[1].trim().toLowerCase();
+        } else {
+          targetNama = words[words.length - 1].toLowerCase();
+        }
+
+        if (targetNama && targetNama.length > 1) {
+          const initLen = dataRekap.length;
+          dataRekap = dataRekap.filter(d => !d.nama.toLowerCase().includes(targetNama));
+          if (dataRekap.length < initLen) {
+            saveDB();
+            navigate(currentTab);
+            chatBox.innerHTML += `
+              <div class="bg-rose-50 dark:bg-rose-950/80 border border-rose-200 dark:border-rose-800 p-2.5 rounded-2xl text-rose-800 dark:text-rose-300 font-bold text-[11px]">
+                🗑️ Berhasil hapus semua data paket yang namanya "${targetNama}", Bro!
+              </div>
+            `;
+            chatBox.scrollTop = chatBox.scrollHeight;
+            return;
+          }
+        }
+      }
+
+      // 2. INTENT DETEKSI INPUT DATA (BAHASA SANTAI/GAUL)
+      if (lower.includes('input') || lower.includes('tambah') || lower.includes('masukin') || lower.includes('catat')) {
+        const matchNama = text.match(/(?:paket|nama|penerima)\s+([A-Za-z\s]+?)(?=\s+kelas|\s+ket|$)/i);
+        const matchKelas = text.match(/kelas\s+([0-9A-Ea-e]+)/i);
+        const matchKet = text.match(/ket(?:erangan)?\s+(.+)/i);
+
+        if (matchNama && matchKelas) {
+          const nama = matchNama[1].trim();
+          const kelas = matchKelas[1].toUpperCase();
+          const keterangan = matchKet ? matchKet[1].trim() : '';
+          const todayISO = new Date().toISOString().split('T')[0];
+          const dayIndex = new Date().getDay();
+          const kelasAllowed = jadwalHari[dayIndex] || [];
+          const isSesuai = kelasAllowed.includes(kelas);
+
+          const newItem = {
+            id: Date.now(),
+            rawTanggal: todayISO,
+            tglFormatted: `${namaHari[dayIndex]}, ${new Date().toLocaleDateString('id-ID')}`,
+            nama,
+            kelas,
+            keterangan,
+            isSesuai,
+            petugas: currentPetugas
+          };
+
+          dataRekap.push(newItem);
+          saveDB();
+          navigate(currentTab);
+
+          chatBox.innerHTML += `
+            <div class="bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800 p-2.5 rounded-2xl text-emerald-800 dark:text-emerald-300 font-bold text-[11px]">
+              ✅ Berhasil diinput! Paket buat <strong>${nama}</strong> (Kelas ${kelas}) udah masuk ke tabel ya!
+            </div>
+          `;
+          chatBox.scrollTop = chatBox.scrollHeight;
+          return;
+        }
+      }
+
+      // 3. CASUAL CHAT VIA GROQ API (MODEL AKTIF BARU: openai/gpt-oss-20b)
+      if (!groqApiKey) {
+        chatBox.innerHTML += `
+          <div class="bg-sky-50 dark:bg-sky-950/60 border border-sky-100 dark:border-sky-900 p-2.5 rounded-2xl text-slate-700 dark:text-slate-300 text-[11px]">
+            ⚙️ Bro Lanaa, klik ikon gear di atas buat masukin **Groq API Key** dulu ya!
+          </div>
+        `;
+        chatBox.scrollTop = chatBox.scrollHeight;
+        return;
+      }
+
+      chatBox.innerHTML += `<div id="aiLoading" class="text-slate-400 italic text-[10px]">Groq AI lagi mikir kilat...</div>`;
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      async function callGroqModel(modelName) {
+        return await fetch(`https://api.groq.com/openai/v1/chat/completions`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${groqApiKey}`
+          },
+          body: JSON.stringify({
+            model: modelName,
+            messages: [
+              {
+                role: "system",
+                content: "Kamu adalah AI Assistant gaul PaketBot untuk Bos Lanaa di aplikasi Paket Control Center. Selalu merespon menggunakan Bahasa Indonesia gaul, santai, akrab, ramah, dan cepat layaknya teman nongkrong. Dilarang menggunakan Bahasa Jawa."
+              },
+              {
+                role: "user",
+                content: text
+              }
+            ],
+            temperature: 0.7
+          })
+        });
+      }
+
+      try {
+        let res = await callGroqModel("openai/gpt-oss-20b");
+        let data = await res.json();
+
+        // Fallback jika butuh model lain
+        if (data.error && data.error.message && data.error.message.includes('does not exist')) {
+          res = await callGroqModel("openai/gpt-oss-120b");
+          data = await res.json();
+        }
+
+        document.getElementById('aiLoading')?.remove();
+
+        if (data.error) {
+          chatBox.innerHTML += `
+            <div class="bg-rose-50 dark:bg-rose-950/80 p-2.5 rounded-2xl text-rose-600 dark:text-rose-300 text-[11px]">
+              ⚠️ Groq API Error: ${data.error.message || 'Key tidak valid'}.
+            </div>
+          `;
+        } else {
+          const reply = data.choices?.[0]?.message?.content || "Aduh, bingung nih mau jawab apa Bro!";
+          chatBox.innerHTML += `
+            <div class="bg-sky-50 dark:bg-sky-950/60 border border-sky-100 dark:border-sky-900 p-2.5 rounded-2xl text-slate-800 dark:text-slate-200 text-[11px]">
+              ${reply}
+            </div>
+          `;
+        }
+      } catch (err) {
+        document.getElementById('aiLoading')?.remove();
+        chatBox.innerHTML += `<div class="bg-rose-50 dark:bg-rose-950/80 p-2.5 rounded-2xl text-rose-600 dark:text-rose-300 text-[11px]">Gagal konek ke Groq API, Bro! Coba cek internet kamu deh.</div>`;
+      }
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function setApiKey() {
+      const inputKey = prompt("Masukkan Groq API Key milikmu:", groqApiKey);
+      if (inputKey !== null) {
+        groqApiKey = inputKey.trim();
+        localStorage.setItem('groq_api_key', groqApiKey);
+        alert("✅ Groq API Key tersimpan!");
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      updateOnlineStatus();
+      navigate('dashboard');
+    });
+  </script>
 </body>
 </html>
