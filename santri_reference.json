@@ -2,5 +2,8 @@
   "version": 1,
   "description": "Master referensi santri untuk saran pencarian dan koreksi typo Bapenta.",
   "fields": ["nama", "kelas", "asrama"],
-  "students": []
+  "students": [
+    {"nama":"Abimanyu Surendra Latif","kelas":"8C","asrama":"Abdul Aziz 201"},
+    {"nama":"Abrisam Khaalish Dzahin","kelas":"8A","asrama":"Abdul Aziz 201"}
+  ]
 }
