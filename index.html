@@ -416,6 +416,248 @@
     let currentPetugas = localStorage.getItem('activePetugas_UI') || "Sultan Maulana";
     if (typeof currentPetugas !== 'string' || !currentPetugas.trim()) currentPetugas = "Sultan Maulana";
     
+
+    // --- MASTER REFERENSI SANTRI (Nama + Kelas + Asrama) ---
+    // Dipakai hanya untuk saran pencarian/koreksi typo. Tidak mengubah data paket.
+    // Data referensi ditanam langsung agar aplikasi tetap jalan sebagai satu file.
+    const santriReference = [{"nama":"Abimanyu Surendra Latif","kelas":"8C","asrama":"Abdul Aziz 201"},{"nama":"Abrisam Khaalish Dzahin","kelas":"8A","asrama":"Abdul Aziz 201"},{"nama":"Afwan Maulana Azidane","kelas":"8D","asrama":"Abdul Aziz 201"},{"nama":"Ahmad Tajun Arifin","kelas":"8C","asrama":"Abdul Aziz 201"},{"nama":"Akhtar Arghanismara Elfaradis","kelas":"8E","asrama":"Abdul Aziz 201"},{"nama":"Anjas Izzul Haq","kelas":"8D","asrama":"Abdul Aziz 201"},{"nama":"Anugrah Syahrial Muzaki","kelas":"8B","asrama":"Abdul Aziz 201"},{"nama":"Arshavan Wijaya Prakoso","kelas":"8A","asrama":"Abdul Aziz 201"},{"nama":"Banyu El Faruq Putra Hidayat","kelas":"8C","asrama":"Abdul Aziz 201"},{"nama":"Daffa Setya Arezky Warsito","kelas":"8D","asrama":"Abdul Aziz 201"},{"nama":"Dinan Al Khalifi","kelas":"8D","asrama":"Abdul Aziz 201"},{"nama":"Emir Firjatunafis","kelas":"8C","asrama":"Abdul Aziz 201"},{"nama":"Faris Bachtiar Usman","kelas":"8B","asrama":"Abdul Aziz 201"},{"nama":"Galang Van Dirga Asyrafiqoh","kelas":"8A","asrama":"Abdul Aziz 201"},{"nama":"Ihsan Fadil Rahmani","kelas":"8E","asrama":"Abdul Aziz 201"},{"nama":"Naufal Azzam Ardhani Sufa","kelas":"8C","asrama":"Abdul Aziz 201"},{"nama":"Naufal Eigas Fadhillah","kelas":"8B","asrama":"Abdul Aziz 201"},{"nama":"Rafa Al Fathin Rosyadi","kelas":"8E","asrama":"Abdul Aziz 201"},{"nama":"Rafif Azka Khamdani","kelas":"8B","asrama":"Abdul Aziz 201"},{"nama":"Restu Kukuh Wicaksono","kelas":"8A","asrama":"Abdul Aziz 201"},{"nama":"Sangguwan Aptana Elgin","kelas":"8A","asrama":"Abdul Aziz 201"},{"nama":"Faiz Muhammad Musyafi","kelas":"11A","asrama":"Abdul Aziz 201"},{"nama":"Muhammad Hamdan Maulana","kelas":"11A","asrama":"Abdul Aziz 201"},{"nama":"Abdullah Al Harits","kelas":"8D","asrama":"Abdul Aziz 202"},{"nama":"Afkar Zain Muzhaffar","kelas":"8D","asrama":"Abdul Aziz 202"},{"nama":"Aksel Adiv Cakradara","kelas":"8A","asrama":"Abdul Aziz 202"},{"nama":"Athaa Zaid","kelas":"8B","asrama":"Abdul Aziz 202"},{"nama":"Bagas Trustha Nugraha","kelas":"8E","asrama":"Abdul Aziz 202"},{"nama":"Bagoes Najdzil Mukhsinin","kelas":"8A","asrama":"Abdul Aziz 202"},{"nama":"Baskara Akhtar Prabowo","kelas":"8B","asrama":"Abdul Aziz 202"},{"nama":"Biru Tsabita Rizkiadi","kelas":"8D","asrama":"Abdul Aziz 202"},{"nama":"Faatih Mahya Izdihar","kelas":"8D","asrama":"Abdul Aziz 202"},{"nama":"Falakh Nur Ilmi S Firori","kelas":"8E","asrama":"Abdul Aziz 202"},{"nama":"Fathan Yusuf Arfai","kelas":"8D","asrama":"Abdul Aziz 202"},{"nama":"Gavin Aska Pratama","kelas":"8C","asrama":"Abdul Aziz 202"},{"nama":"Ghafar Dhuha Arrasyid","kelas":"8A","asrama":"Abdul Aziz 202"},{"nama":"Haykal Afsar Ramadhan","kelas":"8E","asrama":"Abdul Aziz 202"},{"nama":"Ibrahim Fathan Raif Arifin","kelas":"8A","asrama":"Abdul Aziz 202"},{"nama":"Lathif Yafli Sanyoto","kelas":"8B","asrama":"Abdul Aziz 202"},{"nama":"Lintang Qudsi Assyaqieb","kelas":"8C","asrama":"Abdul Aziz 202"},{"nama":"Mahardika Daffa Setya Imani","kelas":"8B","asrama":"Abdul Aziz 202"},{"nama":"Maulana Najwan Ramadhan","kelas":"8B","asrama":"Abdul Aziz 202"},{"nama":"Miko Pradipta Wibowo","kelas":"8C","asrama":"Abdul Aziz 202"},{"nama":"Muhammad Fawwaaz Muhibbullah","kelas":"8E","asrama":"Abdul Aziz 202"},{"nama":"Muhammad Fawwaz Alzena","kelas":"8A","asrama":"Abdul Aziz 202"},{"nama":"Praditia Fayyadhi Gesangputra","kelas":"8E","asrama":"Abdul Aziz 202"},{"nama":"Raditya Early Abiyu","kelas":"8B","asrama":"Abdul Aziz 202"},{"nama":"Athaya Zidhane Putra Daryadi","kelas":"11A","asrama":"Abdul Aziz 202"},{"nama":"Fairuz Bimpi Azzami","kelas":"11A","asrama":"Abdul Aziz 202"},{"nama":"Fazli Ahnaf Faiq Yuswandani","kelas":"8C","asrama":"Abdul Aziz 203"},{"nama":"Ghiffari Ghatan Syazani","kelas":"8B","asrama":"Abdul Aziz 203"},{"nama":"Haikal Fawwaz Azzaki","kelas":"8A","asrama":"Abdul Aziz 203"},{"nama":"Hanafian Bima Santri","kelas":"8A","asrama":"Abdul Aziz 203"},{"nama":"Hanif","kelas":"8C","asrama":"Abdul Aziz 203"},{"nama":"Hanif Asyam Ramadhan","kelas":"8C","asrama":"Abdul Aziz 203"},{"nama":"Hisyam Hilmi Effendy","kelas":"8B","asrama":"Abdul Aziz 203"},{"nama":"Hokian Arya Pradipta","kelas":"8C","asrama":"Abdul Aziz 203"},{"nama":"Kenzie Suryo Putro Wardhana","kelas":"8C","asrama":"Abdul Aziz 203"},{"nama":"Kenzie Zulfadhly Nasywan","kelas":"8D","asrama":"Abdul Aziz 203"},{"nama":"Khalif Rafi Attaqiy","kelas":"8C","asrama":"Abdul Aziz 203"},{"nama":"Khiar Nabhan Ar Rahman","kelas":"8C","asrama":"Abdul Aziz 203"},{"nama":"Kian Apta Alvaro","kelas":"8B","asrama":"Abdul Aziz 203"},{"nama":"Mahardika Banyu Raya","kelas":"8C","asrama":"Abdul Aziz 203"},{"nama":"Maulana Hafizh","kelas":"8D","asrama":"Abdul Aziz 203"},{"nama":"Muhammad Ammar Khaan","kelas":"8C","asrama":"Abdul Aziz 203"},{"nama":"Mukhammad Hasyim Akhtar Haidar","kelas":"8E","asrama":"Abdul Aziz 203"},{"nama":"Muzakki Al Fatih","kelas":"8A","asrama":"Abdul Aziz 203"},{"nama":"Nur Adzaky Anugrahtama","kelas":"8D","asrama":"Abdul Aziz 203"},{"nama":"Pamor Rozzaq Subkhi","kelas":"8C","asrama":"Abdul Aziz 203"},{"nama":"Rafiq Abdur Razzaq","kelas":"8B","asrama":"Abdul Aziz 203"},{"nama":"Zenifa Venzakila Darmawan","kelas":"8A","asrama":"Abdul Aziz 203"},{"nama":"Avon Dzakwan Al Hakim","kelas":"11B","asrama":"Abdul Aziz 203"},{"nama":"Azra Abdul Malik","kelas":"11A","asrama":"Abdul Aziz 203"},{"nama":"Arfa Hikamy Alvarez","kelas":"8B","asrama":"Abdul Aziz 204"},{"nama":"Aufa Jafni Harraz","kelas":"8E","asrama":"Abdul Aziz 204"},{"nama":"Azka Willyen Restiadi","kelas":"8E","asrama":"Abdul Aziz 204"},{"nama":"Fayrell Atharizza Uqailah","kelas":"8E","asrama":"Abdul Aziz 204"},{"nama":"First Amri Darryl Chamdani","kelas":"8B","asrama":"Abdul Aziz 204"},{"nama":"Gesid Ath Thoriq","kelas":"8B","asrama":"Abdul Aziz 204"},{"nama":"Haikal Alfareza Usman","kelas":"8E","asrama":"Abdul Aziz 204"},{"nama":"Haikal Keenan Fachrizal","kelas":"8D","asrama":"Abdul Aziz 204"},{"nama":"Hammam Farros Muttaqin","kelas":"8A","asrama":"Abdul Aziz 204"},{"nama":"Iqbal Cahya Maulana","kelas":"8E","asrama":"Abdul Aziz 204"},{"nama":"Juna Amalul Abdillah","kelas":"8C","asrama":"Abdul Aziz 204"},{"nama":"Kafi A'mal Falah","kelas":"8D","asrama":"Abdul Aziz 204"},{"nama":"Kalea Ibra Sasiki","kelas":"8D","asrama":"Abdul Aziz 204"},{"nama":"Muhammad Farsan Tijani","kelas":"8E","asrama":"Abdul Aziz 204"},{"nama":"Muhammad Indo Zabrajad","kelas":"8D","asrama":"Abdul Aziz 204"},{"nama":"Muhammad Rizky Syahputra","kelas":"8D","asrama":"Abdul Aziz 204"},{"nama":"Rafa Vicky Pratama","kelas":"8A","asrama":"Abdul Aziz 204"},{"nama":"Rafka Aydin Syazwan","kelas":"8C","asrama":"Abdul Aziz 204"},{"nama":"Raihaan Sabhi Romadon","kelas":"8E","asrama":"Abdul Aziz 204"},{"nama":"Rajendra Edgar Gibran","kelas":"8A","asrama":"Abdul Aziz 204"},{"nama":"Reyhan Yasid Asyraf Alfakhry","kelas":"8A","asrama":"Abdul Aziz 204"},{"nama":"Reza Iqbal Maulana","kelas":"8A","asrama":"Abdul Aziz 204"},{"nama":"Royhan Al Ghazali","kelas":"8D","asrama":"Abdul Aziz 204"},{"nama":"Thufail Rijal Jadid","kelas":"8A","asrama":"Abdul Aziz 204"},{"nama":"Faiz Muhtaz Wardoyo","kelas":"11B","asrama":"Abdul Aziz 204"},{"nama":"Arya Satya Nugraha","kelas":"11A","asrama":"Abdul Aziz 204"},{"nama":"Adeeva Kenzie Saverio","kelas":"8B","asrama":"Abdul Aziz 205"},{"nama":"Ahnaf Zhafif Barikly","kelas":"8D","asrama":"Abdul Aziz 205"},{"nama":"Akhtar Rafif Mahira Dzikra","kelas":"8C","asrama":"Abdul Aziz 205"},{"nama":"Arsyad Basim","kelas":"8B","asrama":"Abdul Aziz 205"},{"nama":"Bilal Nur Ramadhan","kelas":"8D","asrama":"Abdul Aziz 205"},{"nama":"Dinu Afkar Raqilla Syahmi","kelas":"8A","asrama":"Abdul Aziz 205"},{"nama":"Durran Kenzie Altito","kelas":"8D","asrama":"Abdul Aziz 205"},{"nama":"Ezra Aydin Ruhan","kelas":"8E","asrama":"Abdul Aziz 205"},{"nama":"Fatwa Giga Anugerah","kelas":"8C","asrama":"Abdul Aziz 205"},{"nama":"Hikari Al Farik Nurtedo","kelas":"8B","asrama":"Abdul Aziz 205"},{"nama":"Mozilla Yusma Mubarok","kelas":"8A","asrama":"Abdul Aziz 205"},{"nama":"Muhammad Albisefano Abraham","kelas":"8B","asrama":"Abdul Aziz 205"},{"nama":"Muhammad Azka Al-Faradist","kelas":"8E","asrama":"Abdul Aziz 205"},{"nama":"Muhammad Farel Sutiyon","kelas":"8A","asrama":"Abdul Aziz 205"},{"nama":"Muhammad Faza El Kautsara","kelas":"8A","asrama":"Abdul Aziz 205"},{"nama":"Muhammad Rayyan Athallah Fahrudin","kelas":"8D","asrama":"Abdul Aziz 205"},{"nama":"Naufal Tsaqif Alkhalifi","kelas":"8B","asrama":"Abdul Aziz 205"},{"nama":"Nayaka Pradita Hutama","kelas":"8B","asrama":"Abdul Aziz 205"},{"nama":"Pranav Cavalin Nurdhyanto","kelas":"8B","asrama":"Abdul Aziz 205"},{"nama":"Rasyananda Muhammad Haykel","kelas":"8D","asrama":"Abdul Aziz 205"},{"nama":"Regan Syafiq Hafiz Fazila","kelas":"8C","asrama":"Abdul Aziz 205"},{"nama":"Rofik Al Rizki","kelas":"8E","asrama":"Abdul Aziz 205"},{"nama":"Syafiq Hafizudin Aqeel","kelas":"8A","asrama":"Abdul Aziz 205"},{"nama":"Syarif Farisqi Oktafiangga","kelas":"8D","asrama":"Abdul Aziz 205"},{"nama":"Yoda Alan Pramudita","kelas":"8C","asrama":"Abdul Aziz 205"},{"nama":"Zain Argia Putra Riyadi","kelas":"8D","asrama":"Abdul Aziz 205"},{"nama":"Fadhiil Hilmi Nashrulloh","kelas":"11A","asrama":"Abdul Aziz 205"},{"nama":"Muhammad Mirza Galan Ramadhan","kelas":"11B","asrama":"Abdul Aziz 205"},{"nama":"Abdullah Abdul Mughni Az-Zam Zami","kelas":"9C","asrama":"Abdul Aziz 104"},{"nama":"Arjuna Qori Islami","kelas":"9B","asrama":"Abdul Aziz 104"},{"nama":"Arkan Hidayat","kelas":"9C","asrama":"Abdul Aziz 104"},{"nama":"Assyam Nadhif Mudzaky","kelas":"9A","asrama":"Abdul Aziz 104"},{"nama":"Azka Faeyza Sasongko","kelas":"9C","asrama":"Abdul Aziz 104"},{"nama":"Azka Naufal Yusuf","kelas":"9B","asrama":"Abdul Aziz 104"},{"nama":"Banyu Alkhalifi Riyanto","kelas":"9C","asrama":"Abdul Aziz 104"},{"nama":"Bintang Putra Peradaban","kelas":"9A","asrama":"Abdul Aziz 104"},{"nama":"Denendra Kenzi Azka Fadhilah","kelas":"9E","asrama":"Abdul Aziz 104"},{"nama":"Daniswara Bayanaka Arezki","kelas":"9E","asrama":"Abdul Aziz 104"},{"nama":"Dzaka Purnama Abiyyu","kelas":"9B","asrama":"Abdul Aziz 104"},{"nama":"Fadlan Haris Aizar","kelas":"9D","asrama":"Abdul Aziz 104"},{"nama":"Ghulam Adika Maiza","kelas":"9A","asrama":"Abdul Aziz 104"},{"nama":"Guinandra Azkalby Maruto","kelas":"9E","asrama":"Abdul Aziz 104"},{"nama":"Haikal Arisky","kelas":"9D","asrama":"Abdul Aziz 104"},{"nama":"Hamizan El Fawwaz","kelas":"9C","asrama":"Abdul Aziz 104"},{"nama":"Haykal Bangkit Samudra","kelas":"9B","asrama":"Abdul Aziz 104"},{"nama":"Maher Mayza Karim","kelas":"9C","asrama":"Abdul Aziz 104"},{"nama":"Maher Muhammad Ibrahim","kelas":"9C","asrama":"Abdul Aziz 104"},{"nama":"Mayland Zaki Pasulung","kelas":"9B","asrama":"Abdul Aziz 104"},{"nama":"Muhammad Akbar Rafif Pangestu","kelas":"9E","asrama":"Abdul Aziz 104"},{"nama":"Muhammad Arif Alfatih","kelas":"9E","asrama":"Abdul Aziz 104"},{"nama":"Rasya Abrar Nugraha","kelas":"9B","asrama":"Abdul Aziz 104"},{"nama":"Rifki Pratama","kelas":"9C","asrama":"Abdul Aziz 104"},{"nama":"Wildan Pramudya Rachman","kelas":"9A","asrama":"Abdul Aziz 104"},{"nama":"Farhan Yusuf Naufal","kelas":"11A","asrama":"Abdul Aziz 104"},{"nama":"Refanly Iqbal Nurmansyah","kelas":"11A","asrama":"Abdul Aziz 104"},{"nama":"Alfath Mahardika Atmaja","kelas":"9A","asrama":"Abdul Aziz 105"},{"nama":"Aqeela Ziyan El Hijazi","kelas":"9E","asrama":"Abdul Aziz 105"},{"nama":"Arraffa Nur Zakin","kelas":"9A","asrama":"Abdul Aziz 105"},{"nama":"Arviyan Arkan Naufal","kelas":"9D","asrama":"Abdul Aziz 105"},{"nama":"Barra Jibran Pradana","kelas":"9C","asrama":"Abdul Aziz 105"},{"nama":"Bisma Arrafa Yanuar Daniswara","kelas":"9A","asrama":"Abdul Aziz 105"},{"nama":"Brikly Biyan Mananta","kelas":"9B","asrama":"Abdul Aziz 105"},{"nama":"Dzaky Azzam Alvaro","kelas":"9C","asrama":"Abdul Aziz 105"},{"nama":"Evan Ragil Aufa","kelas":"9A","asrama":"Abdul Aziz 105"},{"nama":"Fadillah Rafif Khairullah","kelas":"9A","asrama":"Abdul Aziz 105"},{"nama":"Faizullah Alfarizky","kelas":"9E","asrama":"Abdul Aziz 105"},{"nama":"Fetra Alkindy","kelas":"9E","asrama":"Abdul Aziz 105"},{"nama":"Hafiz Alwafi Ayyasy","kelas":"9D","asrama":"Abdul Aziz 105"},{"nama":"Hassan Wahid Ar Rosyid","kelas":"9B","asrama":"Abdul Aziz 105"},{"nama":"Hibrizi Bima Ferdinand Tsaqif","kelas":"9C","asrama":"Abdul Aziz 105"},{"nama":"Husein Itsnan Ar Rosyid","kelas":"9B","asrama":"Abdul Aziz 105"},{"nama":"Irnizar Purwadijaya","kelas":"9B","asrama":"Abdul Aziz 105"},{"nama":"Ismail Hanan Husada","kelas":"9E","asrama":"Abdul Aziz 105"},{"nama":"Kafka Akbar Hafizy","kelas":"9A","asrama":"Abdul Aziz 105"},{"nama":"Manggala Tegar Syahfaeral","kelas":"9C","asrama":"Abdul Aziz 105"},{"nama":"Muhammad Arjuna Yk Setya Almilati","kelas":"9A","asrama":"Abdul Aziz 105"},{"nama":"Muhammad Farras Subandono","kelas":"9A","asrama":"Abdul Aziz 105"},{"nama":"Muhammad Faza Hamizan","kelas":"9A","asrama":"Abdul Aziz 105"},{"nama":"Muhammad Gibran Saviero","kelas":"9E","asrama":"Abdul Aziz 105"},{"nama":"Kautsar Ramadhana Arzaneta","kelas":"11B","asrama":"Abdul Aziz 105"},{"nama":"Ahmad Anis Alfayad Tauda","kelas":"11A","asrama":"Abdul Aziz 105"},{"nama":"Afkar Sakti Fathoni","kelas":"9A","asrama":"Abdul Aziz 106"},{"nama":"Asnanta Hafidz Haris","kelas":"9D","asrama":"Abdul Aziz 106"},{"nama":"Chesyl Ferdinad Pratama","kelas":"9E","asrama":"Abdul Aziz 106"},{"nama":"Chiquillo Devara El Shadiq","kelas":"9B","asrama":"Abdul Aziz 106"},{"nama":"Desten Ibnu Syafi'i","kelas":"9D","asrama":"Abdul Aziz 106"},{"nama":"Emir Adwa' Hufuza","kelas":"9C","asrama":"Abdul Aziz 106"},{"nama":"Fayi Dhuha","kelas":"9E","asrama":"Abdul Aziz 106"},{"nama":"Galent Nidriz Alfaridzi","kelas":"9D","asrama":"Abdul Aziz 106"},{"nama":"Ghossaniy Isyrof Destowikrama","kelas":"9B","asrama":"Abdul Aziz 106"},{"nama":"Gibran Mirza Atallah","kelas":"9D","asrama":"Abdul Aziz 106"},{"nama":"Kaisan Putra Pratama","kelas":"9D","asrama":"Abdul Aziz 106"},{"nama":"Kanza Satria Winoto","kelas":"9C","asrama":"Abdul Aziz 106"},{"nama":"Khoerul Ummam","kelas":"9D","asrama":"Abdul Aziz 106"},{"nama":"Mirza Azzam Musafir","kelas":"9B","asrama":"Abdul Aziz 106"},{"nama":"Muhammad Danish Nabhan Al Farzan","kelas":"9B","asrama":"Abdul Aziz 106"},{"nama":"Muhammad Dirga Pratama","kelas":"9C","asrama":"Abdul Aziz 106"},{"nama":"Muhammad Hafizh Ubaidullah","kelas":"9B","asrama":"Abdul Aziz 106"},{"nama":"Muhammad Haykal Iman","kelas":"9C","asrama":"Abdul Aziz 106"},{"nama":"Muhammad Rasya El Ibrahim","kelas":"9C","asrama":"Abdul Aziz 106"},{"nama":"Muhammad Syahid Abdul Fatah","kelas":"9C","asrama":"Abdul Aziz 106"},{"nama":"Muhammad Umar Ukassyah","kelas":"9A","asrama":"Abdul Aziz 106"},{"nama":"Nabil Sakha Fauzan","kelas":"9D","asrama":"Abdul Aziz 106"},{"nama":"Rafif Aby Ararya","kelas":"9A","asrama":"Abdul Aziz 106"},{"nama":"Raziq Hanan","kelas":"9D","asrama":"Abdul Aziz 106"},{"nama":"Wildan Rafi Tiko Fatan Kholik","kelas":"11B","asrama":"Abdul Aziz 106"},{"nama":"Alden Zidane Wijayananggara","kelas":"11A","asrama":"Abdul Aziz 106"},{"nama":"Abdul Jabbar","kelas":"9A","asrama":"Abdul Aziz 107"},{"nama":"Abyan Fachry Manahilul Kama","kelas":"9E","asrama":"Abdul Aziz 107"},{"nama":"Ahmad Shaddam Azziyaad","kelas":"9D","asrama":"Abdul Aziz 107"},{"nama":"Ahnaf Nabihan Mubarak","kelas":"9B","asrama":"Abdul Aziz 107"},{"nama":"Akmal Yusuf Al-Qushayiqushayi","kelas":"9E","asrama":"Abdul Aziz 107"},{"nama":"Alfari Hanun Ikhsan Pranoto","kelas":"9A","asrama":"Abdul Aziz 107"},{"nama":"Algana Ziggy Saverio","kelas":"9E","asrama":"Abdul Aziz 107"},{"nama":"Anandito Muhadzib Fayadhi","kelas":"9E","asrama":"Abdul Aziz 107"},{"nama":"Arva Firdaus Maliki","kelas":"9D","asrama":"Abdul Aziz 107"},{"nama":"Arya Hanif Maydika","kelas":"9B","asrama":"Abdul Aziz 107"},{"nama":"Arya Rizqi Anugrah","kelas":"9C","asrama":"Abdul Aziz 107"},{"nama":"Athar Hanan Yusuf","kelas":"9D","asrama":"Abdul Aziz 107"},{"nama":"Azrial Dimitra Daud","kelas":"9E","asrama":"Abdul Aziz 107"},{"nama":"Galang Prasetyo","kelas":"9D","asrama":"Abdul Aziz 107"},{"nama":"Mohammad Endra Yusran Zulfandy","kelas":"9B","asrama":"Abdul Aziz 107"},{"nama":"Muhamad Firdaus Rasyidan","kelas":"9B","asrama":"Abdul Aziz 107"},{"nama":"Muhammad Danish Al Azka","kelas":"9B","asrama":"Abdul Aziz 107"},{"nama":"Muhammad Juan Ardana Wijaya","kelas":"9C","asrama":"Abdul Aziz 107"},{"nama":"Muhammad Ramzi Rahmana","kelas":"9A","asrama":"Abdul Aziz 107"},{"nama":"Muhammad Syamil Syauqillah","kelas":"9E","asrama":"Abdul Aziz 107"},{"nama":"Nizam Zulfikar Daryadi","kelas":"9C","asrama":"Abdul Aziz 107"},{"nama":"Pradipta Aqila Tegar","kelas":"9E","asrama":"Abdul Aziz 107"},{"nama":"Rafandra Ghani Putranto","kelas":"9C","asrama":"Abdul Aziz 107"},{"nama":"Rafif Hilmi Alvaro","kelas":"9B","asrama":"Abdul Aziz 107"},{"nama":"Alvino Gifa'iq Budiarto","kelas":"11A","asrama":"Abdul Aziz 107"},{"nama":"Fakhri Ilham Al-Faruq","kelas":"11B","asrama":"Abdul Aziz 107"},{"nama":"Abyaz Putra Aditya","kelas":"9A","asrama":"Abdul Aziz 108"},{"nama":"Ahmad Rojab Al Kafi","kelas":"9A","asrama":"Abdul Aziz 108"},{"nama":"Faiz Khalif Muhammad","kelas":"9E","asrama":"Abdul Aziz 108"},{"nama":"Fayyad Fityan Attaqi","kelas":"9E","asrama":"Abdul Aziz 108"},{"nama":"Hudzaifah Ibnu Yaman","kelas":"9C","asrama":"Abdul Aziz 108"},{"nama":"Kenzie Muktabar","kelas":"9A","asrama":"Abdul Aziz 108"},{"nama":"Khayru Ghafi Elfatih Iskandar","kelas":"9D","asrama":"Abdul Aziz 108"},{"nama":"Lingga Prabaswara Arkana","kelas":"9E","asrama":"Abdul Aziz 108"},{"nama":"Lintang Pamungkas","kelas":"9A","asrama":"Abdul Aziz 108"},{"nama":"Muhammad Fathan Mubiina","kelas":"9D","asrama":"Abdul Aziz 108"},{"nama":"Muhammad Hanif Kurniawan","kelas":"9A","asrama":"Abdul Aziz 108"},{"nama":"Muhammad Lathiif Ayyasy","kelas":"9D","asrama":"Abdul Aziz 108"},{"nama":"Muhammad Raihan Kenzie Raharjo","kelas":"9D","asrama":"Abdul Aziz 108"},{"nama":"Muhammad Risqi Al Farizi","kelas":"9C","asrama":"Abdul Aziz 108"},{"nama":"Muhammad Sakti Aqmar Alfarizqi","kelas":"9A","asrama":"Abdul Aziz 108"},{"nama":"Muhammad Wilson Dwiana","kelas":"9A","asrama":"Abdul Aziz 108"},{"nama":"Raziq Maulana Syahmi","kelas":"9B","asrama":"Abdul Aziz 108"},{"nama":"Riham Ibni Sabrisamala","kelas":"9E","asrama":"Abdul Aziz 108"},{"nama":"Rizki Furqon Subkhiy","kelas":"9C","asrama":"Abdul Aziz 108"},{"nama":"Shain Nafal Ya'isy","kelas":"9D","asrama":"Abdul Aziz 108"},{"nama":"Tamam Atha' Khiyarullah","kelas":"9D","asrama":"Abdul Aziz 108"},{"nama":"Widyan Nafiis Aushaf","kelas":"9D","asrama":"Abdul Aziz 108"},{"nama":"Yaqdhan Abi Nasrullah","kelas":"9E","asrama":"Abdul Aziz 108"},{"nama":"Zaidan Halif Khairi","kelas":"9D","asrama":"Abdul Aziz 108"},{"nama":"Muhammad Ibnu Abas","kelas":"11B","asrama":"Abdul Aziz 108"},{"nama":"Ibrahim Hammam Khairulhuda","kelas":"11A","asrama":"Abdul Aziz 108"},{"nama":"Althan Alief Adiyatama","kelas":"9B","asrama":"Abdul Aziz 206"},{"nama":"Aqila Maulana Zaidan","kelas":"9B","asrama":"Abdul Aziz 206"},{"nama":"Aufaa Galur Prabowo","kelas":"9C","asrama":"Abdul Aziz 206"},{"nama":"Azza Ramadhan Pribadi","kelas":"9A","asrama":"Abdul Aziz 206"},{"nama":"Azzan Fadhlurrahman Handoko","kelas":"9E","asrama":"Abdul Aziz 206"},{"nama":"Bagas Aimar Dary Abiyyu","kelas":"9B","asrama":"Abdul Aziz 206"},{"nama":"Daffa Naufal Adz Dzaki","kelas":"9C","asrama":"Abdul Aziz 206"},{"nama":"Dzaky Alkhalifi","kelas":"9D","asrama":"Abdul Aziz 206"},{"nama":"Farhan Abdurrozak","kelas":"9B","asrama":"Abdul Aziz 206"},{"nama":"Fiza Najmi Khilu Cahyanie","kelas":"9B","asrama":"Abdul Aziz 206"},{"nama":"Muhammad Azka Kusno Diputro","kelas":"9B","asrama":"Abdul Aziz 206"},{"nama":"Muhammad Haidar Ali","kelas":"9B","asrama":"Abdul Aziz 206"},{"nama":"Muhammad Irgi Farras Al-Fatih","kelas":"9E","asrama":"Abdul Aziz 206"},{"nama":"Muhammad Syamil Ar-Royyan","kelas":"9D","asrama":"Abdul Aziz 206"},{"nama":"Muhammad Wildan Kaylanee","kelas":"9A","asrama":"Abdul Aziz 206"},{"nama":"Nabil Rafif Maulana","kelas":"9D","asrama":"Abdul Aziz 206"},{"nama":"Qori Aqna Arroyan","kelas":"9A","asrama":"Abdul Aziz 206"},{"nama":"Rafa Athaillah Jusantos","kelas":"9C","asrama":"Abdul Aziz 206"},{"nama":"Rafa Ziggy Saviero","kelas":"9C","asrama":"Abdul Aziz 206"},{"nama":"Rakha Satria Putra","kelas":"9D","asrama":"Abdul Aziz 206"},{"nama":"Riffat Abudrrahman Aris Maulana","kelas":"9E","asrama":"Abdul Aziz 206"},{"nama":"Royyan Nafis Muzhaffar","kelas":"9D","asrama":"Abdul Aziz 206"},{"nama":"Xavier Eldani Rahmat","kelas":"9B","asrama":"Abdul Aziz 206"},{"nama":"Zahar Ata Falahi","kelas":"9A","asrama":"Abdul Aziz 206"},{"nama":"Fakhru Ilham Al-Faruq","kelas":"11A","asrama":"Abdul Aziz 206"},{"nama":"Bismo Dawud","kelas":"11A","asrama":"Abdul Aziz 206"},{"nama":"Aabid Arkana Safaraz","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Abdunnafi Patma Putra","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Athar Zehan Sasongko","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Bayu Hanun Mumtaza","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Devara Aryasatya Higuain","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Dida Asa Ismail","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Faiq Zidan Nurseha","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Fizfa Malika Al Fawwaz","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Muhammad Azka Kurniawan","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Muhammad Fadil Priatmanto","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Muhammad Fawwazz Hussein Dhiaulhaq","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Muhammad Rafka Putu Samsimar","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Muhammad Yahya Ashiddiq","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Wahyu Arya Putra","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Wahyu Firdaus Fatah Danuri","kelas":"10B","asrama":"Abdul Aziz 102"},{"nama":"Evan Abi Manyu","kelas":"11A","asrama":"Abdul Aziz 102"},{"nama":"Aryo Teguh Wijaya","kelas":"11A","asrama":"Abdul Aziz 102"},{"nama":"Abdullah Yusuf Pangestu","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Akbar Rasyid Abdul Hakim","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Alfatikhul Huda","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Arkana Wira Al Asif","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Bunayya Ahnaf Faizulhaq","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Haidar Ahnaf Purwa Ramdani","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Harlian Anugrah Ramadhan","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Kenzie Surya Pratama","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Muhammad Rizky Ageng Suprayogi","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Najwan Azhim Muntazhar","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Nevan Dzaki Maulana Raziq","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Pandya Arkananta Fatih","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Raffa Hanif Ramadhan","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Zain Afham Badiaji","kelas":"10B","asrama":"Abdul Aziz 103"},{"nama":"Keino Jozuhito Khairuazzam","kelas":"11A","asrama":"Abdul Aziz 103"},{"nama":"Adiapati Sultan Jaya","kelas":"11A","asrama":"Abdul Aziz 103"},{"nama":"Alvaro Faizi Nareswara","kelas":"12","asrama":"Syanggit 102"},{"nama":"Julian Antoni","kelas":"12","asrama":"Syanggit 102"},{"nama":"Shaquille Rafi Raynan","kelas":"12","asrama":"Syanggit 102"},{"nama":"Ridho Marik Kurniawan","kelas":"12","asrama":"Syanggit 102"},{"nama":"M Zaki Akbar Setiawan","kelas":"12","asrama":"Syanggit 102"},{"nama":"Noval Ariq Syauqi","kelas":"12","asrama":"Syanggit 102"},{"nama":"Alfi Hidayatussyarif","kelas":"12","asrama":"Syanggit 102"},{"nama":"Raihan Bintang Trianada","kelas":"12","asrama":"Syanggit 102"},{"nama":"Kenzie Leivi Shidqi","kelas":"12","asrama":"Syanggit 102"},{"nama":"Aufa Daffa Setiyawan","kelas":"12","asrama":"Syanggit 102"},{"nama":"Macheda Ubaydillah Dikaputra","kelas":"12","asrama":"Syanggit 102"},{"nama":"Rizky Insan Fadillah","kelas":"12","asrama":"Syanggit 102"},{"nama":"Abyan Hedit Suseto","kelas":"12","asrama":"Syanggit 102"},{"nama":"Yosef EL-Hamidi","kelas":"12","asrama":"Syanggit 102"},{"nama":"M Tristan Mahardika","kelas":"12","asrama":"Syanggit 102"},{"nama":"Stanly Alex Satria","kelas":"12","asrama":"Syanggit 102"},{"nama":"Daiyan Fari Afzal","kelas":"12","asrama":"Syanggit 102"},{"nama":"Bonanza Faiq Iffat Iskandar","kelas":"12","asrama":"Syanggit 102"},{"nama":"Daffa Al Fatih","kelas":"12","asrama":"Syanggit 102"},{"nama":"Rafi Hanan Ahksan Pranoto","kelas":"12","asrama":"Syanggit 102"},{"nama":"Dzulfikar Gading Kurniawan","kelas":"12","asrama":"Syanggit 102"},{"nama":"Ghani Rizky Putra Perwiranatama","kelas":"12","asrama":"Syanggit 102"},{"nama":"Usamah","kelas":"12","asrama":"Syanggit 103"},{"nama":"El-Rozeen Fazian Zamroni","kelas":"12","asrama":"Syanggit 103"},{"nama":"Pradipta Raditya Yusuf","kelas":"12","asrama":"Syanggit 103"},{"nama":"Raihan Arya Dirya","kelas":"12","asrama":"Syanggit 103"},{"nama":"Yaqdzoh Almadani","kelas":"12","asrama":"Syanggit 103"},{"nama":"Ahmad Faizul Abror","kelas":"12","asrama":"Syanggit 103"},{"nama":"Akmal Almisky Abunawan","kelas":"12","asrama":"Syanggit 103"},{"nama":"Anwarul Akbar Maulana","kelas":"12","asrama":"Syanggit 103"},{"nama":"Zoelva Tamami","kelas":"12","asrama":"Syanggit 103"},{"nama":"Sultan Attari Altraf","kelas":"12","asrama":"Syanggit 103"},{"nama":"Reyhan Ribka Pratama","kelas":"12","asrama":"Syanggit 103"},{"nama":"Dienika Arkananta","kelas":"12","asrama":"Syanggit 103"},{"nama":"Naufal Dzaky Ariqanza","kelas":"12","asrama":"Syanggit 103"},{"nama":"Dzaka Rozan Fuada","kelas":"12","asrama":"Syanggit 103"},{"nama":"Elam Rasendriya Ramdhani","kelas":"12","asrama":"Syanggit 103"},{"nama":"Valentara Aji Wishnutama","kelas":"12","asrama":"Syanggit 105"},{"nama":"Bachtiar Nur Ikhsan","kelas":"12","asrama":"Syanggit 105"},{"nama":"Maulana Shevano Putra","kelas":"12","asrama":"Syanggit 105"},{"nama":"Erza Azka Saputra","kelas":"12","asrama":"Syanggit 105"},{"nama":"Bintang Aryasatya Abd Al Aziz","kelas":"12","asrama":"Syanggit 105"},{"nama":"Muhammad Farhan Fauzan","kelas":"12","asrama":"Syanggit 105"},{"nama":"Muhammad Fatih Fakhrurroji","kelas":"12","asrama":"Syanggit 105"},{"nama":"Asyraf Zahirul Ubaid","kelas":"12","asrama":"Syanggit 105"},{"nama":"M. Rifqi Al Muzzammil","kelas":"12","asrama":"Syanggit 105"},{"nama":"Ilham Ahnaf Harbowo","kelas":"12","asrama":"Syanggit 105"},{"nama":"Mukhlas Yusuf Andito","kelas":"12","asrama":"Syanggit 105"},{"nama":"Zulfan Ali Akbar","kelas":"12","asrama":"Syanggit 105"},{"nama":"Ibni Fadhil Athallah","kelas":"12","asrama":"Syanggit 105"},{"nama":"Ramadhanu Salman Alfarisi","kelas":"12","asrama":"Syanggit 105"},{"nama":"Roja Qurrota Addinil","kelas":"12","asrama":"Syanggit 105"},{"nama":"Zidane Putra Kusuma","kelas":"12","asrama":"Syanggit 105"},{"nama":"Rahmat Subianto","kelas":"12","asrama":"Syanggit 105"},{"nama":"Khoizuran Arfa Syazani","kelas":"12","asrama":"Syanggit 105"},{"nama":"Sultan Maulana Saladin Ibrahim","kelas":"12","asrama":"Syanggit 105"},{"nama":"M. Azka Alauddin Ismadi","kelas":"12","asrama":"Syanggit 105"},{"nama":"Aditia Nailal Furqon","kelas":"11B","asrama":"Syanggit 101"},{"nama":"Ahnaf Tsaqif Zuhdi","kelas":"11A","asrama":"Syanggit 101"},{"nama":"Aidhil Fathan Athary","kelas":"11B","asrama":"Syanggit 101"},{"nama":"Ayman Wibisono Effendy","kelas":"11A","asrama":"Syanggit 101"},{"nama":"Bagas Okasha Abrar El Khairy","kelas":"11B","asrama":"Syanggit 101"},{"nama":"Bagas Prabaswara","kelas":"11A","asrama":"Syanggit 101"},{"nama":"Erlangga Dwi Saputra","kelas":"11B","asrama":"Syanggit 101"},{"nama":"Faishal Azzan Muzakki","kelas":"11A","asrama":"Syanggit 101"},{"nama":"Ghozi Akbar Ramadhan","kelas":"11B","asrama":"Syanggit 101"},{"nama":"Haidar Adib Ghufran","kelas":"11A","asrama":"Syanggit 101"},{"nama":"Muhammad Aqsho Mufid","kelas":"11B","asrama":"Syanggit 101"},{"nama":"Muhammad Fawwaz Subandono","kelas":"11B","asrama":"Syanggit 101"},{"nama":"Muhammad Hafiz Rizqi Alam","kelas":"11A","asrama":"Syanggit 101"},{"nama":"Nauval Khairul Awwali","kelas":"11A","asrama":"Syanggit 101"},{"nama":"Quthub Rayyan Ghaisany","kelas":"11B","asrama":"Syanggit 101"},{"nama":"Reyzan Fadil Maulana","kelas":"11A","asrama":"Syanggit 101"}].map(s => ({nama: String(s.nama || '').trim(), kelas: String(s.kelas || '').trim().toUpperCase(), asrama: String(s.asrama || '').trim()}));
+    window._santriSuggestionResults = [];
+    window._santriActiveIndex = -1;
+
+    function normalizeSearchText(value) {
+      return String(value || '').toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, ' ').trim();
+    }
+
+    function levenshteinDistance(a, b) {
+      const aa = normalizeSearchText(a), bb = normalizeSearchText(b);
+      if (!aa) return bb.length;
+      if (!bb) return aa.length;
+      let prev = Array.from({length: bb.length + 1}, (_, i) => i);
+      for (let i = 1; i <= aa.length; i++) {
+        const cur = [i];
+        for (let j = 1; j <= bb.length; j++) {
+          cur[j] = Math.min(
+            cur[j - 1] + 1,
+            prev[j] + 1,
+            prev[j - 1] + (aa[i - 1] === bb[j - 1] ? 0 : 1)
+          );
+        }
+        prev = cur;
+      }
+      return prev[bb.length];
+    }
+
+    function wordSimilarity(a, b) {
+      const aa = normalizeSearchText(a), bb = normalizeSearchText(b);
+      if (!aa || !bb) return 0;
+      if (aa === bb) return 1;
+      if (aa.startsWith(bb) || bb.startsWith(aa)) {
+        return 0.92 - Math.abs(aa.length - bb.length) * 0.01;
+      }
+      const d = levenshteinDistance(aa, bb);
+      return 1 - d / Math.max(aa.length, bb.length);
+    }
+
+    function scoreSantriSuggestion(query, student) {
+      const q = normalizeSearchText(query);
+      const name = normalizeSearchText(student.nama);
+      if (!q || !name) return 0;
+      if (name === q) return 2000;
+      if (name.startsWith(q)) return 1600 - Math.min(name.length - q.length, 100);
+      if (name.includes(q)) return 1300 - Math.min(name.indexOf(q), 100);
+
+      const qWords = q.split(' ').filter(Boolean);
+      const nWords = name.split(' ').filter(Boolean);
+      let matched = 0;
+      let wordScore = 0;
+
+      for (const qw of qWords) {
+        let best = 0;
+        for (const nw of nWords) best = Math.max(best, wordSimilarity(qw, nw));
+        if (best >= 0.55) {
+          matched++;
+          wordScore += best;
+        }
+      }
+
+      let score = matched * 180 + wordScore * 180;
+      if (qWords.length && matched === qWords.length) score += 450;
+
+      if (q.length >= 4) {
+        const distance = levenshteinDistance(q, name);
+        const similarity = 1 - distance / Math.max(q.length, name.length);
+        if (similarity >= 0.55) score += Math.round(similarity * 400);
+      }
+      return score;
+    }
+
+    function getSantriSuggestions(query, limit = 6) {
+      const q = normalizeSearchText(query);
+      if (q.length < 2 || !santriReference.length) return [];
+      return santriReference
+        .map(student => ({...student, _score: scoreSantriSuggestion(q, student)}))
+        .filter(student => student._score > 0)
+        .sort((a, b) => b._score - a._score || a.nama.localeCompare(b.nama, 'id'))
+        .slice(0, limit);
+    }
+
+    function getGhostCompletion(query, student) {
+      if (!query || !student) return '';
+      const raw = String(query);
+      const normalizedQuery = normalizeSearchText(raw);
+      const normalizedName = normalizeSearchText(student.nama);
+      if (!normalizedQuery || !normalizedName) return '';
+
+      // Ghost completion is shown when the typed text is a true prefix.
+      // For fuzzy/typo matches, the dropdown still shows the suggestion,
+      // but we do not pretend that the remainder is an exact continuation.
+      if (!normalizedName.startsWith(normalizedQuery)) return '';
+
+      const qNoSpace = normalizedQuery.replace(/\s+/g, ' ');
+      const nameNoSpace = normalizedName.replace(/\s+/g, ' ');
+      if (!nameNoSpace.startsWith(qNoSpace)) return '';
+
+      // Preserve the user's typed text and append the remaining original name.
+      const typedLength = Math.min(raw.length, student.nama.length);
+      return student.nama.slice(typedLength);
+    }
+
+    function updateSantriGhost(query, results) {
+      const ghost = document.getElementById('santri-ghost');
+      if (!ghost) return;
+
+      const best = results?.[0];
+      const remainder = getGhostCompletion(query, best);
+      if (!remainder) {
+        ghost.innerHTML = '';
+        ghost.classList.add('hidden');
+        return;
+      }
+
+      ghost.innerHTML = `<span class="text-transparent">${escapeHTML(query)}</span><span class="text-slate-400/80 dark:text-slate-500/80">${escapeHTML(remainder)}</span>`;
+      ghost.classList.remove('hidden');
+    }
+
+    function hideSantriSuggestions() {
+      document.getElementById('santri-suggestion-box')?.classList.add('hidden');
+      window._santriActiveIndex = -1;
+      updateSantriGhost('', []);
+    }
+
+    function selectSantriSuggestion(index) {
+      const student = window._santriSuggestionResults[index];
+      if (!student) return;
+
+      const nameInput = document.getElementById('inp-nama');
+      if (nameInput) {
+        nameInput.value = student.nama;
+        nameInput.setSelectionRange(nameInput.value.length, nameInput.value.length);
+      }
+
+      const matchingClass = allKelasList.find(k => k.toUpperCase() === student.kelas.toUpperCase());
+      if (matchingClass) {
+        selectedKelasInput = matchingClass;
+        renderKelasButtons(document.getElementById('inp-tanggal')?.value || lastSelectedDate);
+      }
+
+      window._santriActiveIndex = -1;
+      hideSantriSuggestions();
+      nameInput?.focus();
+    }
+
+    function renderSantriSuggestions(query) {
+      const box = document.getElementById('santri-suggestion-box');
+      if (!box) return;
+
+      const results = getSantriSuggestions(query);
+      window._santriSuggestionResults = results;
+
+      if (!results.length) {
+        box.innerHTML = '';
+        box.classList.add('hidden');
+        updateSantriGhost(query, []);
+        return;
+      }
+
+      if (window._santriActiveIndex >= results.length) window._santriActiveIndex = -1;
+
+      box.innerHTML = results.map((student, index) => {
+        const active = index === window._santriActiveIndex;
+        return `
+          <button type="button"
+            onclick="selectSantriSuggestion(${index})"
+            aria-selected="${active ? 'true' : 'false'}"
+            class="w-full text-left px-3 py-2.5 transition border-b last:border-b-0 border-slate-100 dark:border-slate-700 ${active ? 'bg-sky-100 dark:bg-sky-900/50' : 'hover:bg-sky-50 dark:hover:bg-slate-700'}">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-extrabold text-slate-800 dark:text-slate-100">${escapeHTML(student.nama)}</span>
+              ${active ? '<span class="text-[9px] font-bold text-sky-600 dark:text-sky-300 ml-auto">ENTER</span>' : ''}
+            </div>
+            <div class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 mt-0.5">
+              Kelas ${escapeHTML(student.kelas)} · ${escapeHTML(student.asrama)}
+            </div>
+          </button>
+        `;
+      }).join('');
+
+      box.classList.remove('hidden');
+      updateSantriGhost(query, results);
+    }
+
+    function handleNamaInput() {
+      const input = document.getElementById('inp-nama');
+      if (!input) return;
+      window._santriActiveIndex = -1;
+      renderSantriSuggestions(input.value);
+    }
+
+    function handleNamaKeydown(e) {
+      const input = document.getElementById('inp-nama');
+      const query = input?.value || '';
+      const results = window._santriSuggestionResults || [];
+      const box = document.getElementById('santri-suggestion-box');
+      const visible = box && !box.classList.contains('hidden') && results.length;
+
+      if (e.key === 'ArrowDown' && visible) {
+        e.preventDefault();
+        window._santriActiveIndex = window._santriActiveIndex < results.length - 1
+          ? window._santriActiveIndex + 1 : 0;
+        renderSantriSuggestions(query);
+        return;
+      }
+
+      if (e.key === 'ArrowUp' && visible) {
+        e.preventDefault();
+        window._santriActiveIndex = window._santriActiveIndex > 0
+          ? window._santriActiveIndex - 1 : results.length - 1;
+        renderSantriSuggestions(query);
+        return;
+      }
+
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        hideSantriSuggestions();
+        return;
+      }
+
+      if (e.key === 'Enter') {
+        if (visible) {
+          e.preventDefault();
+          const index = window._santriActiveIndex >= 0 ? window._santriActiveIndex : 0;
+          selectSantriSuggestion(index);
+          return;
+        }
+
+        const nameVal = query.trim();
+        if (nameVal) {
+          e.preventDefault();
+          const container = document.getElementById('kelas-btn-container');
+          if (container) container.focus();
+        }
+      }
+    }
+
     // --- GROQ API KEY HARDCODED ---
     let groqApiKey = localStorage.getItem('groq_api_key') || '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';
 
@@ -625,7 +867,12 @@
 
             <div>
               <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Nama Penerima <span class="text-rose-500">*</span></label>
-              <input type="text" id="inp-nama" required placeholder="Masukkan nama siswa (Ketik & Enter...)" onkeydown="handleNamaKeydown(event)" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
+              <div class="relative">
+                <div id="santri-ghost" class="hidden pointer-events-none absolute inset-y-0 left-0 right-0 z-0 flex items-center px-3 text-sm font-bold whitespace-pre overflow-hidden"></div>
+                <input type="text" id="inp-nama" required autocomplete="off" spellcheck="false" placeholder="Ketik nama siswa, nanti muncul saran..." oninput="handleNamaInput()" onfocus="handleNamaInput()" onkeydown="handleNamaKeydown(event)" class="relative z-10 w-full bg-transparent border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
+                <div id="santri-suggestion-box" role="listbox" class="hidden absolute z-40 left-0 right-0 mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl overflow-hidden"></div>
+              </div>
+              <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-1.5">🔎 Saran nama, kelas, dan asrama aktif untuk membantu koreksi typo ringan.</p>
             </div>
 
             <div>
@@ -730,16 +977,13 @@
     }
 
     // --- KEYBOARD SHORTCUT ENGINE LOGIC ---
-    function handleNamaKeydown(e) {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        const namaVal = document.getElementById('inp-nama').value.trim();
-        if (namaVal) {
-          const container = document.getElementById('kelas-btn-container');
-          if (container) container.focus();
-        }
+    document.addEventListener('click', (event) => {
+      const input = document.getElementById('inp-nama');
+      const box = document.getElementById('santri-suggestion-box');
+      if (input && box && !input.contains(event.target) && !box.contains(event.target)) {
+        hideSantriSuggestions();
       }
-    }
+    });
 
     function handleKelasContainerKeydown(e) {
       if (e.key >= '1' && e.key <= '9') {
@@ -1346,9 +1590,10 @@
       }
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', async () => {
       initTheme();
       updateOnlineStatus();
+      await loadSantriReference();
       navigate('dashboard');
     });
   </script>
