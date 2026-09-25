@@ -300,27 +300,39 @@
     function loadYouTubeURL() {
       const val = document.getElementById('input-yt-url').value.trim();
       if (!val) return;
-
-      let videoId = val;
-      if (val.includes('v=')) {
-        videoId = val.split('v=')[1].split('&')[0];
-      } else if (val.includes('youtu.be/')) {
-        videoId = val.split('youtu.be/')[1].split('?')[0];
-      }
-
+      let videoId = '';
+      try {
+        if (/^[A-Za-z0-9_-]{11}$/.test(val)) videoId = val;
+        else {
+          const url = new URL(val);
+          if (url.hostname === 'youtu.be') videoId = url.pathname.slice(1).split('/')[0];
+          else if (['www.youtube.com','youtube.com','m.youtube.com'].includes(url.hostname)) {
+            if (url.pathname === '/watch') videoId = url.searchParams.get('v') || '';
+            else if (url.pathname.startsWith('/embed/')) videoId = url.pathname.split('/')[2] || '';
+            else if (url.pathname.startsWith('/shorts/')) videoId = url.pathname.split('/')[2] || '';
+          }
+        }
+      } catch (err) {}
+      if (!/^[A-Za-z0-9_-]{11}$/.test(videoId)) { alert('⚠️ URL YouTube atau ID video tidak valid.'); return; }
       document.getElementById('iframe-yt').src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
     }
 
     function loadSpotifyURL() {
       const val = document.getElementById('input-sp-url').value.trim();
       if (!val) return;
-
-      let embedUrl = val;
-      if (!val.includes('/embed/')) {
-        embedUrl = val.replace('spotify.com/', 'spotify.com/embed/');
-      }
-
-      document.getElementById('iframe-sp').src = embedUrl;
+      try {
+        const url = new URL(val);
+        if (url.hostname !== 'open.spotify.com') throw new Error('Host Spotify tidak valid');
+        const parts = url.pathname.split('/').filter(Boolean);
+        const types = ['track','album','playlist','artist','show','episode'];
+        if (parts[0] === 'embed' && types.includes(parts[1]) && parts[2]) {
+          document.getElementById('iframe-sp').src = `https://open.spotify.com/embed/${parts[1]}/${parts[2]}`; return;
+        }
+        if (types.includes(parts[0]) && parts[1]) {
+          document.getElementById('iframe-sp').src = `https://open.spotify.com/embed/${parts[0]}/${parts[1]}`; return;
+        }
+      } catch (err) {}
+      alert('⚠️ URL Spotify tidak valid. Gunakan link open.spotify.com yang normal.');
     }
 
     // --- JADWAL HARI ---
@@ -336,15 +348,79 @@
     const namaHari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
     const allKelasList = ["12", "11", "10", "9A", "9B", "9C", "9D", "9E", "8A", "8B", "8C", "8D", "8E"];
 
+    // --- DATA SAFETY & DATE HELPERS ---
+    function getLocalDateISO(date = new Date()) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function parseLocalDate(rawDate) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(String(rawDate || ''))) return null;
+      const [year, month, day] = rawDate.split('-').map(Number);
+      const date = new Date(year, month - 1, day);
+      if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) return null;
+      return date;
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function loadStoredArray(primaryKey, fallbackKey) {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(primaryKey) || localStorage.getItem(fallbackKey) || '[]');
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (err) {
+        console.warn('Data lokal rusak, memulai dengan data kosong:', err);
+        return [];
+      }
+    }
+
+    function isValidPackageRecord(item) {
+      return !!(item && typeof item === 'object' && !Array.isArray(item) &&
+        typeof item.nama === 'string' && item.nama.trim() &&
+        typeof item.kelas === 'string' && item.kelas.trim() &&
+        parseLocalDate(item.rawTanggal) &&
+        (item.keterangan == null || typeof item.keterangan === 'string') &&
+        (item.petugas == null || typeof item.petugas === 'string') &&
+        (item.isSesuai == null || typeof item.isSesuai === 'boolean'));
+    }
+
+    function normalizePackageRecord(item, index) {
+      const date = parseLocalDate(item.rawTanggal);
+      const dayIndex = date.getDay();
+      const kelas = item.kelas.trim().toUpperCase();
+      return {
+        ...item,
+        id: Number.isFinite(Number(item.id)) ? Number(item.id) : Date.now() + index,
+        rawTanggal: item.rawTanggal,
+        tglFormatted: item.tglFormatted || `${namaHari[dayIndex]}, ${date.toLocaleDateString('id-ID')}`,
+        nama: item.nama.trim(),
+        kelas,
+        keterangan: typeof item.keterangan === 'string' ? item.keterangan.trim() : '',
+        isSesuai: typeof item.isSesuai === 'boolean' ? item.isSesuai : (jadwalHari[dayIndex] || []).includes(kelas),
+        petugas: typeof item.petugas === 'string' && item.petugas.trim() ? item.petugas.trim() : 'Tidak diketahui'
+      };
+    }
+
     // Storage Engine & State
-    let dataRekap = JSON.parse(localStorage.getItem('rekapPaketData_UI')) || JSON.parse(localStorage.getItem('rekapPaketData')) || [];
+    let dataRekap = loadStoredArray('rekapPaketData_UI', 'rekapPaketData');
+    dataRekap = dataRekap.filter(isValidPackageRecord).map(normalizePackageRecord);
     let currentPetugas = localStorage.getItem('activePetugas_UI') || "Sultan Maulana";
+    if (typeof currentPetugas !== 'string' || !currentPetugas.trim()) currentPetugas = "Sultan Maulana";
     
     // --- GROQ API KEY HARDCODED ---
     let groqApiKey = localStorage.getItem('groq_api_key') || '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';
 
     let selectedKelasInput = "";
-    let lastSelectedDate = new Date().toISOString().split('T')[0];
+    let lastSelectedDate = getLocalDateISO();
     let activeFilterRekap = "hari";
     let sortedKelasListCurrent = [];
 
@@ -352,6 +428,18 @@
       localStorage.setItem('rekapPaketData_UI', JSON.stringify(dataRekap));
       localStorage.setItem('rekapPaketData', JSON.stringify(dataRekap));
     }
+
+    // Keep package data newest-first everywhere in the app.
+    function sortDataRekapNewestFirst() {
+      dataRekap.sort((a, b) => {
+        const dateA = a.rawTanggal || '';
+        const dateB = b.rawTanggal || '';
+        if (dateA !== dateB) return dateB.localeCompare(dateA);
+        return Number(b.id || 0) - Number(a.id || 0);
+      });
+    }
+
+    sortDataRekapNewestFirst();
 
     function changePetugas(name) {
       currentPetugas = name;
@@ -387,7 +475,7 @@
 
     // --- DASHBOARD VIEW ---
     function renderDashboard(container) {
-      const todayISO = new Date().toISOString().split('T')[0];
+      const todayISO = getLocalDateISO();
       const todayIndex = new Date().getDay();
       const kelasHariIni = jadwalHari[todayIndex] || [];
 
@@ -395,7 +483,7 @@
       const countSesuai = todayData.filter(d => d.isSesuai).length;
       const countLuar = todayData.filter(d => !d.isSesuai).length;
 
-      let titleSambutan = `Selamat Datang, ${currentPetugas} 👋`;
+      let titleSambutan = `Selamat Datang, ${escapeHTML(currentPetugas)} 👋`;
       let subSambutan = "Selamat bertugas! Rekap penerimaan paket siswa harian makin gampang, akurat, lan terorganisir.";
 
       if (currentPetugas === "Sultan Maulana") {
@@ -414,10 +502,10 @@
                 <span>Sistem Monitoring Paket Aktif</span>
               </div>
               <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">
-                ${titleSambutan}
+                ${escapeHTML(titleSambutan)}
               </h2>
               <p class="text-white/90 text-sm max-w-xl">
-                ${subSambutan}
+                ${escapeHTML(subSambutan)}
               </p>
             </div>
             <div class="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-2xl flex items-center gap-4 text-xs shrink-0">
@@ -483,16 +571,16 @@
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
-                ${dataRekap.slice(-5).reverse().map(d => `
+                ${dataRekap.slice(0, 5).map(d => `
                   <tr>
-                    <td class="py-3 font-medium text-slate-500 dark:text-slate-400">${d.tglFormatted || d.rawTanggal}</td>
-                    <td class="py-3 font-bold text-slate-900 dark:text-white">${d.nama}</td>
-                    <td class="py-3 font-semibold text-slate-700 dark:text-slate-300">${d.kelas}</td>
-                    <td class="py-3 font-medium text-slate-500 dark:text-slate-400">${d.petugas || '-'}</td>
+                    <td class="py-3 font-medium text-slate-500 dark:text-slate-400">${escapeHTML(d.tglFormatted || d.rawTanggal)}</td>
+                    <td class="py-3 font-bold text-slate-900 dark:text-white">${escapeHTML(d.nama)}</td>
+                    <td class="py-3 font-semibold text-slate-700 dark:text-slate-300">${escapeHTML(d.kelas)}</td>
+                    <td class="py-3 font-medium text-slate-500 dark:text-slate-400">${escapeHTML(d.petugas || '-')}</td>
                     <td class="py-3">
                       ${d.isSesuai 
                         ? `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400">Sesuai Jadwal</span>`
-                        : `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400">${d.keterangan ? 'Dilegalkan (' + d.keterangan + ')' : 'Luar Jadwal'}</span>`
+                        : `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400">${d.keterangan ? 'Dilegalkan (' + escapeHTML(d.keterangan) + ')' : 'Luar Jadwal'}</span>`
                       }
                     </td>
                   </tr>
@@ -507,8 +595,8 @@
     // --- INPUT VIEW WITH KEYBOARD SHORTCUTS ---
     function renderInput(container) {
       selectedKelasInput = "";
-      const dateToUse = lastSelectedDate || new Date().toISOString().split('T')[0];
-      const lastRecord = dataRekap.length > 0 ? dataRekap[dataRekap.length - 1] : null;
+      const dateToUse = lastSelectedDate || getLocalDateISO();
+      const lastRecord = dataRekap.length > 0 ? dataRekap[0] : null;
 
       container.innerHTML = `
         <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs p-6 sm:p-8 space-y-6">
@@ -590,7 +678,8 @@
     }
 
     function renderKelasButtons(rawDate) {
-      const selectedDate = new Date(rawDate + "T00:00:00");
+      const selectedDate = parseLocalDate(rawDate);
+      if (!selectedDate) return;
       const dayIndex = selectedDate.getDay();
       const kelasAllowed = jadwalHari[dayIndex] || [];
       const container = document.getElementById('kelas-btn-container');
@@ -694,7 +783,11 @@
       const rawTanggal = document.getElementById('inp-tanggal').value;
       lastSelectedDate = rawTanggal;
 
-      const selectedDate = new Date(rawTanggal + "T00:00:00");
+      const selectedDate = parseLocalDate(rawTanggal);
+      if (!selectedDate) {
+        alert('⚠️ Tanggal paket tidak valid.');
+        return;
+      }
       const dayIndex = selectedDate.getDay();
       const kelasAllowed = jadwalHari[dayIndex] || [];
 
@@ -719,6 +812,7 @@
       };
 
       dataRekap.push(newItem);
+      sortDataRekapNewestFirst();
       saveDB();
 
       document.getElementById('inp-nama').value = '';
@@ -758,10 +852,10 @@
                 <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
                   ${sesuai.map(d => `
                     <tr>
-                      <td class="p-3">${d.tglFormatted || d.rawTanggal}</td>
-                      <td class="p-3 font-bold text-slate-900 dark:text-white">${d.nama}</td>
-                      <td class="p-3 font-semibold">${d.kelas}</td>
-                      <td class="p-3 text-slate-500 dark:text-slate-400">${d.petugas || '-'}</td>
+                      <td class="p-3">${escapeHTML(d.tglFormatted || d.rawTanggal)}</td>
+                      <td class="p-3 font-bold text-slate-900 dark:text-white">${escapeHTML(d.nama)}</td>
+                      <td class="p-3 font-semibold">${escapeHTML(d.kelas)}</td>
+                      <td class="p-3 text-slate-500 dark:text-slate-400">${escapeHTML(d.petugas || '-')}</td>
                       <td class="p-3"><button onclick="deletePaket(${d.id})" class="text-rose-600 dark:text-rose-400 font-bold hover:underline">Hapus</button></td>
                     </tr>
                   `).join('')}
@@ -780,11 +874,11 @@
                 <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
                   ${luar.map(d => `
                     <tr>
-                      <td class="p-3">${d.tglFormatted || d.rawTanggal}</td>
-                      <td class="p-3 font-bold text-slate-900 dark:text-white">${d.nama}</td>
-                      <td class="p-3 font-semibold">${d.kelas}</td>
-                      <td class="p-3">${d.keterangan || '-'}</td>
-                      <td class="p-3 text-slate-500 dark:text-slate-400">${d.petugas || '-'}</td>
+                      <td class="p-3">${escapeHTML(d.tglFormatted || d.rawTanggal)}</td>
+                      <td class="p-3 font-bold text-slate-900 dark:text-white">${escapeHTML(d.nama)}</td>
+                      <td class="p-3 font-semibold">${escapeHTML(d.kelas)}</td>
+                      <td class="p-3">${escapeHTML(d.keterangan || '-')}</td>
+                      <td class="p-3 text-slate-500 dark:text-slate-400">${escapeHTML(d.petugas || '-')}</td>
                       <td class="p-3">
                         <span class="px-2 py-0.5 rounded font-bold text-[10px] ${d.keterangan ? 'bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-400' : 'bg-rose-100 dark:bg-rose-950/80 text-rose-800 dark:text-rose-400'}">
                           ${d.keterangan ? 'Dilegalkan' : 'Belum Dilegalkan'}
@@ -803,7 +897,7 @@
 
     function deletePaket(id) {
       if (confirm('Apakah Bos yakin mau menghapus data ini?')) {
-        dataRekap = dataRekap.filter(d => d.id !== id);
+        dataRekap = dataRekap.filter(d => String(d.id) !== String(id));
         saveDB();
         navigate(currentTab);
       }
@@ -811,7 +905,7 @@
 
     // --- REKAP VIEW ---
     function renderRekap(container) {
-      const todayISO = new Date().toISOString().split('T')[0];
+      const todayISO = getLocalDateISO();
 
       container.innerHTML = `
         <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-6">
@@ -849,8 +943,9 @@
 
           <div class="bg-slate-50 dark:bg-slate-800/80 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div class="space-y-1">
-              <span class="text-xs font-extrabold text-slate-800 dark:text-slate-200 block">📅 Export Rentang Tanggal Khusus:</span>
-              <div class="flex items-center gap-2">
+              <span class="text-xs font-extrabold text-slate-800 dark:text-slate-200 block">📅 Export CSV Berdasarkan Tanggal:</span>
+              <p class="text-[10px] text-slate-400 dark:text-slate-500">Pilih rentang tanggal. Data akan otomatis dipisah menjadi file CSV per bulan.</p>
+              <div class="flex flex-wrap items-center gap-2 mt-2">
                 <input type="date" id="export-start" value="${todayISO}" class="bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100 rounded-lg p-2 text-xs font-bold" />
                 <span class="text-xs font-bold text-slate-400">s/d</span>
                 <input type="date" id="export-end" value="${todayISO}" class="bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100 rounded-lg p-2 text-xs font-bold" />
@@ -892,7 +987,7 @@
       }
 
       activeFilterRekap = period;
-      const todayISO = new Date().toISOString().split('T')[0];
+      const todayISO = getLocalDateISO();
       const now = new Date();
 
       let filtered = dataRekap.filter(d => {
@@ -901,9 +996,11 @@
 
         if (period === 'hari') return d.rawTanggal === todayISO;
         if (period === 'minggu') {
-          const diffTime = Math.abs(now - itemDate);
-          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-          return diffDays <= 7;
+          const dayOfWeek = now.getDay();
+          const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+          const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() + mondayOffset);
+          const weekEnd = new Date(weekStart.getFullYear(), weekStart.getMonth(), weekStart.getDate() + 7);
+          return itemDate >= weekStart && itemDate < weekEnd;
         }
         if (period === 'bulan') return itemDate.getMonth() === now.getMonth() && itemDate.getFullYear() === now.getFullYear();
         return true;
@@ -924,15 +1021,15 @@
       filtered.forEach(d => {
         tbody.innerHTML += `
           <tr>
-            <td class="py-3 font-medium text-slate-500 dark:text-slate-400">${d.tglFormatted || d.rawTanggal}</td>
-            <td class="py-3 font-bold text-slate-900 dark:text-white">${d.nama}</td>
-            <td class="py-3 font-semibold text-slate-700 dark:text-slate-300">${d.kelas}</td>
+            <td class="py-3 font-medium text-slate-500 dark:text-slate-400">${escapeHTML(d.tglFormatted || d.rawTanggal)}</td>
+            <td class="py-3 font-bold text-slate-900 dark:text-white">${escapeHTML(d.nama)}</td>
+            <td class="py-3 font-semibold text-slate-700 dark:text-slate-300">${escapeHTML(d.kelas)}</td>
             <td class="py-3">
               <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${d.isSesuai ? 'bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400' : 'bg-amber-50 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400'}">
                 ${d.isSesuai ? 'Sesuai Jadwal' : 'Di Luar Jadwal'}
               </span>
             </td>
-            <td class="py-3 text-slate-600 dark:text-slate-400">${d.keterangan || '-'}</td>
+            <td class="py-3 text-slate-600 dark:text-slate-400">${escapeHTML(d.keterangan || '-')}</td>
           </tr>
         `;
       });
@@ -943,7 +1040,37 @@
         alert('Gak ada data yang bisa di-export nih!');
         return;
       }
-      generateCSVBlob(dataRekap, `Rekap_Paket_TOTAL_${new Date().toISOString().slice(0,10)}.csv`);
+      // Export all records as separate CSV files per month, never combined.
+      exportMonthlyCSVGroups(dataRekap, 'semua');
+    }
+
+    function exportMonthlyCSVGroups(listData, mode = 'rentang') {
+      const groups = {};
+      [...listData].sort((a, b) => {
+        const dateCompare = (b.rawTanggal || '').localeCompare(a.rawTanggal || '');
+        return dateCompare || (Number(b.id || 0) - Number(a.id || 0));
+      }).forEach(item => {
+        const monthKey = String(item.rawTanggal || '').slice(0, 7);
+        if (!/^\d{4}-\d{2}$/.test(monthKey)) return;
+        (groups[monthKey] ||= []).push(item);
+      });
+
+      const months = Object.keys(groups).sort().reverse();
+      if (!months.length) {
+        alert('⚠️ Tidak ada data dengan tanggal yang valid untuk di-export.');
+        return;
+      }
+
+      months.forEach((monthKey, index) => {
+        setTimeout(() => {
+          const suffix = mode === 'semua' ? monthKey : `bulan_${monthKey}`;
+          generateCSVBlob(groups[monthKey], `Rekap_Paket_${suffix}.csv`);
+        }, index * 450);
+      });
+
+      if (months.length > 1) {
+        alert(`✅ ${months.length} file CSV akan di-download, masing-masing 1 file untuk setiap bulan.`);
+      }
     }
 
     function exportCSVByDateRange() {
@@ -954,6 +1081,8 @@
         alert('⚠️ Pilih tanggal mulai dan tanggal akhir dulu ya!');
         return;
       }
+      if (!parseLocalDate(start) || !parseLocalDate(end)) { alert('⚠️ Format tanggal tidak valid.'); return; }
+      if (start > end) { alert('⚠️ Tanggal mulai tidak boleh setelah tanggal akhir.'); return; }
 
       const filtered = dataRekap.filter(d => d.rawTanggal >= start && d.rawTanggal <= end);
 
@@ -962,14 +1091,17 @@
         return;
       }
 
-      generateCSVBlob(filtered, `Rekap_Paket_${start}_sd_${end}.csv`);
+      exportMonthlyCSVGroups(filtered, 'rentang');
     }
 
     function generateCSVBlob(listData, filename) {
       const BOM = "\uFEFF";
       let csvRows = [["Tanggal Rekap", "Nama", "Kelas", "Kategori Rekap", "Keterangan", "Petugas", "Status Legalitas"].join(",")];
 
-      listData.forEach(i => {
+      [...listData].sort((a, b) => {
+        const dateCompare = (b.rawTanggal || '').localeCompare(a.rawTanggal || '');
+        return dateCompare || (Number(b.id || 0) - Number(a.id || 0));
+      }).forEach(i => {
         let kategori = i.isSesuai ? "Sesuai Jadwal" : "Di Luar Jadwal";
         let status = i.isSesuai ? "Sesuai Jadwal" : (i.keterangan ? `Dilegalkan (${i.keterangan})` : "Belum Dilegalkan");
         csvRows.push([
@@ -995,7 +1127,7 @@
 
     // --- TAB MIGRASI DATA ---
     function renderMigrasi(container) {
-      const jsonString = JSON.stringify(dataRekap, null, 2);
+      const jsonString = JSON.stringify([...dataRekap], null, 2);
 
       container.innerHTML = `
         <div class="space-y-6">
@@ -1029,29 +1161,22 @@
 
     function importJSONData() {
       let importVal = document.getElementById("txt-import").value.trim();
-      if (!importVal) {
-        alert("⚠️ Tempel (paste) kode JSON dulu ya!");
-        return;
-      }
+      if (!importVal) { alert("⚠️ Tempel (paste) kode JSON dulu ya!"); return; }
       try {
         const firstBracket = importVal.indexOf('[');
         const lastBracket = importVal.lastIndexOf(']');
-        if (firstBracket !== -1 && lastBracket !== -1) {
-          importVal = importVal.substring(firstBracket, lastBracket + 1);
-        }
-
+        if (firstBracket !== -1 && lastBracket !== -1) importVal = importVal.substring(firstBracket, lastBracket + 1);
         const parsed = JSON.parse(importVal);
-        if (Array.isArray(parsed)) {
-          dataRekap = parsed;
-          saveDB();
-          alert(`✅ Sukses! ${parsed.length} data berhasil di-import.`);
-          navigate('dashboard');
-        } else {
-          alert("❌ Format JSON harus berupa list/array.");
-        }
-      } catch (err) {
-        alert("❌ Gagal membaca JSON: " + err.message);
-      }
+        if (!Array.isArray(parsed)) { alert("❌ Format JSON harus berupa list/array."); return; }
+        const valid = parsed.filter(isValidPackageRecord).map(normalizePackageRecord);
+        const rejected = parsed.length - valid.length;
+        if (parsed.length > 0 && valid.length === 0) { alert("❌ Tidak ada data valid yang bisa di-import. Pastikan format data sesuai backup Paket Control."); return; }
+        dataRekap = valid;
+        sortDataRekapNewestFirst();
+        saveDB();
+        alert(`✅ Sukses! ${valid.length} data berhasil di-import${rejected ? `, ${rejected} data tidak valid dilewati.` : '.'}`);
+        navigate('dashboard');
+      } catch (err) { alert("❌ Gagal membaca JSON: " + err.message); }
     }
 
     // --- AI CHATBOT ENGINE LOGIC (MODEL GROQ TERBARU) ---
