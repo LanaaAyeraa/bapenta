@@ -13,8 +13,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Supabase JS Client -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,6 +41,7 @@
     }
   </script>
   <style>
+    /* ANIMASI SMOOTH FADE TRANSITION DARK MODE */
     *, *::before, *::after {
       transition: background-color 0.35s ease-in-out, 
                   border-color 0.35s ease-in-out, 
@@ -61,6 +60,7 @@
 
     .global-search-item[aria-selected="true"] { background: rgba(59, 130, 246, .10); }
 
+    /* Efek putar ikon tema */
     .icon-spin-effect {
       transform: rotate(360deg);
       transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -73,7 +73,7 @@
   <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-30 shadow-xs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
       
-      <!-- LOGO + GLOBAL SEARCH BAR -->
+      <!-- LOGO + GLOBAL SEARCH BAR (POSISI SESUAI TANDA MERAH) -->
       <div class="flex items-center gap-4 flex-1 max-w-2xl min-w-0">
         <div class="flex items-center gap-3 cursor-pointer shrink-0" onclick="navigate('dashboard')">
           <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-md">
@@ -84,7 +84,7 @@
               <span class="text-base font-extrabold tracking-tight text-slate-900 dark:text-white">PAKET<span class="text-sky-500">CONTROL</span></span>
               <span id="badge-online-status" class="text-[10px] bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                ONLINE REALTIME
+                ONLINE
               </span>
             </div>
             <p class="text-[11px] text-slate-400 dark:text-slate-500 font-medium">Package Management & Verification</p>
@@ -110,10 +110,12 @@
 
       <!-- RIGHT TOP BAR: PETUGAS & DARK MODE TOGGLE -->
       <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+        <!-- TOGGLE DARK MODE BUTTON -->
         <button onclick="toggleDarkMode()" id="btn-theme-toggle" title="Ubah Mode Tampilan" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-amber-400 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition border border-slate-200 dark:border-slate-700 overflow-hidden">
           <i data-lucide="moon" id="icon-theme" class="w-4 h-4"></i>
         </button>
 
+        <!-- PETUGAS PIKET SELECTOR -->
         <div class="flex items-center gap-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-full px-3 py-1.5 shadow-2xs">
           <div class="w-7 h-7 rounded-full bg-sky-500 text-white flex items-center justify-center font-bold text-xs">
             <i data-lucide="user" class="w-3.5 h-3.5"></i>
@@ -148,17 +150,17 @@
         </button>
         <button onclick="navigate('migrasi')" id="nav-migrasi" class="nav-pill flex items-center gap-2 px-4 py-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition shrink-0">
           <i data-lucide="arrow-left-right" class="w-4 h-4 text-amber-500"></i>
-          <span>Migrasi & Auto-Merge Cloud</span>
+          <span>Migrasi Data / Backup</span>
         </button>
       </div>
     </div>
   </header>
 
-  <!-- LAYOUT GRID -->
+  <!-- LAYOUT GRID DENGAN MUSIC PLAYER SIDEBAR (KIRI), MAIN CONTENT (TENGAH), DAN AI CHAT (KANAN) -->
   <div class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
     <div class="flex flex-col lg:flex-row gap-6 items-start">
       
-      <!-- SIDEBAR MUSIC PLAYER (KIRI) -->
+      <!-- 🎵 SIDEBAR MUSIC PLAYER (KIRI) -->
       <aside class="w-full lg:w-72 shrink-0 lg:sticky lg:top-24 space-y-4">
         <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-4 shadow-xs">
           <div class="flex items-center justify-between mb-3">
@@ -178,7 +180,7 @@
 
           <div id="player-yt-box" class="space-y-2.5">
             <div class="w-full h-48 rounded-2xl overflow-hidden bg-slate-900 shadow-inner border border-slate-200 dark:border-slate-800">
-              <iframe id="iframe-yt" class="w-full h-full" src="https://www.youtube.com/embed/5qap5aO4i9A" title="YouTube Music Player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              <iframe id="iframe-yt" class="w-full h-full" src="https://www.youtube.com/embed/jfKfPfyJRdk" title="YouTube Music Player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
             <div class="space-y-1">
               <label class="text-[10px] font-bold text-slate-400 dark:text-slate-500 block">Link/ID Video YouTube:</label>
@@ -211,7 +213,7 @@
         <div id="app-container"></div>
       </main>
 
-      <!-- AI ASSISTANT SIDEBAR (KANAN) -->
+      <!-- 🤖 AI ASSISTANT SIDEBAR (KANAN) -->
       <aside class="w-full lg:w-72 shrink-0 lg:sticky lg:top-24 space-y-4">
         <div class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-4 shadow-xs flex flex-col h-[520px]">
           <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 mb-3">
@@ -234,7 +236,7 @@
           <!-- Chat History Container -->
           <div id="aiChatBox" class="flex-1 overflow-y-auto space-y-2.5 pr-1 text-xs custom-scroll">
             <div class="bg-sky-50 dark:bg-sky-950/60 border border-sky-100 dark:border-sky-900 p-3 rounded-2xl text-slate-700 dark:text-slate-300 leading-relaxed text-[11px]">
-              👋 Yo watsap Bro Lanaa! Gue AI Assistant lo nih. Bebas mau ngobrol santai, nanya-nanya apa aja, atau minta kelola data paket. Langsung gass!
+              👋 Yo watsap Bro Lanaa! Gue AI Assistant lo nih. Bebas mau ngobrol santai, nanya-nanya apa aja, atau minta kelola data paket (contoh: <i>"hapus paket yang namanya Lanaa"</i> atau <i>"input paket Budi kelas 9D"</i>). Langsung gass!
             </div>
           </div>
 
@@ -313,34 +315,24 @@
   </footer>
 
   <script>
-    // --- INTEGRASI SUPABASE REALTIME CLOUD CLIENT ---
-    const SUPABASE_URL = "https://hidgkvfrniimzteypmfv.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_D9VXgBCMsA0yjHw_RD08-w_USLrszfU";
-    let supabase = null;
-    try {
-      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    } catch (e) {
-      console.warn("Supabase client init error:", e);
-    }
-
-    // --- NETWORK STATUS & CLOUD DETECTOR ---
-    function updateOnlineStatus(isCloudConnected = true) {
+    // --- NETWORK STATUS DETECTOR ---
+    function updateOnlineStatus() {
       const badge = document.getElementById('badge-online-status');
       if (!badge) return;
 
-      if (navigator.onLine && isCloudConnected) {
+      if (navigator.onLine) {
         badge.className = "text-[10px] bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1";
-        badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> ONLINE REALTIME`;
+        badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> ONLINE`;
       } else {
         badge.className = "text-[10px] bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-400 font-bold px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1";
-        badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> OFFLINE / LOCAL`;
+        badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> OFFLINE MODE`;
       }
     }
 
-    window.addEventListener('online', () => updateOnlineStatus(true));
-    window.addEventListener('offline', () => updateOnlineStatus(false));
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
 
-    // --- DARK MODE SYSTEM ---
+    // --- DARK MODE SYSTEM WITH SMOOTH ANIMATION ---
     function initTheme() {
       const isDark = localStorage.getItem('theme_mode') === 'dark';
       if (isDark) {
@@ -367,7 +359,7 @@
       const icon = document.getElementById('icon-theme');
       if (icon) {
         icon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
-        if (window.lucide) lucide.createIcons();
+        lucide.createIcons();
       }
     }
 
@@ -430,22 +422,23 @@
           document.getElementById('iframe-sp').src = `https://open.spotify.com/embed/${parts[0]}/${parts[1]}`; return;
         }
       } catch (err) {}
-      alert('⚠️ URL Spotify tidak valid.');
+      alert('⚠️ URL Spotify tidak valid. Gunakan link open.spotify.com yang normal.');
     }
 
-    // --- DATA JADWAL HARI ---
+    // --- JADWAL HARI ---
     const jadwalHari = {
-      1: ["12"],
-      2: ["11", "10"],
-      3: ["9A", "9B"],
-      4: ["9C", "9D", "9E"],
-      5: ["8A", "8B"],
-      6: ["8C", "8D", "8E"],
-      0: []
+      1: ["12"],                           // Senin
+      2: ["11", "10"],                     // Selasa
+      3: ["9A", "9B"],                     // Rabu
+      4: ["9C", "9D", "9E"],               // Kamis
+      5: ["8A", "8B"],                     // Jumat
+      6: ["8C", "8D", "8E"],               // Sabtu
+      0: []                                // Minggu
     };
     const namaHari = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
     const allKelasList = ["12", "11", "10", "9A", "9B", "9C", "9D", "9E", "8A", "8B", "8C", "8D", "8E"];
 
+    // --- DATA SAFETY & DATE HELPERS ---
     function getLocalDateISO(date = new Date()) {
       const y = date.getFullYear();
       const m = String(date.getMonth() + 1).padStart(2, '0');
@@ -475,6 +468,7 @@
         const parsed = JSON.parse(localStorage.getItem(primaryKey) || localStorage.getItem(fallbackKey) || '[]');
         return Array.isArray(parsed) ? parsed : [];
       } catch (err) {
+        console.warn('Data lokal rusak, memulai dengan data kosong:', err);
         return [];
       }
     }
@@ -483,36 +477,279 @@
       return !!(item && typeof item === 'object' && !Array.isArray(item) &&
         typeof item.nama === 'string' && item.nama.trim() &&
         typeof item.kelas === 'string' && item.kelas.trim() &&
-        parseLocalDate(item.raw_tanggal || item.rawTanggal));
+        parseLocalDate(item.rawTanggal) &&
+        (item.keterangan == null || typeof item.keterangan === 'string') &&
+        (item.petugas == null || typeof item.petugas === 'string') &&
+        (item.isSesuai == null || typeof item.isSesuai === 'boolean'));
     }
 
     function normalizePackageRecord(item, index) {
-      const rawTanggal = item.raw_tanggal || item.rawTanggal;
-      const date = parseLocalDate(rawTanggal) || new Date();
+      const date = parseLocalDate(item.rawTanggal);
       const dayIndex = date.getDay();
       const kelas = item.kelas.trim().toUpperCase();
-      const isSesuai = item.is_sesuai !== undefined ? item.is_sesuai : (item.isSesuai !== undefined ? item.isSesuai : (jadwalHari[dayIndex] || []).includes(kelas));
-      
       return {
+        ...item,
         id: Number.isFinite(Number(item.id)) ? Number(item.id) : Date.now() + index,
-        rawTanggal,
-        tglFormatted: item.tgl_formatted || item.tglFormatted || `${namaHari[dayIndex]}, ${date.toLocaleDateString('id-ID')}`,
+        rawTanggal: item.rawTanggal,
+        tglFormatted: item.tglFormatted || `${namaHari[dayIndex]}, ${date.toLocaleDateString('id-ID')}`,
         nama: item.nama.trim(),
         kelas,
         keterangan: typeof item.keterangan === 'string' ? item.keterangan.trim() : '',
-        isSesuai,
-        petugas: typeof item.petugas === 'string' && item.petugas.trim() ? item.petugas.trim() : 'Sultan Maulana'
+        isSesuai: typeof item.isSesuai === 'boolean' ? item.isSesuai : (jadwalHari[dayIndex] || []).includes(kelas),
+        petugas: typeof item.petugas === 'string' && item.petugas.trim() ? item.petugas.trim() : 'Tidak diketahui'
       };
     }
 
-    let dataRekap = loadStoredArray('rekapPaketData_UI', 'rekapPaketData').filter(isValidPackageRecord).map(normalizePackageRecord);
+    // Storage Engine & State
+    let dataRekap = loadStoredArray('rekapPaketData_UI', 'rekapPaketData');
+    dataRekap = dataRekap.filter(isValidPackageRecord).map(normalizePackageRecord);
     let currentPetugas = localStorage.getItem('activePetugas_UI') || "Sultan Maulana";
+    if (typeof currentPetugas !== 'string' || !currentPetugas.trim()) currentPetugas = "Sultan Maulana";
+
+    const santriReference = [{"nama":"Abimanyu Surendra Latif","kelas":"8C","asrama":"Abdul Aziz 201"},{"nama":"Abrisam Khaalish Dzahin","kelas":"8A","asrama":"Abdul Aziz 201"},{"nama":"Afwan Maulana Azidane","kelas":"8D","asrama":"Abdul Aziz 201"},{"nama":"Ahmad Tajun Arifin","kelas":"8C","asrama":"Abdul Aziz 201"},{"nama":"Akhtar Arghanismara Elfaradis","kelas":"8E","asrama":"Abdul Aziz 201"},{"nama":"Anjas Izzul Haq","kelas":"8D","asrama":"Abdul Aziz 201"},{"nama":"Anugrah Syahrial Muzaki","kelas":"8B","asrama":"Abdul Aziz 201"},{"nama":"Arshavan Wijaya Prakoso","kelas":"8A","asrama":"Abdul Aziz 201"},{"nama":"Banyu El Faruq Putra Hidayat","kelas":"8C","asrama":"Abdul Aziz 201"},{"nama":"Daffa Setya Arezky Warsito","kelas":"8D","asrama":"Abdul Aziz 201"},{"nama":"Dinan Al Khalifi","kelas":"8D","asrama":"Abdul Aziz 201"},{"nama":"Emir Firjatunafis","kelas":"8C","asrama":"Abdul Aziz 201"},{"nama":"Faris Bachtiar Usman","kelas":"8B","asrama":"Abdul Aziz 201"},{"nama":"Galang Van Dirga Asyrafiqoh","kelas":"8A","asrama":"Abdul Aziz 201"},{"nama":"Ihsan Fadil Rahmani","kelas":"8E","asrama":"Abdul Aziz 201"},{"nama":"Naufal Azzam Ardhani Sufa","kelas":"8C","asrama":"Abdul Aziz 201"},{"nama":"Naufal Eigas Fadhillah","kelas":"8B","asrama":"Abdul Aziz 201"},{"nama":"Rafa Al Fathin Rosyadi","kelas":"8E","asrama":"Abdul Aziz 201"},{"nama":"Rafif Azka Khamdani","kelas":"8B","asrama":"Abdul Aziz 201"},{"nama":"Restu Kukuh Wicaksono","kelas":"8A","asrama":"Abdul Aziz 201"},{"nama":"Sangguwan Aptana Elgin","kelas":"8A","asrama":"Abdul Aziz 201"},{"nama":"Faiz Muhammad Musyafi","kelas":"11A","asrama":"Abdul Aziz 201"},{"nama":"Muhammad Hamdan Maulana","kelas":"11A","asrama":"Abdul Aziz 201"},{"nama":"Abdullah Al Harits","kelas":"8D","asrama":"Abdul Aziz 202"},{"nama":"Afkar Zain Muzhaffar","kelas":"8D","asrama":"Abdul Aziz 202"},{"nama":"Aksel Adiv Cakradara","kelas":"8A","asrama":"Abdul Aziz 202"},{"nama":"Athaa Zaid","kelas":"8B","asrama":"Abdul Aziz 202"},{"nama":"Bagas Trustha Nugraha","kelas":"8E","asrama":"Abdul Aziz 202"},{"nama":"Bagoes Najdzil Mukhsinin","kelas":"8A","asrama":"Abdul Aziz 202"},{"nama":"Baskara Akhtar Prabowo","kelas":"8B","asrama":"Abdul Aziz 202"},{"nama":"Biru Tsabita Rizkiadi","kelas":"8D","asrama":"Abdul Aziz 202"},{"nama":"Faatih Mahya Izdihar","kelas":"8D","asrama":"Abdul Aziz 202"},{"nama":"Falakh Nur Ilmi S Firori","kelas":"8E","asrama":"Abdul Aziz 202"},{"nama":"Fathan Yusuf Arfai","kelas":"8D","asrama":"Abdul Aziz 202"},{"nama":"Gavin Aska Pratama","kelas":"8C","asrama":"Abdul Aziz 202"},{"nama":"Ghafar Dhuha Arrasyid","kelas":"8A","asrama":"Abdul Aziz 202"},{"nama":"Haykal Afsar Ramadhan","kelas":"8E","asrama":"Abdul Aziz 202"},{"nama":"Ibrahim Fathan Raif Arifin","kelas":"8A","asrama":"Abdul Aziz 202"},{"nama":"Lathif Yafli Sanyoto","kelas":"8B","asrama":"Abdul Aziz 202"},{"nama":"Lintang Qudsi Assyaqieb","kelas":"8C","asrama":"Abdul Aziz 202"},{"nama":"Mahardika Daffa Setya Imani","kelas":"8B","asrama":"Abdul Aziz 202"},{"nama":"Maulana Najwan Ramadhan","kelas":"8B","asrama":"Abdul Aziz 202"},{"nama":"Miko Pradipta Wibowo","kelas":"8C","asrama":"Abdul Aziz 202"},{"nama":"Muhammad Fawwaaz Muhibbullah","kelas":"8E","asrama":"Abdul Aziz 202"},{"nama":"Muhammad Fawwaz Alzena","kelas":"8A","asrama":"Abdul Aziz 202"},{"nama":"Praditia Fayyadhi Gesangputra","kelas":"8E","asrama":"Abdul Aziz 202"},{"nama":"Raditya Early Abiyu","kelas":"8B","asrama":"Abdul Aziz 202"},{"nama":"Athaya Zidhane Putra Daryadi","kelas":"11A","asrama":"Abdul Aziz 202"},{"nama":"Fairuz Bimpi Azzami","kelas":"11A","asrama":"Abdul Aziz 202"},{"nama":"Sultan Maulana Saladin Ibrahim","kelas":"12","asrama":"Syanggit 105"}].map(s => ({nama: String(s.nama || '').trim(), kelas: String(s.kelas || '').trim().toUpperCase(), asrama: String(s.asrama || '').trim()}));
+
+    window._santriSuggestionResults = [];
+    window._santriActiveIndex = -1;
+
+    function normalizeSearchText(value) {
+      return String(value || '').toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, ' ').trim();
+    }
+
+    function levenshteinDistance(a, b) {
+      const aa = normalizeSearchText(a), bb = normalizeSearchText(b);
+      if (!aa) return bb.length;
+      if (!bb) return aa.length;
+      let prev = Array.from({length: bb.length + 1}, (_, i) => i);
+      for (let i = 1; i <= aa.length; i++) {
+        const cur = [i];
+        for (let j = 1; j <= bb.length; j++) {
+          cur[j] = Math.min(
+            cur[j - 1] + 1,
+            prev[j] + 1,
+            prev[j - 1] + (aa[i - 1] === bb[j - 1] ? 0 : 1)
+          );
+        }
+        prev = cur;
+      }
+      return prev[bb.length];
+    }
+
+    function wordSimilarity(a, b) {
+      const aa = normalizeSearchText(a), bb = normalizeSearchText(b);
+      if (!aa || !bb) return 0;
+      if (aa === bb) return 1;
+      if (aa.startsWith(bb) || bb.startsWith(aa)) {
+        return 0.92 - Math.abs(aa.length - bb.length) * 0.01;
+      }
+      const d = levenshteinDistance(aa, bb);
+      return 1 - d / Math.max(aa.length, bb.length);
+    }
+
+    function scoreSantriSuggestion(query, student) {
+      const q = normalizeSearchText(query);
+      const name = normalizeSearchText(student.nama);
+      if (!q || !name) return 0;
+      if (name === q) return 2000;
+      if (name.startsWith(q)) return 1600 - Math.min(name.length - q.length, 100);
+      if (name.includes(q)) return 1300 - Math.min(name.indexOf(q), 100);
+
+      const qWords = q.split(' ').filter(Boolean);
+      const nWords = name.split(' ').filter(Boolean);
+      let matched = 0;
+      let wordScore = 0;
+
+      for (const qw of qWords) {
+        let best = 0;
+        for (const nw of nWords) best = Math.max(best, wordSimilarity(qw, nw));
+        if (best >= 0.55) {
+          matched++;
+          wordScore += best;
+        }
+      }
+
+      let score = matched * 180 + wordScore * 180;
+      if (qWords.length && matched === qWords.length) score += 450;
+
+      if (q.length >= 4) {
+        const distance = levenshteinDistance(q, name);
+        const similarity = 1 - distance / Math.max(q.length, name.length);
+        if (similarity >= 0.55) score += Math.round(similarity * 400);
+      }
+      return score;
+    }
+
+    function getSantriSuggestions(query, limit = 6) {
+      const q = normalizeSearchText(query);
+      if (q.length < 2 || !santriReference.length) return [];
+      return santriReference
+        .map(student => ({...student, _score: scoreSantriSuggestion(q, student)}))
+        .filter(student => student._score > 0)
+        .sort((a, b) => b._score - a._score || a.nama.localeCompare(b.nama, 'id'))
+        .slice(0, limit);
+    }
+
+    function getGhostCompletion(query, student) {
+      if (!query || !student) return '';
+      const raw = String(query);
+      const normalizedQuery = normalizeSearchText(raw);
+      const normalizedName = normalizeSearchText(student.nama);
+      if (!normalizedQuery || !normalizedName) return '';
+
+      if (!normalizedName.startsWith(normalizedQuery)) return '';
+
+      const qNoSpace = normalizedQuery.replace(/\s+/g, ' ');
+      const nameNoSpace = normalizedName.replace(/\s+/g, ' ');
+      if (!nameNoSpace.startsWith(qNoSpace)) return '';
+
+      const typedLength = Math.min(raw.length, student.nama.length);
+      return student.nama.slice(typedLength);
+    }
+
+    function updateSantriGhost(query, results) {
+      const ghost = document.getElementById('santri-ghost');
+      if (!ghost) return;
+
+      const best = results?.[0];
+      const remainder = getGhostCompletion(query, best);
+      if (!remainder) {
+        ghost.innerHTML = '';
+        ghost.classList.add('hidden');
+        return;
+      }
+
+      ghost.innerHTML = `<span class="text-transparent">${escapeHTML(query)}</span><span class="text-slate-400/80 dark:text-slate-500/80">${escapeHTML(remainder)}</span>`;
+      ghost.classList.remove('hidden');
+    }
+
+    function hideSantriSuggestions() {
+      document.getElementById('santri-suggestion-box')?.classList.add('hidden');
+      window._santriActiveIndex = -1;
+      updateSantriGhost('', []);
+    }
+
+    function selectSantriSuggestion(index) {
+      const student = window._santriSuggestionResults[index];
+      if (!student) return;
+
+      const nameInput = document.getElementById('inp-nama');
+      if (nameInput) {
+        nameInput.value = student.nama;
+        nameInput.setSelectionRange(nameInput.value.length, nameInput.value.length);
+      }
+
+      const matchingClass = allKelasList.find(k => k.toUpperCase() === student.kelas.toUpperCase());
+      if (matchingClass) {
+        selectedKelasInput = matchingClass;
+        renderKelasButtons(document.getElementById('inp-tanggal')?.value || lastSelectedDate);
+      }
+
+      window._santriActiveIndex = -1;
+      hideSantriSuggestions();
+      nameInput?.focus();
+    }
+
+    function renderSantriSuggestions(query) {
+      const box = document.getElementById('santri-suggestion-box');
+      if (!box) return;
+
+      const results = getSantriSuggestions(query);
+      window._santriSuggestionResults = results;
+
+      if (!results.length) {
+        box.innerHTML = '';
+        box.classList.add('hidden');
+        updateSantriGhost(query, []);
+        return;
+      }
+
+      if (window._santriActiveIndex >= results.length) window._santriActiveIndex = -1;
+
+      box.innerHTML = results.map((student, index) => {
+        const active = index === window._santriActiveIndex;
+        return `
+          <button type="button"
+            onclick="selectSantriSuggestion(${index})"
+            aria-selected="${active ? 'true' : 'false'}"
+            class="w-full text-left px-3 py-2.5 transition border-b last:border-b-0 border-slate-100 dark:border-slate-700 ${active ? 'bg-sky-100 dark:bg-sky-900/50' : 'hover:bg-sky-50 dark:hover:bg-slate-700'}">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-extrabold text-slate-800 dark:text-slate-100">${escapeHTML(student.nama)}</span>
+              ${active ? '<span class="text-[9px] font-bold text-sky-600 dark:text-sky-300 ml-auto">ENTER</span>' : ''}
+            </div>
+            <div class="text-[10px] font-semibold text-slate-400 dark:text-slate-500 mt-0.5">
+              Kelas ${escapeHTML(student.kelas)} · ${escapeHTML(student.asrama)}
+            </div>
+          </button>
+        `;
+      }).join('');
+
+      box.classList.remove('hidden');
+      updateSantriGhost(query, results);
+    }
+
+    function handleNamaInput() {
+      const input = document.getElementById('inp-nama');
+      if (!input) return;
+      window._santriActiveIndex = -1;
+      renderSantriSuggestions(input.value);
+    }
+
+    function handleNamaKeydown(e) {
+      const input = document.getElementById('inp-nama');
+      const query = input?.value || '';
+      const results = window._santriSuggestionResults || [];
+      const box = document.getElementById('santri-suggestion-box');
+      const visible = box && !box.classList.contains('hidden') && results.length;
+
+      if (e.key === 'ArrowDown' && visible) {
+        e.preventDefault();
+        window._santriActiveIndex = window._santriActiveIndex < results.length - 1
+          ? window._santriActiveIndex + 1 : 0;
+        renderSantriSuggestions(query);
+        return;
+      }
+
+      if (e.key === 'ArrowUp' && visible) {
+        e.preventDefault();
+        window._santriActiveIndex = window._santriActiveIndex > 0
+          ? window._santriActiveIndex - 1 : results.length - 1;
+        renderSantriSuggestions(query);
+        return;
+      }
+
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        hideSantriSuggestions();
+        return;
+      }
+
+      if (e.key === 'Enter') {
+        if (visible) {
+          e.preventDefault();
+          const index = window._santriActiveIndex >= 0 ? window._santriActiveIndex : 0;
+          selectSantriSuggestion(index);
+          return;
+        }
+
+        const nameVal = query.trim();
+        if (nameVal) {
+          e.preventDefault();
+          const container = document.getElementById('kelas-btn-container');
+          if (container) container.focus();
+        }
+      }
+    }
+
+    // --- GROQ API KEY HARDCODED ---
     let groqApiKey = localStorage.getItem('groq_api_key') || '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';
+
     let selectedKelasInput = "";
     let lastSelectedDate = getLocalDateISO();
-    let currentTab = 'dashboard';
+    let activeFilterRekap = "hari";
+    let sortedKelasListCurrent = [];
 
-    function saveDBLocal() {
+    function saveDB() {
       localStorage.setItem('rekapPaketData_UI', JSON.stringify(dataRekap));
       localStorage.setItem('rekapPaketData', JSON.stringify(dataRekap));
     }
@@ -526,32 +763,7 @@
       });
     }
 
-    async function loadCloudData() {
-      if (!supabase) return;
-      try {
-        const { data, error } = await supabase.from('rekap_paket').select('*').order('raw_tanggal', { ascending: false });
-        if (!error && data) {
-          dataRekap = data.map(item => ({
-            id: Number(item.id),
-            rawTanggal: item.raw_tanggal,
-            tglFormatted: item.tgl_formatted,
-            nama: item.nama,
-            kelas: item.kelas,
-            keterangan: item.keterangan || '',
-            isSesuai: item.is_sesuai,
-            petugas: item.petugas || 'Tidak diketahui'
-          }));
-          sortDataRekapNewestFirst();
-          saveDBLocal();
-          updateOnlineStatus(true);
-          navigate(currentTab);
-        } else {
-          updateOnlineStatus(false);
-        }
-      } catch (err) {
-        updateOnlineStatus(false);
-      }
-    }
+    sortDataRekapNewestFirst();
 
     function changePetugas(name) {
       currentPetugas = name;
@@ -561,7 +773,8 @@
       }
     }
 
-    // --- RENDER VIEWS ---
+    let currentTab = 'dashboard';
+
     function navigate(tabId) {
       currentTab = tabId;
       document.querySelectorAll('.nav-pill').forEach(btn => {
@@ -575,35 +788,34 @@
       }
 
       const container = document.getElementById('app-container');
-      if (!container) return;
-
       if (tabId === 'dashboard') renderDashboard(container);
       else if (tabId === 'input') renderInput(container);
       else if (tabId === 'live') renderLive(container);
       else if (tabId === 'rekap') renderRekap(container);
       else if (tabId === 'migrasi') renderMigrasi(container);
 
-      if (window.lucide) lucide.createIcons();
+      lucide.createIcons();
     }
 
+    // --- DASHBOARD VIEW ---
     function renderDashboard(container) {
       const todayISO = getLocalDateISO();
       const todayIndex = new Date().getDay();
       const kelasHariIni = jadwalHari[todayIndex] || [];
+
       const todayData = dataRekap.filter(d => d.rawTanggal === todayISO);
       const countSesuai = todayData.filter(d => d.isSesuai).length;
       const countLuar = todayData.filter(d => !d.isSesuai).length;
 
       let titleSambutan = `Selamat Datang, ${escapeHTML(currentPetugas)} 👋`;
-      let subSambutan = "Selamat bertugas! Rekap penerimaan paket siswa harian makin gampang, akurat, dan terorganisir.";
+      let subSambutan = "Selamat bertugas! Rekap penerimaan paket siswa harian makin gampang, akurat, lan terorganisir.";
 
       if (currentPetugas === "Sultan Maulana") {
         titleSambutan = "Yo watsap Bos Lanaa! 🚀";
         subSambutan = "Siap rekap paket hari ini? Bikin semua data rapi, sat-set, dan terorganisir tanpa ribet!";
       }
 
-      const selectPetugas = document.getElementById('select-petugas');
-      if (selectPetugas) selectPetugas.value = currentPetugas;
+      document.getElementById('select-petugas').value = currentPetugas;
 
       container.innerHTML = `
         <div class="rg-gradient rounded-3xl p-6 sm:p-8 text-white shadow-lg relative overflow-hidden">
@@ -611,7 +823,7 @@
             <div class="space-y-2">
               <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold">
                 <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span>Sistem Monitoring Paket Cloud Realtime</span>
+                <span>Sistem Monitoring Paket Aktif</span>
               </div>
               <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">
                 ${escapeHTML(titleSambutan)}
@@ -684,7 +896,6 @@
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
-                ${dataRekap.length === 0 ? `<tr><td colspan="6" class="py-6 text-center text-slate-400">Belum ada data paket. SILAKAN INPUT DATA BARU!</td></tr>` : ''}
                 ${dataRekap.slice(0, 5).map(d => `
                   <tr>
                     <td class="py-3 font-medium text-slate-500 dark:text-slate-400">${escapeHTML(d.tglFormatted || d.rawTanggal)}</td>
@@ -709,6 +920,7 @@
       `;
     }
 
+    // --- INPUT VIEW WITH KEYBOARD SHORTCUTS ---
     function renderInput(container) {
       selectedKelasInput = "";
       const dateToUse = lastSelectedDate || getLocalDateISO();
@@ -724,6 +936,15 @@
             <span class="bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold px-3 py-1 rounded-full uppercase">Full Shortcut</span>
           </div>
 
+          <!-- SHORTCUT GUIDE BANNER -->
+          <div id="shortcut-guide-banner" class="bg-sky-50 dark:bg-sky-950/50 border border-sky-100 dark:border-sky-900 p-3.5 rounded-2xl text-xs space-y-1.5">
+            <div class="font-bold text-sky-800 dark:text-sky-300 flex items-center gap-1.5">
+              <i data-lucide="keyboard" class="w-4 h-4 text-sky-500"></i>
+              <span>Panduan Shortcut Keyboard Angka Hari Ini:</span>
+            </div>
+            <div id="shortcut-hint-list" class="flex flex-wrap gap-2 text-[11px] font-semibold text-slate-700 dark:text-slate-300"></div>
+          </div>
+
           <form id="formPaket" onsubmit="handleSavePaket(event)" class="space-y-6">
             <div>
               <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Tanggal Rekap / Paket Masuk</label>
@@ -732,51 +953,103 @@
 
             <div>
               <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Nama Penerima <span class="text-rose-500">*</span></label>
-              <input type="text" id="inp-nama" required autocomplete="off" placeholder="Ketik nama siswa..." class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
+              <div class="relative">
+                <div id="santri-ghost" class="hidden pointer-events-none absolute inset-y-0 left-0 right-0 z-0 flex items-center px-3 text-sm font-bold whitespace-pre overflow-hidden"></div>
+                <input type="text" id="inp-nama" required autocomplete="off" spellcheck="false" placeholder="Ketik nama siswa, nanti muncul saran..." oninput="handleNamaInput()" onfocus="handleNamaInput()" onkeydown="handleNamaKeydown(event)" class="relative z-10 w-full bg-transparent border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 text-sm font-bold focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
+                <div id="santri-suggestion-box" role="listbox" class="hidden absolute z-40 left-0 right-0 mt-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl overflow-hidden"></div>
+              </div>
+              <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-1.5">🔎 Saran nama, kelas, dan asrama aktif untuk membantu koreksi typo ringan.</p>
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">Pilih Kelas</label>
-              <div id="kelas-btn-container" class="flex flex-wrap gap-2.5"></div>
+              <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">Pilih Kelas <span class="text-sky-500">(Tekan Angka 1, 2, 3...)</span></label>
+              <div id="kelas-btn-container" class="flex flex-wrap gap-2.5" tabindex="0" onkeydown="handleKelasContainerKeydown(event)"></div>
+              <p class="text-[11px] text-slate-400 dark:text-slate-500 font-medium mt-2">Hijau = sesuai jadwal (Diutamakan paling kiri/atas). Merah = di luar jadwal.</p>
             </div>
 
             <div>
               <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">Keterangan Paket</label>
               <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-2">
-                <button type="button" onclick="setKeteranganQuick('Online')" class="py-2.5 px-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200">Online</button>
-                <button type="button" onclick="setKeteranganQuick('Non-online')" class="py-2.5 px-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200">Non-online</button>
-                <button type="button" onclick="setKeteranganQuick('HRL')" class="py-2.5 px-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200">HRL</button>
-                <button type="button" onclick="setKeteranganQuick('Food')" class="py-2.5 px-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200">Food</button>
+                <button type="button" onclick="setKeteranganQuick('Online')" class="py-2.5 px-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs transition">Online</button>
+                <button type="button" onclick="setKeteranganQuick('Non-online')" class="py-2.5 px-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs transition">Non-online</button>
+                <button type="button" onclick="setKeteranganQuick('HRL')" class="py-2.5 px-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs transition">HRL</button>
+                <button type="button" onclick="setKeteranganQuick('Food')" class="py-2.5 px-4 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 shadow-2xs transition">Food</button>
               </div>
-              <input type="text" id="inp-keterangan" placeholder="Ketik keterangan khusus jika ada..." class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 text-xs font-medium focus:ring-2 focus:ring-sky-500 focus:outline-none" />
+              <input type="text" id="inp-keterangan" placeholder="Atau ketik keterangan khusus di sini (Enter simpan)..." onkeydown="handleKetKeydown(event)" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl p-3 text-xs font-medium focus:ring-2 focus:ring-sky-500 focus:outline-none shadow-2xs" />
             </div>
 
             <button type="submit" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-xl text-sm shadow-md transition uppercase tracking-wider">
-              SIMPAN DATA PAKET
+              SIMPAN DATA PAKET (ENTER)
             </button>
           </form>
+
+          <!-- STATUS INPUT TERAKHIR -->
+          <div id="card-last-record" class="bg-sky-50/60 dark:bg-sky-950/40 border border-sky-100 dark:border-sky-900 rounded-2xl p-4 flex items-center justify-between transition-all duration-300 ${lastRecord ? '' : 'hidden'}">
+            <div class="flex items-center gap-3">
+              <span class="text-lg">✅</span>
+              <div class="text-xs">
+                <span class="font-extrabold text-slate-800 dark:text-slate-200 block">Input Terakhir Terkini</span>
+                <span id="txt-last-record-detail" class="text-slate-500 dark:text-slate-400 font-medium">${lastRecord ? `${lastRecord.nama} — Kelas ${lastRecord.kelas} \vert{}${lastRecord.tglFormatted || lastRecord.rawTanggal}` : ''}</span>
+              </div>
+            </div>
+            <span class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950 px-2.5 py-1 rounded-full uppercase">Tersimpan</span>
+          </div>
         </div>
       `;
 
       renderKelasButtons(dateToUse);
+
+      setTimeout(() => {
+        const inputNama = document.getElementById('inp-nama');
+        if (inputNama) inputNama.focus();
+      }, 100);
+    }
+
+    function updateSelectedDate(val) {
+      lastSelectedDate = val;
+      renderKelasButtons(val);
     }
 
     function renderKelasButtons(rawDate) {
-      const selectedDate = parseLocalDate(rawDate) || new Date();
+      const selectedDate = parseLocalDate(rawDate);
+      if (!selectedDate) return;
       const dayIndex = selectedDate.getDay();
       const kelasAllowed = jadwalHari[dayIndex] || [];
       const container = document.getElementById('kelas-btn-container');
 
       if (!container) return;
 
-      container.innerHTML = allKelasList.map(k => {
+      sortedKelasListCurrent = [...allKelasList].sort((a, b) => {
+        const aSesuai = kelasAllowed.includes(a);
+        const bSesuai = kelasAllowed.includes(b);
+        if (aSesuai && !bSesuai) return -1;
+        if (!aSesuai && bSesuai) return 1;
+        return 0;
+      });
+
+      const hintList = document.getElementById('shortcut-hint-list');
+      if (hintList) {
+        let hints = sortedKelasListCurrent.map((k, idx) => {
+          if (idx < 9) {
+            return `<span class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2 py-0.5 rounded-md">[ ${idx + 1} ] = ${k}</span>`;
+          }
+          return '';
+        }).join('');
+        hints += `<span class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2 py-0.5 rounded-md">[ 0 ] = 12</span>`;
+        hintList.innerHTML = hints;
+      }
+
+      container.innerHTML = sortedKelasListCurrent.map((k, idx) => {
         const isSesuai = kelasAllowed.includes(k);
         const isSelected = selectedKelasInput === k;
+        
         let bgClass = isSesuai ? "bg-emerald-600 hover:bg-emerald-700 text-white" : "bg-rose-500 hover:bg-rose-600 text-white";
         let borderClass = isSelected ? "ring-4 ring-sky-300 dark:ring-sky-500 scale-105" : "";
+        let badgeNum = idx < 9 ? `<span class="absolute -top-1 -right-1 bg-slate-900 text-white text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-bold">${idx + 1}</span>` : '';
 
         return `
-          <button type="button" onclick="selectKelasBtn('${k}')" class="w-12 h-10 sm:w-14 sm:h-11 rounded-xl font-extrabold text-xs sm:text-sm shadow-xs transition flex items-center justify-center ${bgClass} ${borderClass}">
+          <button type="button" onclick="selectKelasBtn('${k}')" id="btn-k-${k}" class="relative w-12 h-10 sm:w-14 sm:h-11 rounded-xl font-extrabold text-xs sm:text-sm shadow-xs transition flex items-center justify-center ${bgClass} ${borderClass}">
+            ${badgeNum}
             ${k}
           </button>
         `;
@@ -789,38 +1062,80 @@
       renderKelasButtons(rawDate);
     }
 
-    function updateSelectedDate(val) {
-      lastSelectedDate = val;
-      renderKelasButtons(val);
+    // --- KEYBOARD SHORTCUT ENGINE LOGIC ---
+    document.addEventListener('click', (event) => {
+      const input = document.getElementById('inp-nama');
+      const box = document.getElementById('santri-suggestion-box');
+      if (input && box && !input.contains(event.target) && !box.contains(event.target)) {
+        hideSantriSuggestions();
+      }
+    });
+
+    function handleKelasContainerKeydown(e) {
+      if (e.key >= '1' && e.key <= '9') {
+        e.preventDefault();
+        const idx = parseInt(e.key) - 1;
+        if (idx < sortedKelasListCurrent.length) {
+          selectKelasBtn(sortedKelasListCurrent[idx]);
+        }
+      } else if (e.key === '0') {
+        e.preventDefault();
+        selectKelasBtn("12");
+      }
+
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (selectedKelasInput) {
+          handleSavePaket(e);
+        }
+      }
+    }
+
+    function handleKetKeydown(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        handleSavePaket(e);
+      }
     }
 
     function setKeteranganQuick(val) {
-      const ket = document.getElementById('inp-keterangan');
-      if (ket) ket.value = val;
+      document.getElementById('inp-keterangan').value = val;
     }
 
-    async function handleSavePaket(e) {
+    function handleSavePaket(e) {
       if (e) e.preventDefault();
+
       if (!selectedKelasInput) {
         alert("⚠️ Harap pilih salah satu Kelas terlebih dahulu!");
         return;
       }
 
       const rawTanggal = document.getElementById('inp-tanggal').value;
-      const selectedDate = parseLocalDate(rawTanggal) || new Date();
+      lastSelectedDate = rawTanggal;
+
+      const selectedDate = parseLocalDate(rawTanggal);
+      if (!selectedDate) {
+        alert('⚠️ Tanggal paket tidak valid.');
+        return;
+      }
       const dayIndex = selectedDate.getDay();
       const kelasAllowed = jadwalHari[dayIndex] || [];
+
       const nama = document.getElementById('inp-nama').value.trim();
+      if (!nama) return;
+
+      const kelas = selectedKelasInput;
       const keterangan = document.getElementById('inp-keterangan').value.trim();
+
       const tglFormatted = `${namaHari[dayIndex]}, ${selectedDate.toLocaleDateString('id-ID')}`;
-      const isSesuai = kelasAllowed.includes(selectedKelasInput);
+      const isSesuai = kelasAllowed.includes(kelas);
 
       const newItem = {
         id: Date.now(),
         rawTanggal,
         tglFormatted,
         nama,
-        kelas: selectedKelasInput,
+        kelas,
         keterangan,
         isSesuai,
         petugas: currentPetugas
@@ -828,72 +1143,103 @@
 
       dataRekap.push(newItem);
       sortDataRekapNewestFirst();
-      saveDBLocal();
+      saveDB();
 
-      if (supabase) {
-        await supabase.from('rekap_paket').insert([{
-          id: newItem.id,
-          raw_tanggal: rawTanggal,
-          tgl_formatted: tglFormatted,
-          nama,
-          kelas: selectedKelasInput,
-          keterangan,
-          is_sesuai: isSesuai,
-          petugas: currentPetugas
-        }]);
+      document.getElementById('inp-nama').value = '';
+      document.getElementById('inp-keterangan').value = '';
+      selectedKelasInput = "";
+      renderKelasButtons(rawTanggal);
+
+      const cardRecord = document.getElementById('card-last-record');
+      const txtRecord = document.getElementById('txt-last-record-detail');
+      
+      if (cardRecord && txtRecord) {
+        txtRecord.innerText = `${newItem.nama} — Kelas ${newItem.kelas} | ${newItem.tglFormatted || newItem.rawTanggal}`;
+        cardRecord.classList.remove('hidden');
+        cardRecord.classList.add('ring-2', 'ring-emerald-500');
+        setTimeout(() => {
+          cardRecord.classList.remove('ring-2', 'ring-emerald-500');
+        }, 1000);
       }
 
-      alert("✅ Data Paket Berhasil Disimpan!");
-      navigate('dashboard');
+      document.getElementById('inp-nama').focus();
     }
 
+    // --- LIVE VIEW ---
     function renderLive(container) {
+      const sesuai = dataRekap.filter(d => d.isSesuai);
+      const luar = dataRekap.filter(d => !d.isSesuai);
+
       container.innerHTML = `
-        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
-          <h3 class="text-sm font-extrabold text-slate-900 dark:text-white mb-4">📋 Semua Data Live</h3>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs">
-              <thead class="bg-slate-50 dark:bg-slate-800 font-bold text-slate-400 dark:text-slate-400 uppercase">
-                <tr><th class="p-3">Tanggal</th><th class="p-3">Nama</th><th class="p-3">Kelas</th><th class="p-3">Status</th><th class="p-3 text-right">Aksi</th></tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
-                ${dataRekap.map(d => `
-                  <tr>
-                    <td class="p-3">${escapeHTML(d.tglFormatted || d.rawTanggal)}</td>
-                    <td class="p-3 font-bold text-slate-900 dark:text-white">${escapeHTML(d.nama)}</td>
-                    <td class="p-3 font-semibold">${escapeHTML(d.kelas)}</td>
-                    <td class="p-3">${d.isSesuai ? '✅ Sesuai' : '⚠️ Luar Jadwal'}</td>
-                    <td class="p-3 text-right">
-                      <button onclick="openEditModal(${d.id})" class="text-amber-600 dark:text-amber-400 font-bold hover:underline mr-3">Edit</button>
-                      <button onclick="deletePaket(${d.id})" class="text-rose-600 dark:text-rose-400 font-bold hover:underline">Hapus</button>
-                    </td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
+        <div class="space-y-6">
+          <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white mb-4">✅ Data Sesuai Jadwal</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 dark:bg-slate-800 font-bold text-slate-400 dark:text-slate-400 uppercase">
+                  <tr><th class="p-3">Tanggal</th><th class="p-3">Nama</th><th class="p-3">Kelas</th><th class="p-3">Petugas</th><th class="p-3 text-right">Aksi</th></tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+                  ${sesuai.map(d => `
+                    <tr>
+                      <td class="p-3">${escapeHTML(d.tglFormatted || d.rawTanggal)}</td>
+                      <td class="p-3 font-bold text-slate-900 dark:text-white">${escapeHTML(d.nama)}</td>
+                      <td class="p-3 font-semibold">${escapeHTML(d.kelas)}</td>
+                      <td class="p-3 text-slate-500 dark:text-slate-400">${escapeHTML(d.petugas || '-')}</td>
+                      <td class="p-3 text-right">
+                        <button onclick="openEditModal(${d.id})" class="text-amber-600 dark:text-amber-400 font-bold hover:underline mr-3">Edit</button>
+                        <button onclick="deletePaket(${d.id})" class="text-rose-600 dark:text-rose-400 font-bold hover:underline">Hapus</button>
+                      </td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white mb-4">⚠️ Data Di Luar Jadwal (Online/Izin)</h3>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-50 dark:bg-slate-800 font-bold text-slate-400 dark:text-slate-400 uppercase">
+                  <tr><th class="p-3">Tanggal</th><th class="p-3">Nama</th><th class="p-3">Kelas</th><th class="p-3">Keterangan</th><th class="p-3">Petugas</th><th class="p-3">Status</th><th class="p-3 text-right">Aksi</th></tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+                  ${luar.map(d => `
+                    <tr>
+                      <td class="p-3">${escapeHTML(d.tglFormatted || d.rawTanggal)}</td>
+                      <td class="p-3 font-bold text-slate-900 dark:text-white">${escapeHTML(d.nama)}</td>
+                      <td class="p-3 font-semibold">${escapeHTML(d.kelas)}</td>
+                      <td class="p-3">${escapeHTML(d.keterangan || '-')}</td>
+                      <td class="p-3 text-slate-500 dark:text-slate-400">${escapeHTML(d.petugas || '-')}</td>
+                      <td class="p-3">
+                        <span class="px-2 py-0.5 rounded font-bold text-[10px] ${d.keterangan ? 'bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-400' : 'bg-rose-100 dark:bg-rose-950/80 text-rose-800 dark:text-rose-400'}">
+                          ${d.keterangan ? 'Dilegalkan' : 'Belum Dilegalkan'}
+                        </span>
+                      </td>
+                      <td class="p-3 text-right">
+                        <button onclick="openEditModal(${d.id})" class="text-amber-600 dark:text-amber-400 font-bold hover:underline mr-3">Edit</button>
+                        <button onclick="deletePaket(${d.id})" class="text-rose-600 dark:text-rose-400 font-bold hover:underline">Hapus</button>
+                      </td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       `;
     }
 
-    function renderRekap(container) {
-      container.innerHTML = `
-        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4">
-          <h2 class="text-lg font-extrabold text-slate-900 dark:text-white">📊 Rekapitulasi Data Paket</h2>
-          <p class="text-xs text-slate-500">Total Data Terdaftar: <strong>${dataRekap.length}</strong> Paket</p>
-        </div>
-      `;
+    function deletePaket(id) {
+      if (confirm('Apakah Bos yakin mau menghapus data ini?')) {
+        dataRekap = dataRekap.filter(d => String(d.id) !== String(id));
+        saveDB();
+        navigate(currentTab);
+      }
     }
 
-    function renderMigrasi(container) {
-      container.innerHTML = `
-        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-4">
-          <h2 class="text-lg font-extrabold text-slate-900 dark:text-white">🔄 Migrasi & Auto-Merge Cloud</h2>
-          <p class="text-xs text-slate-500">Gunakan menu ini untuk menyinkronkan atau mengimpor file backup JSON manual.</p>
-        </div>
-      `;
-    }
-
+    // --- MODAL EDIT / HAPUS ENGINE ---
     function openEditModal(id) {
       const item = dataRekap.find(d => String(d.id) === String(id));
       if (!item) return;
@@ -904,48 +1250,346 @@
       document.getElementById('edit-tanggal').value = item.rawTanggal;
       document.getElementById('edit-keterangan').value = item.keterangan || '';
 
-      document.getElementById('editModal').classList.remove('hidden');
+      const modal = document.getElementById('editModal');
+      modal.classList.remove('hidden');
+      lucide.createIcons();
     }
 
     function closeEditModal() {
       document.getElementById('editModal').classList.add('hidden');
     }
 
-    async function saveEditModal() {
+    function saveEditModal() {
       const id = document.getElementById('edit-id').value;
       const nama = document.getElementById('edit-nama').value.trim();
       const kelas = document.getElementById('edit-kelas').value.trim().toUpperCase();
       const rawTanggal = document.getElementById('edit-tanggal').value;
       const keterangan = document.getElementById('edit-keterangan').value.trim();
 
+      if (!nama || !kelas || !rawTanggal) {
+        alert("⚠️ Nama, Kelas, dan Tanggal tidak boleh kosong!");
+        return;
+      }
+
+      const selectedDate = parseLocalDate(rawTanggal);
+      if (!selectedDate) {
+        alert("⚠️ Tanggal tidak valid!");
+        return;
+      }
+
+      const dayIndex = selectedDate.getDay();
+      const kelasAllowed = jadwalHari[dayIndex] || [];
+      const isSesuai = kelasAllowed.includes(kelas);
+      const tglFormatted = `${namaHari[dayIndex]}, ${selectedDate.toLocaleDateString('id-ID')}`;
+
       const index = dataRekap.findIndex(d => String(d.id) === String(id));
       if (index !== -1) {
-        dataRekap[index].nama = nama;
-        dataRekap[index].kelas = kelas;
-        dataRekap[index].rawTanggal = rawTanggal;
-        dataRekap[index].keterangan = keterangan;
-
-        saveDBLocal();
+        dataRekap[index] = {
+          ...dataRekap[index],
+          nama,
+          kelas,
+          rawTanggal,
+          tglFormatted,
+          keterangan,
+          isSesuai
+        };
+        sortDataRekapNewestFirst();
+        saveDB();
         closeEditModal();
         navigate(currentTab);
       }
     }
 
-    async function deletePaket(id) {
-      if (confirm('Hapus paket ini?')) {
+    function deletePaketFromModal() {
+      const id = document.getElementById('edit-id').value;
+      if (confirm('Apakah Bos yakin mau menghapus data ini?')) {
         dataRekap = dataRekap.filter(d => String(d.id) !== String(id));
-        saveDBLocal();
-        if (supabase) await supabase.from('rekap_paket').delete().eq('id', id);
+        saveDB();
+        closeEditModal();
         navigate(currentTab);
       }
     }
 
-    async function deletePaketFromModal() {
-      const id = document.getElementById('edit-id').value;
-      await deletePaket(id);
-      closeEditModal();
+    // --- REKAP VIEW ---
+    function renderRekap(container) {
+      const todayISO = getLocalDateISO();
+
+      container.innerHTML = `
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-6">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">📊</span>
+              <h2 class="text-lg font-extrabold text-slate-900 dark:text-white">Rekapitulasi Data Paket</h2>
+            </div>
+            <button onclick="exportCSV('semua')" class="px-5 py-2.5 bg-sky-500 hover:bg-sky-600 text-white font-extrabold rounded-xl text-xs shadow-sm transition">
+              Export Semua Data
+            </button>
+          </div>
+
+          <div class="flex flex-wrap gap-2 border-b border-slate-100 dark:border-slate-800 pb-4">
+            <button onclick="filterPeriodik('hari', this)" class="sub-filter-btn px-4 py-2 rounded-full text-xs font-extrabold transition bg-sky-500 text-white shadow-xs">Hari Ini</button>
+            <button onclick="filterPeriodik('minggu', this)" class="sub-filter-btn px-4 py-2 rounded-full text-xs font-extrabold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">Minggu Ini</button>
+            <button onclick="filterPeriodik('bulan', this)" class="sub-filter-btn px-4 py-2 rounded-full text-xs font-extrabold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">Bulan Ini</button>
+            <button onclick="filterPeriodik('semua', this)" class="sub-filter-btn px-4 py-2 rounded-full text-xs font-extrabold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">Semua Data</button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="bg-white dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs text-center space-y-1">
+              <span class="text-xs font-bold text-slate-400 dark:text-slate-400">Total Paket</span>
+              <div id="stat-total" class="text-3xl font-black text-slate-900 dark:text-white">0</div>
+            </div>
+            <div class="bg-white dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs text-center space-y-1">
+              <span class="text-xs font-bold text-slate-400 dark:text-slate-400">Sesuai Jadwal</span>
+              <div id="stat-sesuai" class="text-3xl font-black text-emerald-600 dark:text-emerald-400">0</div>
+            </div>
+            <div class="bg-white dark:bg-slate-800/60 p-5 rounded-2xl border border-slate-100 dark:border-slate-800 shadow-xs text-center space-y-1">
+              <span class="text-xs font-bold text-slate-400 dark:text-slate-400">Di Luar Jadwal</span>
+              <div id="stat-luar" class="text-3xl font-black text-amber-600 dark:text-amber-400">0</div>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 dark:bg-slate-800/80 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="space-y-1">
+              <span class="text-xs font-extrabold text-slate-800 dark:text-slate-200 block">📅 Export CSV Berdasarkan Tanggal:</span>
+              <p class="text-[10px] text-slate-400 dark:text-slate-500">Pilih rentang tanggal. Data akan otomatis dipisah menjadi file CSV per bulan.</p>
+              <div class="flex flex-wrap items-center gap-2 mt-2">
+                <input type="date" id="export-start" value="${todayISO}" class="bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100 rounded-lg p-2 text-xs font-bold" />
+                <span class="text-xs font-bold text-slate-400">s/d</span>
+                <input type="date" id="export-end" value="${todayISO}" class="bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100 rounded-lg p-2 text-xs font-bold" />
+              </div>
+            </div>
+            <button onclick="exportCSVByDateRange()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow-xs transition shrink-0">
+              Export Rentang Tanggal
+            </button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="text-slate-500 dark:text-slate-400 font-extrabold border-b border-slate-100 dark:border-slate-800">
+                <tr>
+                  <th class="pb-3 w-32">Tanggal</th>
+                  <th class="pb-3">Nama</th>
+                  <th class="pb-3 w-20">Kelas</th>
+                  <th class="pb-3 w-32">Kategori</th>
+                  <th class="pb-3">Keterangan</th>
+                  <th class="pb-3 text-right">Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="tabel-rekap-body" class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300"></tbody>
+            </table>
+          </div>
+        </div>
+      `;
+
+      filterPeriodik('hari', document.querySelector('.sub-filter-btn'));
     }
 
+    function filterPeriodik(period, btn) {
+      document.querySelectorAll('.sub-filter-btn').forEach(b => {
+        b.classList.remove('bg-sky-500', 'text-white', 'shadow-xs');
+        b.classList.add('text-slate-600', 'dark:text-slate-300', 'bg-slate-100', 'dark:bg-slate-800');
+      });
+      if(btn) {
+        btn.classList.add('bg-sky-500', 'text-white', 'shadow-xs');
+        btn.classList.remove('text-slate-600', 'dark:text-slate-300', 'bg-slate-100', 'dark:bg-slate-800');
+      }
+
+      activeFilterRekap = period;
+      const todayISO = getLocalDateISO();
+      const now = new Date();
+
+      let filtered = dataRekap.filter(d => {
+        if (!d.rawTanggal) return false;
+        const itemDate = new Date(d.rawTanggal + "T00:00:00");
+
+        if (period === 'hari') return d.rawTanggal === todayISO;
+        if (period === 'minggu') {
+          const dayOfWeek = now.getDay();
+          const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+          const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() + mondayOffset);
+          const weekEnd = new Date(weekStart.getFullYear(), weekStart.getMonth(), weekStart.getDate() + 7);
+          return itemDate >= weekStart && itemDate < weekEnd;
+        }
+        if (period === 'bulan') return itemDate.getMonth() === now.getMonth() && itemDate.getFullYear() === now.getFullYear();
+        return true;
+      });
+
+      document.getElementById('stat-total').innerText = filtered.length;
+      document.getElementById('stat-sesuai').innerText = filtered.filter(d => d.isSesuai).length;
+      document.getElementById('stat-luar').innerText = filtered.filter(d => !d.isSesuai).length;
+
+      const tbody = document.getElementById('tabel-rekap-body');
+      tbody.innerHTML = '';
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-400 dark:text-slate-500 font-medium">Belum ada data untuk periode ini.</td></tr>`;
+        return;
+      }
+
+      filtered.forEach(d => {
+        tbody.innerHTML += `
+          <tr>
+            <td class="py-3 font-medium text-slate-500 dark:text-slate-400">${escapeHTML(d.tglFormatted || d.rawTanggal)}</td>
+            <td class="py-3 font-bold text-slate-900 dark:text-white">${escapeHTML(d.nama)}</td>
+            <td class="py-3 font-semibold text-slate-700 dark:text-slate-300">${escapeHTML(d.kelas)}</td>
+            <td class="py-3">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${d.isSesuai ? 'bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400' : 'bg-amber-50 dark:bg-amber-950/80 text-amber-700 dark:text-amber-400'}">
+                ${d.isSesuai ? 'Sesuai Jadwal' : 'Di Luar Jadwal'}
+              </span>
+            </td>
+            <td class="py-3 text-slate-600 dark:text-slate-400">${escapeHTML(d.keterangan || '-')}</td>
+            <td class="py-3 text-right">
+              <button onclick="openEditModal(${d.id})" class="px-2.5 py-1 bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 font-bold rounded-lg hover:bg-amber-100 transition text-[11px]">Edit / Hapus</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function exportCSV(tipe) {
+      if (!dataRekap.length) {
+        alert('Gak ada data yang bisa di-export nih!');
+        return;
+      }
+      exportMonthlyCSVGroups(dataRekap, 'semua');
+    }
+
+    function exportMonthlyCSVGroups(listData, mode = 'rentang') {
+      const groups = {};
+      [...listData].sort((a, b) => {
+        const dateCompare = (b.rawTanggal || '').localeCompare(a.rawTanggal || '');
+        return dateCompare || (Number(b.id || 0) - Number(a.id || 0));
+      }).forEach(item => {
+        const monthKey = String(item.rawTanggal || '').slice(0, 7);
+        if (!/^\d{4}-\d{2}$/.test(monthKey)) return;
+        (groups[monthKey] ||= []).push(item);
+      });
+
+      const months = Object.keys(groups).sort().reverse();
+      if (!months.length) {
+        alert('⚠️ Tidak ada data dengan tanggal yang valid untuk di-export.');
+        return;
+      }
+
+      months.forEach((monthKey, index) => {
+        setTimeout(() => {
+          const suffix = mode === 'semua' ? monthKey : `bulan_${monthKey}`;
+          generateCSVBlob(groups[monthKey], `Rekap_Paket_${suffix}.csv`);
+        }, index * 450);
+      });
+
+      if (months.length > 1) {
+        alert(`✅ ${months.length} file CSV akan di-download, masing-masing 1 file untuk setiap bulan.`);
+      }
+    }
+
+    function exportCSVByDateRange() {
+      const start = document.getElementById('export-start').value;
+      const end = document.getElementById('export-end').value;
+
+      if (!start || !end) {
+        alert('⚠️ Pilih tanggal mulai dan tanggal akhir dulu ya!');
+        return;
+      }
+      if (!parseLocalDate(start) || !parseLocalDate(end)) { alert('⚠️ Format tanggal tidak valid.'); return; }
+      if (start > end) { alert('⚠️ Tanggal mulai tidak boleh setelah tanggal akhir.'); return; }
+
+      const filtered = dataRekap.filter(d => d.rawTanggal >= start && d.rawTanggal <= end);
+
+      if (!filtered.length) {
+        alert(`Gak ada data paket di rentang tanggal ${start} s/d ${end}!`);
+        return;
+      }
+
+      exportMonthlyCSVGroups(filtered, 'rentang');
+    }
+
+    function generateCSVBlob(listData, filename) {
+      const BOM = "\uFEFF";
+      let csvRows = [["Tanggal Rekap", "Nama", "Kelas", "Kategori Rekap", "Keterangan", "Petugas", "Status Legalitas"].join(",")];
+
+      [...listData].sort((a, b) => {
+        const dateCompare = (b.rawTanggal || '').localeCompare(a.rawTanggal || '');
+        return dateCompare || (Number(b.id || 0) - Number(a.id || 0));
+      }).forEach(i => {
+        let kategori = i.isSesuai ? "Sesuai Jadwal" : "Di Luar Jadwal";
+        let status = i.isSesuai ? "Sesuai Jadwal" : (i.keterangan ? `Dilegalkan (${i.keterangan})` : "Belum Dilegalkan");
+        csvRows.push([
+          `"${(i.tglFormatted || i.rawTanggal).replace(/"/g, '""')}"`,
+          `"${i.nama.replace(/"/g, '""')}"`,
+          `"${i.kelas}"`,
+          `"${kategori}"`,
+          `"${(i.keterangan || '-').replace(/"/g, '""')}"`,
+          `"${i.petugas || '-'}"`,
+          `"${status.replace(/"/g, '""')}"`
+        ].join(","));
+      });
+
+      const blob = new Blob([BOM + csvRows.join("\n")], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // --- TAB MIGRASI DATA ---
+    function renderMigrasi(container) {
+      const jsonString = JSON.stringify([...dataRekap], null, 2);
+
+      container.innerHTML = `
+        <div class="space-y-6">
+          <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white mb-1">📤 Export / Copy Data Lokal</h3>
+            <p class="text-xs text-slate-400 dark:text-slate-500 mb-4">Salin kode JSON di bawah ini untuk disimpan atau dipindahkan ke device lain.</p>
+            <textarea id="txt-export" readonly class="w-full h-36 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl p-3 font-mono text-[11px] focus:outline-none">${jsonString}</textarea>
+            <button onclick="copyExportJSON()" class="mt-2 px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl text-xs flex items-center gap-2">
+              <i data-lucide="copy" class="w-4 h-4"></i> Copy Kode JSON
+            </button>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
+            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white mb-1">📥 Import / Paste Data</h3>
+            <p class="text-xs text-slate-400 dark:text-slate-500 mb-4">Paste kode JSON dari backup lama ke bawah ini, lalu klik tombol **Import Data**.</p>
+            <textarea id="txt-import" placeholder='Paste kode JSON di sini (Contoh: [{"nama":"Budi","kelas":"8A"...}])' class="w-full h-36 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl p-3 font-mono text-[11px] focus:bg-white dark:focus:bg-slate-800 focus:ring-2 focus:ring-amber-500 focus:outline-none"></textarea>
+            <button onclick="importJSONData()" class="mt-2 px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-xs flex items-center gap-2">
+              <i data-lucide="download-cloud" class="w-4 h-4"></i> Import Data
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function copyExportJSON() {
+      const copyText = document.getElementById("txt-export");
+      copyText.select();
+      document.execCommand("copy");
+      alert("✅ Kode JSON berhasil di-copy!");
+    }
+
+    function importJSONData() {
+      let importVal = document.getElementById("txt-import").value.trim();
+      if (!importVal) { alert("⚠️ Tempel (paste) kode JSON dulu ya!"); return; }
+      try {
+        const firstBracket = importVal.indexOf('[');
+        const lastBracket = importVal.lastIndexOf(']');
+        if (firstBracket !== -1 && lastBracket !== -1) importVal = importVal.substring(firstBracket, lastBracket + 1);
+        const parsed = JSON.parse(importVal);
+        if (!Array.isArray(parsed)) { alert("❌ Format JSON harus berupa list/array."); return; }
+        const valid = parsed.filter(isValidPackageRecord).map(normalizePackageRecord);
+        const rejected = parsed.length - valid.length;
+        if (parsed.length > 0 && valid.length === 0) { alert("❌ Tidak ada data valid yang bisa di-import. Pastikan format data sesuai backup Paket Control."); return; }
+        dataRekap = valid;
+        sortDataRekapNewestFirst();
+        saveDB();
+        alert(`✅ Sukses! ${valid.length} data berhasil di-import${rejected ? `, ${rejected} data tidak valid dilewati.` : '.'}`);
+        navigate('dashboard');
+      } catch (err) { alert("❌ Gagal membaca JSON: " + err.message); }
+    }
+
+    // --- AI CHATBOT ENGINE LOGIC ---
     async function handleAiChatSubmit(e) {
       e.preventDefault();
       const inputEl = document.getElementById('aiChatInput');
@@ -953,26 +1597,300 @@
       const text = inputEl.value.trim();
       if (!text) return;
 
-      chatBox.innerHTML += `<div class="bg-sky-500 text-white p-2.5 rounded-2xl font-medium ml-4 text-right text-[11px]">${text}</div>`;
+      chatBox.innerHTML += `
+        <div class="bg-sky-500 text-white p-2.5 rounded-2xl font-medium ml-4 text-right text-[11px]">
+          ${text}
+        </div>
+      `;
       inputEl.value = '';
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      const lower = text.toLowerCase();
+
+      // 1. INTENT DETEKSI HAPUS DATA
+      if (lower.includes('hapus') || lower.includes('hilangin') || lower.includes('delete') || lower.includes('buang')) {
+        const words = text.split(/\s+/);
+        let targetNama = "";
+        
+        const matchNama = text.match(/(?:nama|namanya|paket|punya|data|atas nama)\s+([A-Za-z0-9]+)/i);
+        if (matchNama) {
+          targetNama = matchNama[1].trim().toLowerCase();
+        } else {
+          targetNama = words[words.length - 1].toLowerCase();
+        }
+
+        if (targetNama && targetNama.length > 1) {
+          const initLen = dataRekap.length;
+          dataRekap = dataRekap.filter(d => !d.nama.toLowerCase().includes(targetNama));
+          if (dataRekap.length < initLen) {
+            saveDB();
+            navigate(currentTab);
+            chatBox.innerHTML += `
+              <div class="bg-rose-50 dark:bg-rose-950/80 border border-rose-200 dark:border-rose-800 p-2.5 rounded-2xl text-rose-800 dark:text-rose-300 font-bold text-[11px]">
+                🗑️ Berhasil hapus semua data paket yang namanya "${targetNama}", Bro!
+              </div>
+            `;
+            chatBox.scrollTop = chatBox.scrollHeight;
+            return;
+          }
+        }
+      }
+
+      // 2. INTENT DETEKSI INPUT DATA
+      if (lower.includes('input') || lower.includes('tambah') || lower.includes('masukin') || lower.includes('catat')) {
+        const matchNama = text.match(/(?:paket|nama|penerima)\s+([A-Za-z\s]+?)(?=\s+kelas|\s+ket|$)/i);
+        const matchKelas = text.match(/kelas\s+([0-9A-Ea-e]+)/i);
+        const matchKet = text.match(/ket(?:erangan)?\s+(.+)/i);
+
+        if (matchNama && matchKelas) {
+          const nama = matchNama[1].trim();
+          const kelas = matchKelas[1].toUpperCase();
+          const keterangan = matchKet ? matchKet[1].trim() : '';
+          const todayISO = new Date().toISOString().split('T')[0];
+          const dayIndex = new Date().getDay();
+          const kelasAllowed = jadwalHari[dayIndex] || [];
+          const isSesuai = kelasAllowed.includes(kelas);
+
+          const newItem = {
+            id: Date.now(),
+            rawTanggal: todayISO,
+            tglFormatted: `${namaHari[dayIndex]}, ${new Date().toLocaleDateString('id-ID')}`,
+            nama,
+            kelas,
+            keterangan,
+            isSesuai,
+            petugas: currentPetugas
+          };
+
+          dataRekap.push(newItem);
+          saveDB();
+          navigate(currentTab);
+
+          chatBox.innerHTML += `
+            <div class="bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800 p-2.5 rounded-2xl text-emerald-800 dark:text-emerald-300 font-bold text-[11px]">
+              ✅ Berhasil diinput! Paket buat <strong>${nama}</strong> (Kelas ${kelas}) udah masuk ke tabel ya!
+            </div>
+          `;
+          chatBox.scrollTop = chatBox.scrollHeight;
+          return;
+        }
+      }
+
+      // 3. CASUAL CHAT VIA GROQ API
+      if (!groqApiKey) {
+        chatBox.innerHTML += `
+          <div class="bg-sky-50 dark:bg-sky-950/60 border border-sky-100 dark:border-sky-900 p-2.5 rounded-2xl text-slate-700 dark:text-slate-300 text-[11px]">
+            ⚙️ Bro Lanaa, klik ikon gear di atas buat masukin **Groq API Key** dulu ya!
+          </div>
+        `;
+        chatBox.scrollTop = chatBox.scrollHeight;
+        return;
+      }
+
+      chatBox.innerHTML += `<div id="aiLoading" class="text-slate-400 italic text-[10px]">Groq AI lagi mikir kilat...</div>`;
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      async function callGroqModel(modelName) {
+        return await fetch(`https://api.groq.com/openai/v1/chat/completions`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${groqApiKey}`
+          },
+          body: JSON.stringify({
+            model: modelName,
+            messages: [
+              {
+                role: "system",
+                content: "Kamu adalah AI Assistant gaul PaketBot untuk Bos Lanaa di aplikasi Paket Control Center. Selalu merespon menggunakan Bahasa Indonesia gaul, santai, akrab, ramah, dan cepat layaknya teman nongkrong. Dilarang menggunakan Bahasa Jawa."
+              },
+              {
+                role: "user",
+                content: text
+              }
+            ],
+            temperature: 0.7
+          })
+        });
+      }
+
+      try {
+        let res = await callGroqModel("openai/gpt-oss-20b");
+        let data = await res.json();
+
+        if (data.error && data.error.message && data.error.message.includes('does not exist')) {
+          res = await callGroqModel("openai/gpt-oss-120b");
+          data = await res.json();
+        }
+
+        document.getElementById('aiLoading')?.remove();
+
+        if (data.error) {
+          chatBox.innerHTML += `
+            <div class="bg-rose-50 dark:bg-rose-950/80 p-2.5 rounded-2xl text-rose-600 dark:text-rose-300 text-[11px]">
+              ⚠️ Groq API Error: ${data.error.message || 'Key tidak valid'}.
+            </div>
+          `;
+        } else {
+          const reply = data.choices?.[0]?.message?.content || "Aduh, bingung nih mau jawab apa Bro!";
+          chatBox.innerHTML += `
+            <div class="bg-sky-50 dark:bg-sky-950/60 border border-sky-100 dark:border-sky-900 p-2.5 rounded-2xl text-slate-800 dark:text-slate-200 text-[11px]">
+              ${reply}
+            </div>
+          `;
+        }
+      } catch (err) {
+        document.getElementById('aiLoading')?.remove();
+        chatBox.innerHTML += `<div class="bg-rose-50 dark:bg-rose-950/80 p-2.5 rounded-2xl text-rose-600 dark:text-rose-300 text-[11px]">Gagal konek ke Groq API, Bro! Coba cek internet kamu deh.</div>`;
+      }
       chatBox.scrollTop = chatBox.scrollHeight;
     }
 
     function setApiKey() {
-      const inputKey = prompt("Masukkan Groq API Key:", groqApiKey);
+      const inputKey = prompt("Masukkan Groq API Key milikmu:", groqApiKey);
       if (inputKey !== null) {
         groqApiKey = inputKey.trim();
         localStorage.setItem('groq_api_key', groqApiKey);
+        alert("✅ Groq API Key tersimpan!");
       }
     }
 
-    // INITALIZATION UTAMA
     window.addEventListener('DOMContentLoaded', async () => {
       initTheme();
-      sortDataRekapNewestFirst();
+      updateOnlineStatus();
       navigate('dashboard');
-      await loadCloudData();
     });
+
+    // ===== GLOBAL DATA SEARCH =====
+    (function initGlobalDataSearch() {
+      const input = document.getElementById('globalDataSearch');
+      const box = document.getElementById('globalSearchResults');
+      if (!input || !box) return;
+
+      let activeIndex = -1;
+      let results = [];
+
+      const esc = (value) => String(value ?? '').replace(/[&<>"']/g, ch => ({
+        '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;'
+      }[ch]));
+
+      const normalize = (value) => String(value ?? '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+      const getRows = () => {
+        if (Array.isArray(window.dataRekap)) return window.dataRekap;
+        if (typeof dataRekap !== 'undefined' && Array.isArray(dataRekap)) return dataRekap;
+        return [];
+      };
+
+      const render = () => {
+        if (!results.length) {
+          box.innerHTML = input.value.trim()
+            ? '<div class="p-4 text-xs font-semibold text-slate-400 dark:text-slate-500 text-center">Data paket tidak ditemukan.</div>'
+            : '';
+          box.classList.toggle('hidden', !input.value.trim());
+          return;
+        }
+
+        box.innerHTML = results.slice(0, 8).map((item, i) => {
+          const row = item.row;
+          const name = row.nama || '-';
+          const kelas = row.kelas || '-';
+          const petugas = row.petugas || '-';
+          const tanggal = row.tglFormatted || row.rawTanggal || '-';
+          const ket = row.keterangan || 'Tanpa Keterangan';
+
+          return `
+            <div class="global-search-item w-full px-4 py-3 border-b last:border-b-0 border-slate-100 dark:border-slate-800 hover:bg-sky-50 dark:hover:bg-slate-800/80 transition flex items-center justify-between gap-3 cursor-pointer" data-index="${i}" aria-selected="${i === activeIndex}">
+              <div class="min-w-0 flex-1" onclick="selectAndEdit(${row.id})">
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-100 truncate">${esc(name)}</span>
+                  <span class="px-2 py-0.5 rounded-md bg-sky-100 dark:bg-sky-950 text-sky-700 dark:text-sky-300 text-[10px] font-bold shrink-0">Kelas ${esc(kelas)}</span>
+                </div>
+                <div class="mt-1 text-[11px] text-slate-400 dark:text-slate-500 truncate">
+                  ${esc(ket)} • Petugas: ${esc(petugas)}
+                </div>
+              </div>
+              <div class="shrink-0 flex items-center gap-2">
+                <span class="text-[10px] text-slate-400 dark:text-slate-500 hidden sm:inline">${esc(tanggal)}</span>
+                <button onclick="event.stopPropagation(); openEditModal(${row.id}); document.getElementById('globalSearchResults').classList.add('hidden');" class="px-2.5 py-1 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-lg text-[10px] transition">
+                  Edit/Hapus
+                </button>
+              </div>
+            </div>`;
+        }).join('');
+
+        box.classList.remove('hidden');
+        box.querySelectorAll('.global-search-item').forEach(btn => {
+          btn.addEventListener('mouseenter', () => {
+            activeIndex = Number(btn.dataset.index);
+          });
+        });
+      };
+
+      window.selectAndEdit = (id) => {
+        box.classList.add('hidden');
+        openEditModal(id);
+      };
+
+      const doSearch = () => {
+        const q = normalize(input.value.trim());
+        activeIndex = -1;
+        if (!q) {
+          results = [];
+          box.classList.add('hidden');
+          return;
+        }
+
+        results = getRows().map(row => {
+          const haystack = normalize([
+            row.nama, row.kelas, row.petugas, row.keterangan,
+            row.rawTanggal, row.tglFormatted
+          ].join(' '));
+          const pos = haystack.indexOf(q);
+          return { row, score: pos === -1 ? Infinity : pos, query: input.value.trim() };
+        }).filter(x => x.score !== Infinity)
+          .sort((a,b) => a.score - b.score)
+          .slice(0, 8);
+
+        render();
+      };
+
+      input.addEventListener('input', doSearch);
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown' && results.length) {
+          e.preventDefault();
+          activeIndex = (activeIndex + 1) % Math.min(results.length, 8);
+          render();
+        } else if (e.key === 'ArrowUp' && results.length) {
+          e.preventDefault();
+          activeIndex = activeIndex <= 0 ? Math.min(results.length, 8) - 1 : activeIndex - 1;
+          render();
+        } else if (e.key === 'Enter' && results.length) {
+          e.preventDefault();
+          const target = results[activeIndex >= 0 ? activeIndex : 0];
+          if (target) {
+            box.classList.add('hidden');
+            openEditModal(target.row.id);
+          }
+        } else if (e.key === 'Escape') {
+          box.classList.add('hidden');
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!input.contains(e.target) && !box.contains(e.target)) box.classList.add('hidden');
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+          e.preventDefault();
+          input.focus();
+          input.select();
+        }
+      });
+
+      if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
+    })();
   </script>
 </body>
 </html>
