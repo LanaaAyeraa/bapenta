@@ -13,6 +13,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -114,6 +115,17 @@
         <button onclick="toggleDarkMode()" id="btn-theme-toggle" title="Ubah Mode Tampilan" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-amber-400 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition border border-slate-200 dark:border-slate-700 overflow-hidden">
           <i data-lucide="moon" id="icon-theme" class="w-4 h-4"></i>
         </button>
+
+        <a
+          href="https://supabase.com/dashboard/project/hidgkvfrniimzteypmfv/storage/buckets"
+          target="_blank"
+          rel="noopener noreferrer"
+          id="btn-cloud-storage"
+          title="Buka Cloud Storage Supabase"
+          class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-sky-400 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition border border-slate-200 dark:border-slate-700"
+          aria-label="Buka Cloud Storage Supabase">
+          <i data-lucide="cloud" class="w-4 h-4"></i>
+        </a>
 
         <!-- PETUGAS PIKET SELECTOR -->
         <div class="flex items-center gap-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-full px-3 py-1.5 shadow-2xs">
@@ -1891,6 +1903,439 @@
 
       if (typeof lucide !== 'undefined' && lucide.createIcons) lucide.createIcons();
     })();
+
+
+    // ============================================================
+    // BAPENTA - SUPABASE SYNC ONLY
+    // Catatan: bagian ini sengaja terpisah agar fitur/UI lama
+    // tidak diubah. localStorage tetap menjadi cache/offline utama.
+    // ============================================================
+    (function initBapentaSupabaseSync() {
+      const SUPABASE_URL = 'https://hidgkvfrniimzteypmfv.supabase.co';
+      const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_D9VXgBCMsA0yjHw_RD08-w_USLrszfU';
+      const SYNC_STATE_KEY = 'bapenta_supabase_sync_state_v1';
+      const DEVICE_ID_KEY = 'bapenta_device_id_v1';
+      const SYNC_DEBOUNCE_MS = 1200;
+      const BACKUP_BUCKET = 'bapenta-files';
+      const BACKUP_STATE_KEY = 'bapenta_supabase_backup_state_v1';
+      const BACKUP_MIN_INTERVAL_MS = 30 * 60 * 1000; // maksimal 1 backup / 30 menit per device
+
+      if (!window.supabase || !window.supabase.createClient) {
+        console.warn('[Bapenta Sync] Supabase client tidak tersedia. Mode lokal tetap berjalan.');
+        return;
+      }
+
+      const supabaseClient = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY,
+        { auth: { persistSession: false, autoRefreshToken: false } }
+      );
+      window.bapentaSupabase = supabaseClient;
+
+      function getDeviceId() {
+        let id = localStorage.getItem(DEVICE_ID_KEY);
+        if (!id) {
+          id = (crypto && crypto.randomUUID)
+            ? crypto.randomUUID()
+            : 'device-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+          localStorage.setItem(DEVICE_ID_KEY, id);
+        }
+        return id;
+      }
+
+      const deviceId = getDeviceId();
+
+      function normalizeSyncText(value) {
+        return String(value ?? '')
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/\s+/g, ' ')
+          .trim();
+      }
+
+      function makeSyncKey(item) {
+        return [
+          String(item.rawTanggal || '').trim(),
+          normalizeSyncText(item.nama),
+          normalizeSyncText(item.kelas),
+          normalizeSyncText(item.keterangan || '')
+        ].join('|');
+      }
+
+      function makeLocalId() {
+        const now = Date.now();
+        const random = Math.floor(Math.random() * 100000);
+        return Number(String(now) + String(random).padStart(5, '0'));
+      }
+
+      function toCloudPackage(item) {
+        return {
+          tanggal: item.rawTanggal,
+          nama: String(item.nama || '').trim(),
+          kelas: String(item.kelas || '').trim().toUpperCase(),
+          keterangan: String(item.keterangan || '').trim(),
+          petugas: String(item.petugas || currentPetugas || 'Tidak diketahui').trim(),
+          status: item.isSesuai ? 'sesuai' : 'luar_jadwal',
+          sync_key: makeSyncKey(item),
+          device_id: deviceId,
+          local_id: String(item.id ?? '')
+        };
+      }
+
+      function fromCloudPackage(row, existingByKey) {
+        const syncKey = row.sync_key || [
+          String(row.tanggal || ''),
+          normalizeSyncText(row.nama),
+          normalizeSyncText(row.kelas),
+          normalizeSyncText(row.keterangan || '')
+        ].join('|');
+
+        const existing = existingByKey.get(syncKey);
+        const date = parseLocalDate(row.tanggal);
+        if (!date) return null;
+        const dayIndex = date.getDay();
+        const kelas = String(row.kelas || '').trim().toUpperCase();
+
+        return {
+          id: existing ? existing.id : (Number(row.local_id) || makeLocalId()),
+          rawTanggal: row.tanggal,
+          tglFormatted: `${namaHari[dayIndex]}, ${date.toLocaleDateString('id-ID')}`,
+          nama: String(row.nama || '').trim(),
+          kelas,
+          keterangan: String(row.keterangan || '').trim(),
+          isSesuai: row.status === 'sesuai' || (jadwalHari[dayIndex] || []).includes(kelas),
+          petugas: String(row.petugas || 'Tidak diketahui').trim()
+        };
+      }
+
+      function nameSimilarity(a, b) {
+        const aa = normalizeSyncText(a);
+        const bb = normalizeSyncText(b);
+        if (!aa || !bb) return 0;
+        if (aa === bb) return 1;
+        const maxLen = Math.max(aa.length, bb.length);
+        if (!maxLen) return 1;
+        const prev = Array.from({length: bb.length + 1}, (_, i) => i);
+        let row = prev;
+        for (let i = 1; i <= aa.length; i++) {
+          const cur = [i];
+          for (let j = 1; j <= bb.length; j++) {
+            cur[j] = Math.min(
+              cur[j - 1] + 1,
+              row[j] + 1,
+              row[j - 1] + (aa[i - 1] === bb[j - 1] ? 0 : 1)
+            );
+          }
+          row = cur;
+        }
+        return 1 - row[bb.length] / maxLen;
+      }
+
+      function areLikelyDuplicate(a, b) {
+        if (String(a.rawTanggal || '') !== String(b.rawTanggal || '')) return false;
+        if (normalizeSyncText(a.kelas) !== normalizeSyncText(b.kelas)) return false;
+        if (normalizeSyncText(a.keterangan || '') !== normalizeSyncText(b.keterangan || '')) return false;
+        return nameSimilarity(a.nama, b.nama) >= 0.92;
+      }
+
+      function dedupeLocalPackages(rows) {
+        const exact = new Map();
+        for (const row of Array.isArray(rows) ? rows : []) {
+          if (!isValidPackageRecord(row)) continue;
+          const normalized = normalizePackageRecord(row, 0);
+          const key = makeSyncKey(normalized);
+          const previous = exact.get(key);
+          if (!previous || Number(normalized.id || 0) > Number(previous.id || 0)) {
+            exact.set(key, normalized);
+          }
+        }
+
+        // Lapisan kedua: bersihkan typo ringan antar-device. Hanya digabung
+        // bila tanggal, kelas, dan keterangan sama serta nama >=92% mirip.
+        const result = [];
+        for (const item of exact.values()) {
+          const duplicateIndex = result.findIndex(existing => areLikelyDuplicate(existing, item));
+          if (duplicateIndex === -1) {
+            result.push(item);
+          } else if (Number(item.id || 0) > Number(result[duplicateIndex].id || 0)) {
+            result[duplicateIndex] = item;
+          }
+        }
+
+        return result.sort((a, b) => {
+          const da = a.rawTanggal || '', db = b.rawTanggal || '';
+          if (da !== db) return db.localeCompare(da);
+          return Number(b.id || 0) - Number(a.id || 0);
+        });
+      }
+
+      async function pullAndMerge() {
+        const { data: cloudRows, error } = await supabaseClient
+          .from('paket')
+          .select('id,local_id,tanggal,nama,kelas,keterangan,petugas,status,sync_key,device_id,created_at,updated_at')
+          .order('tanggal', { ascending: false })
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        const local = dedupeLocalPackages(dataRekap);
+        const byKey = new Map(local.map(item => [makeSyncKey(item), item]));
+
+        for (const row of (cloudRows || [])) {
+          const merged = fromCloudPackage(row, byKey);
+          if (!merged) continue;
+          const key = makeSyncKey(merged);
+          if (!byKey.has(key)) byKey.set(key, merged);
+        }
+
+        // Bersihkan duplikat typo di hasil merge sebelum dikirim balik ke cloud.
+        const mergedData = dedupeLocalPackages(Array.from(byKey.values()));
+
+        // Kalau cloud sudah terlanjur memiliki record typo yang sangat mirip,
+        // pertahankan satu canonical record dan hapus hanya record duplikatnya.
+        const cloudKeep = [];
+        const cloudDeleteIds = [];
+        for (const row of (cloudRows || [])) {
+          const canonical = fromCloudPackage(row, new Map());
+          if (!canonical) continue;
+          const duplicateOf = cloudKeep.find(existing => areLikelyDuplicate(existing, canonical));
+          if (duplicateOf) {
+            const oldTime = new Date(duplicateOf._updatedAt || 0).getTime();
+            const newTime = new Date(row.updated_at || row.created_at || 0).getTime();
+            if (newTime > oldTime) {
+              if (duplicateOf._cloudId) cloudDeleteIds.push(duplicateOf._cloudId);
+              duplicateOf._cloudId = row.id;
+              duplicateOf._updatedAt = row.updated_at || row.created_at;
+            } else if (row.id) {
+              cloudDeleteIds.push(row.id);
+            }
+          } else {
+            canonical._cloudId = row.id;
+            canonical._updatedAt = row.updated_at || row.created_at;
+            cloudKeep.push(canonical);
+          }
+        }
+
+        if (cloudDeleteIds.length) {
+          const uniqueIds = [...new Set(cloudDeleteIds.filter(Boolean))];
+          const { error: deleteError } = await supabaseClient
+            .from('paket')
+            .delete()
+            .in('id', uniqueIds);
+          if (deleteError) console.warn('[Bapenta Sync] Duplikat cloud tidak bisa dibersihkan:', deleteError);
+        }
+
+        dataRekap = mergedData;
+        saveDBLocalOnly();
+        return mergedData;
+      }
+
+      async function pushLocalPackages() {
+        const clean = dedupeLocalPackages(dataRekap);
+        if (clean.length !== dataRekap.length) {
+          dataRekap = clean;
+          saveDBLocalOnly();
+        }
+
+        if (!clean.length) return;
+
+        const payload = clean.map(toCloudPackage);
+        const { error } = await supabaseClient
+          .from('paket')
+          .upsert(payload, { onConflict: 'sync_key' });
+
+        if (error) throw error;
+      }
+
+      async function createAutomaticCloudBackup(reason = 'sync') {
+        try {
+          if (!navigator.onLine || !supabaseClient) return false;
+
+          let state = null;
+          try {
+            state = JSON.parse(localStorage.getItem(BACKUP_STATE_KEY) || 'null');
+          } catch {}
+
+          const now = Date.now();
+          if (state?.at && (now - new Date(state.at).getTime()) < BACKUP_MIN_INTERVAL_MS && reason !== 'manual-backup') {
+            return false;
+          }
+
+          // Backup berisi snapshot hasil merge, bukan hanya data dari device ini.
+          const snapshot = {
+            app: 'BAPENTA',
+            version: 1,
+            created_at: new Date().toISOString(),
+            reason,
+            device_id: deviceId,
+            package_count: Array.isArray(dataRekap) ? dataRekap.length : 0,
+            santri_count: Array.isArray(santriReference) ? santriReference.length : 0,
+            data_paket: Array.isArray(dataRekap) ? dataRekap : [],
+            master_santri: Array.isArray(santriReference) ? santriReference : []
+          };
+
+          const json = JSON.stringify(snapshot, null, 2);
+          const day = new Date().toISOString().slice(0, 10);
+          const path = `backups/${day}/bapenta-latest.json`;
+          const blob = new Blob([json], { type: 'application/json;charset=utf-8' });
+
+          const { error } = await supabaseClient
+            .storage
+            .from(BACKUP_BUCKET)
+            .upload(path, blob, {
+              contentType: 'application/json',
+              upsert: true,
+              cacheControl: '0'
+            });
+
+          if (error) throw error;
+
+          localStorage.setItem(BACKUP_STATE_KEY, JSON.stringify({
+            status: 'ok',
+            at: new Date().toISOString(),
+            path,
+            reason,
+            count: snapshot.package_count
+          }));
+
+          console.info(`[Bapenta Backup] Otomatis tersimpan: ${path}`);
+          return true;
+        } catch (error) {
+          localStorage.setItem(BACKUP_STATE_KEY, JSON.stringify({
+            status: 'error',
+            at: new Date().toISOString(),
+            reason,
+            message: error?.message || String(error)
+          }));
+          console.warn('[Bapenta Backup] Gagal membuat backup cloud:', error);
+          return false;
+        }
+      }
+
+      async function syncSantriReference() {
+        if (!Array.isArray(santriReference) || !santriReference.length) return;
+
+        const rows = santriReference
+          .filter(s => s && s.nama)
+          .map(s => ({
+            nama: String(s.nama).trim(),
+            kelas: String(s.kelas || '').trim().toUpperCase(),
+            asrama: String(s.asrama || '').trim()
+          }));
+
+        if (!rows.length) return;
+
+        // Master santri sengaja diisi dengan upsert berdasarkan isi identitas.
+        // Jika schema belum memiliki unique constraint untuk santri, jangan gagalkan sync paket.
+        try {
+          const { data: existing, error: readError } = await supabaseClient
+            .from('santri')
+            .select('id,nama,kelas,asrama');
+          if (readError) return;
+
+          const existingMap = new Map(
+            (existing || []).map(s => [
+              `${normalizeSyncText(s.nama)}|${normalizeSyncText(s.kelas)}|${normalizeSyncText(s.asrama)}`,
+              s.id
+            ])
+          );
+
+          const insertRows = rows.map(s => ({
+            ...(existingMap.has(`${normalizeSyncText(s.nama)}|${normalizeSyncText(s.kelas)}|${normalizeSyncText(s.asrama)}`)
+              ? { id: existingMap.get(`${normalizeSyncText(s.nama)}|${normalizeSyncText(s.kelas)}|${normalizeSyncText(s.asrama)}`) }
+              : {}),
+            ...s
+          }));
+
+          await supabaseClient.from('santri').upsert(insertRows, { onConflict: 'id' });
+        } catch (err) {
+          console.warn('[Bapenta Sync] Master santri dilewati:', err);
+        }
+      }
+
+      function saveDBLocalOnly() {
+        localStorage.setItem('rekapPaketData_UI', JSON.stringify(dataRekap));
+        localStorage.setItem('rekapPaketData', JSON.stringify(dataRekap));
+      }
+
+      let syncTimer = null;
+      let syncRunning = false;
+
+      async function syncNow(reason = 'manual') {
+        if (syncRunning || !navigator.onLine) return;
+        syncRunning = true;
+        try {
+          // Pull dulu supaya data device lain ikut masuk, lalu push hasil merge.
+          await pullAndMerge();
+          await pushLocalPackages();
+          await syncSantriReference();
+          await createAutomaticCloudBackup(reason);
+
+          localStorage.setItem(SYNC_STATE_KEY, JSON.stringify({
+            status: 'ok',
+            reason,
+            deviceId,
+            at: new Date().toISOString(),
+            count: dataRekap.length
+          }));
+          console.info(`[Bapenta Sync] OK: ${reason}. ${dataRekap.length} data paket.`);
+        } catch (error) {
+          localStorage.setItem(SYNC_STATE_KEY, JSON.stringify({
+            status: 'error',
+            reason,
+            deviceId,
+            at: new Date().toISOString(),
+            message: error?.message || String(error)
+          }));
+          console.warn('[Bapenta Sync] Gagal, Bapenta tetap memakai localStorage:', error);
+        } finally {
+          syncRunning = false;
+        }
+      }
+
+      function scheduleSync(reason = 'local-change') {
+        clearTimeout(syncTimer);
+        syncTimer = setTimeout(() => syncNow(reason), SYNC_DEBOUNCE_MS);
+      }
+
+      // Simpan referensi fungsi lama, lalu bungkus saveDB tanpa mengubah fungsi aslinya.
+      const originalSaveDB = window.saveDB;
+      if (typeof originalSaveDB === 'function') {
+        window.saveDB = function bapentaSaveDBWithCloudSync() {
+          originalSaveDB();
+          scheduleSync('local-save');
+        };
+      }
+
+      // Expose hanya fungsi sync, tidak mengubah UI.
+      window.bapentaSyncNow = () => syncNow('manual');
+      window.bapentaBackupNow = () => createAutomaticCloudBackup('manual-backup');
+      window.bapentaGetBackupState = () => {
+        try { return JSON.parse(localStorage.getItem(BACKUP_STATE_KEY) || 'null'); }
+        catch { return null; }
+      };
+      window.bapentaGetSyncState = () => {
+        try { return JSON.parse(localStorage.getItem(SYNC_STATE_KEY) || 'null'); }
+        catch { return null; }
+      };
+
+      window.addEventListener('online', () => syncNow('online-again'));
+      window.addEventListener('offline', () => {
+        console.info('[Bapenta Sync] Offline. Perubahan tetap disimpan di localStorage.');
+      });
+
+      // Sinkron pertama setelah seluruh aplikasi selesai init.
+      window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => syncNow('startup'), 900);
+      });
+
+      // Cadangan sinkron berkala tanpa menyentuh UI.
+      setInterval(() => {
+        if (navigator.onLine) syncNow('periodic');
+      }, 5 * 60 * 1000);
+    })();
+
   </script>
 </body>
 </html>
