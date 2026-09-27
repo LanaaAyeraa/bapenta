@@ -1245,6 +1245,10 @@
 
     function deletePaket(id) {
       if (confirm('Apakah Bos yakin mau menghapus data ini?')) {
+        const target = dataRekap.find(d => String(d.id) === String(id));
+        if (target && typeof window.bapentaMarkPackageDeleted === 'function') {
+          window.bapentaMarkPackageDeleted(target);
+        }
         dataRekap = dataRekap.filter(d => String(d.id) !== String(id));
         saveDB();
         navigate(currentTab);
@@ -1315,6 +1319,10 @@
     function deletePaketFromModal() {
       const id = document.getElementById('edit-id').value;
       if (confirm('Apakah Bos yakin mau menghapus data ini?')) {
+        const target = dataRekap.find(d => String(d.id) === String(id));
+        if (target && typeof window.bapentaMarkPackageDeleted === 'function') {
+          window.bapentaMarkPackageDeleted(target);
+        }
         dataRekap = dataRekap.filter(d => String(d.id) !== String(id));
         saveDB();
         closeEditModal();
@@ -2070,6 +2078,44 @@
         });
       }
 
+      function getDeletedSyncKeys() {
+        try {
+          const parsed = JSON.parse(localStorage.getItem(DELETED_KEYS_KEY) || '[]');
+          return new Set(Array.isArray(parsed) ? parsed.filter(Boolean) : []);
+        } catch {
+          return new Set();
+        }
+      }
+
+      function saveDeletedSyncKeys(keys) {
+        localStorage.setItem(DELETED_KEYS_KEY, JSON.stringify([...keys]));
+      }
+
+      function markPackageDeleted(item) {
+        const key = makeSyncKey(item);
+        if (!key) return;
+        const keys = getDeletedSyncKeys();
+        keys.add(key);
+        saveDeletedSyncKeys(keys);
+      }
+
+      async function flushDeletedCloudPackages() {
+        const deletedKeys = getDeletedSyncKeys();
+        if (!deletedKeys.size) return true;
+
+        const keys = [...deletedKeys];
+        const { error } = await supabaseClient
+          .from('paket')
+          .delete()
+          .in('sync_key', keys);
+
+        if (error) throw error;
+
+        // Hanya hapus tombstone setelah cloud benar-benar menerima DELETE.
+        saveDeletedSyncKeys(new Set());
+        return true;
+      }
+
       async function pullAndMerge() {
         const { data: cloudRows, error } = await supabaseClient
           .from('paket')
@@ -2081,8 +2127,19 @@
 
         const local = dedupeLocalPackages(dataRekap);
         const byKey = new Map(local.map(item => [makeSyncKey(item), item]));
+        const deletedKeys = getDeletedSyncKeys();
 
         for (const row of (cloudRows || [])) {
+          const rowKey = row.sync_key || makeSyncKey({
+            rawTanggal: row.tanggal,
+            nama: row.nama,
+            kelas: row.kelas,
+            keterangan: row.keterangan || ''
+          });
+          // Tombstone lokal mencegah record yang sudah dihapus muncul lagi
+          // ketika device berpindah tab atau melakukan pull berikutnya.
+          if (deletedKeys.has(rowKey)) continue;
+
           const merged = fromCloudPackage(row, byKey);
           if (!merged) continue;
           const key = makeSyncKey(merged);
@@ -2132,7 +2189,8 @@
       }
 
       async function pushLocalPackages() {
-        const clean = dedupeLocalPackages(dataRekap);
+        const deletedKeys = getDeletedSyncKeys();
+        const clean = dedupeLocalPackages(dataRekap).filter(item => !deletedKeys.has(makeSyncKey(item)));
         if (clean.length !== dataRekap.length) {
           dataRekap = clean;
           saveDBLocalOnly();
@@ -2266,6 +2324,9 @@
         if (syncRunning || !navigator.onLine) return;
         syncRunning = true;
         try {
+          // Hapus record cloud yang ditandai terhapus terlebih dahulu.
+          // Ini mencegah pull berikutnya menghidupkan kembali data yang sudah dihapus.
+          await flushDeletedCloudPackages();
           // Pull dulu supaya data device lain ikut masuk, lalu push hasil merge.
           await pullAndMerge();
           await pushLocalPackages();
@@ -2309,6 +2370,7 @@
       }
 
       // Expose hanya fungsi sync, tidak mengubah UI.
+      window.bapentaMarkPackageDeleted = (item) => markPackageDeleted(item);
       window.bapentaSyncNow = () => syncNow('manual');
       window.bapentaBackupNow = () => createAutomaticCloudBackup('manual-backup');
       window.bapentaGetBackupState = () => {
