@@ -1605,22 +1605,16 @@
         </div>
       `;
     }
-    async function deletePaket(id) {
-      if (!confirm('Apakah Bos yakin mau menghapus data ini?')) return;
 
-      const target = dataRekap.find(d => String(d.id) === String(id));
-      if (!target) return;
-
-      if (typeof window.bapentaMarkPackageDeleted === 'function') {
-        window.bapentaMarkPackageDeleted(target);
-      }
-
-      dataRekap = dataRekap.filter(d => String(d.id) !== String(id));
-      saveDB();
-      navigate(currentTab);
-
-      if (typeof window.bapentaDeletePackageCloud === 'function') {
-        window.bapentaDeletePackageCloud(target);
+    function deletePaket(id) {
+      if (confirm('Apakah Bos yakin mau menghapus data ini?')) {
+        const target = dataRekap.find(d => String(d.id) === String(id));
+        if (target && typeof window.bapentaMarkPackageDeleted === 'function') {
+          window.bapentaMarkPackageDeleted(target);
+        }
+        dataRekap = dataRekap.filter(d => String(d.id) !== String(id));
+        saveDB();
+        navigate(currentTab);
       }
     }
 
@@ -1685,24 +1679,17 @@
       }
     }
 
-    async function deletePaketFromModal() {
+    function deletePaketFromModal() {
       const id = document.getElementById('edit-id').value;
-      if (!confirm('Apakah Bos yakin mau menghapus data ini?')) return;
-
-      const target = dataRekap.find(d => String(d.id) === String(id));
-      if (!target) return;
-
-      if (typeof window.bapentaMarkPackageDeleted === 'function') {
-        window.bapentaMarkPackageDeleted(target);
-      }
-
-      dataRekap = dataRekap.filter(d => String(d.id) !== String(id));
-      saveDB();
-      closeEditModal();
-      navigate(currentTab);
-
-      if (typeof window.bapentaDeletePackageCloud === 'function') {
-        window.bapentaDeletePackageCloud(target);
+      if (confirm('Apakah Bos yakin mau menghapus data ini?')) {
+        const target = dataRekap.find(d => String(d.id) === String(id));
+        if (target && typeof window.bapentaMarkPackageDeleted === 'function') {
+          window.bapentaMarkPackageDeleted(target);
+        }
+        dataRekap = dataRekap.filter(d => String(d.id) !== String(id));
+        saveDB();
+        closeEditModal();
+        navigate(currentTab);
       }
     }
 
@@ -2487,37 +2474,9 @@
 
         if (error) throw error;
 
-        // Hanya hapus tombstone setelah cloud benar-benar menerima DELETE.
-        saveDeletedSyncKeys(new Set());
+        // Jangan hapus tombstone di sini. Tombstone masih diperlukan saat
+        // pullAndMerge() agar record cloud yang baru saja dihapus tidak hidup lagi.
         return true;
-      }
-
-      // Hapus satu paket langsung dari Supabase. Tombstone tetap disimpan
-      // sampai penghapusan cloud benar-benar berhasil.
-      async function deleteCloudPackageNow(item) {
-        if (!item || !supabaseClient || !navigator.onLine) return false;
-
-        const key = makeSyncKey(item);
-        if (!key) return false;
-
-        try {
-          const { error } = await supabaseClient
-            .from('paket')
-            .delete()
-            .eq('sync_key', key);
-
-          if (error) throw error;
-
-          // Hanya hapus tombstone setelah DELETE berhasil.
-          const keys = getDeletedSyncKeys();
-          keys.delete(key);
-          saveDeletedSyncKeys(keys);
-          console.info('[Bapenta Sync] Paket berhasil dihapus dari cloud:', key);
-          return true;
-        } catch (error) {
-          console.warn('[Bapenta Sync] Hapus paket dari cloud gagal, akan dicoba lagi:', error);
-          return false;
-        }
       }
 
       async function pullAndMerge() {
@@ -2758,12 +2717,14 @@
         if (syncRunning || !navigator.onLine) return;
         syncRunning = true;
         try {
-          // Hapus record cloud yang ditandai terhapus terlebih dahulu.
-          // Ini mencegah pull berikutnya menghidupkan kembali data yang sudah dihapus.
-          await flushDeletedCloudPackages();
-          // Pull dulu supaya data device lain ikut masuk, lalu push hasil merge.
+          // Pull tetap dilakukan saat tombstone masih tersimpan, sehingga data
+          // yang sudah dihapus tidak ikut hidup kembali dari cloud.
           await pullAndMerge();
           await pushLocalPackages();
+          // Setelah merge selesai, baru hapus record yang ditandai deleted dari cloud.
+          await flushDeletedCloudPackages();
+          // Tombstone baru boleh dibersihkan setelah seluruh proses delete cloud selesai.
+          saveDeletedSyncKeys(new Set());
           await syncSantriReference();
           await createAutomaticCloudBackup(reason);
 
@@ -2805,7 +2766,6 @@
 
       // Expose hanya fungsi sync, tidak mengubah UI.
       window.bapentaMarkPackageDeleted = (item) => markPackageDeleted(item);
-      window.bapentaDeletePackageCloud = (item) => deleteCloudPackageNow(item);
       window.bapentaSyncNow = () => syncNow('manual');
       window.bapentaScheduleSantriSync = () => scheduleSync('santri-local-change');
       window.bapentaBackupNow = () => createAutomaticCloudBackup('manual-backup');
