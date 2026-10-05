@@ -334,6 +334,7 @@
           <div>
             <h3 class="text-base font-extrabold text-slate-900 dark:text-white">Tambah Data Santri</h3>
             <p class="text-[10px] text-slate-400 dark:text-slate-500">Tambahkan ke master santri tanpa mengubah data paket lama.</p>
+            <p class="text-[9px] text-sky-500 dark:text-sky-400 font-bold mt-0.5">Ctrl + Space untuk buka cepat · Enter = lanjut field</p>
           </div>
         </div>
         <button type="button" onclick="closeAddSantriModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1">
@@ -372,7 +373,8 @@
 
       <div class="flex items-center justify-end gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
         <button type="button" onclick="closeAddSantriModal()" class="px-4 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold rounded-xl text-xs transition">Batal</button>
-        <button type="button" onclick="saveNewSantri()" class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold rounded-xl text-xs transition shadow-xs flex items-center gap-1.5">
+        <button type="button" id="btn-save-new-santri"
+          class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold rounded-xl text-xs transition shadow-xs flex items-center gap-1.5">
           <i data-lucide="save" class="w-4 h-4"></i> Simpan Santri
         </button>
       </div>
@@ -1243,6 +1245,74 @@
     }
 
 
+    // --- SHORTCUT & KEYBOARD FLOW TAMBAH DATA SANTRI ---
+    function handleAddSantriKeyboard(e) {
+      const modal = document.getElementById('addSantriModal');
+      if (!modal || modal.classList.contains('hidden')) return;
+
+      const target = e.target;
+      const id = target?.id;
+
+      // Alur cepat: Nama -> Kelas -> Asrama -> Checkbox -> Simpan
+      if (e.key === 'Enter' && id === 'add-santri-nama') {
+        e.preventDefault();
+        const kelas = document.getElementById('add-santri-kelas');
+        kelas?.focus();
+        return;
+      }
+
+      if (e.key === 'Enter' && id === 'add-santri-kelas') {
+        e.preventDefault();
+        const asrama = document.getElementById('add-santri-asrama');
+        asrama?.focus();
+        return;
+      }
+
+      if (e.key === 'Enter' && id === 'add-santri-asrama') {
+        e.preventDefault();
+        const checkbox = document.getElementById('add-santri-sekaligus-paket');
+        checkbox?.focus();
+        return;
+      }
+
+      if (e.key === 'Enter' && id === 'add-santri-sekaligus-paket') {
+        e.preventDefault();
+        // Karena shortcut ini memang untuk alur "sekalian simpan sebagai data paket",
+        // Enter pada checkbox otomatis mengaktifkannya lalu pindah ke tombol simpan.
+        target.checked = true;
+        document.getElementById('btn-save-new-santri')?.focus();
+        return;
+      }
+
+      if (e.key === 'Enter' && id === 'btn-save-new-santri') {
+        e.preventDefault();
+        target.click();
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      // Ctrl + Space = buka modal Tambah Data Santri dari tab Input Paket.
+      if (e.ctrlKey && e.code === 'Space') {
+        const addModal = document.getElementById('addSantriModal');
+        const similarModal = document.getElementById('similarSantriModal');
+        if (currentTab === 'input' && addModal && addModal.classList.contains('hidden') &&
+            (!similarModal || similarModal.classList.contains('hidden'))) {
+          e.preventDefault();
+          openAddSantriModal();
+        }
+        return;
+      }
+
+      handleAddSantriKeyboard(e);
+    });
+
+    // Klik tombol simpan selalu masuk ke handler utama, termasuk setelah fokus dari alur Enter.
+    document.getElementById('btn-save-new-santri')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      saveNewSantri();
+    });
+
     // --- TAMBAH DATA SANTRI ---
     let pendingSantriSave = null;
 
@@ -1312,6 +1382,7 @@
     }
 
     function saveNewSantri(forceNew = false) {
+      try {
       const nameEl = document.getElementById('add-santri-nama');
       const classEl = document.getElementById('add-santri-kelas');
       const asramaEl = document.getElementById('add-santri-asrama');
@@ -1384,6 +1455,10 @@
           window.bapentaSyncNow();
         }
         alert(`✅ Data santri "${student.nama}" berhasil ditambahkan ke master santri.`);
+      }
+      } catch (err) {
+        console.error('Gagal menyimpan data santri:', err);
+        alert(`❌ Gagal menyimpan data santri. Cek Console untuk detail.\n${err?.message || err}`);
       }
     }
 
