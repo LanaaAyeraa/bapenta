@@ -877,7 +877,7 @@
     }
 
     // --- GROQ API KEY HARDCODED ---
-    let groqApiKey = localStorage.getItem('groq_api_key') || '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';
+    let groqApiKey = localStorage.getItem('groq_api_key') || '';
 
     let selectedKelasInput = "";
     let lastSelectedDate = getLocalDateISO();
@@ -887,6 +887,7 @@
     function saveDB() {
       localStorage.setItem('rekapPaketData_UI', JSON.stringify(dataRekap));
       localStorage.setItem('rekapPaketData', JSON.stringify(dataRekap));
+      if (typeof window.bapentaScheduleSync === 'function') window.bapentaScheduleSync('local-save');
     }
 
     function sortDataRekapNewestFirst() {
@@ -2098,11 +2099,11 @@
       }
 
       try {
-        let res = await callGroqModel("openai/gpt-oss-20b");
+        let res = await callGroqModel("llama-3.3-70b-versatile");
         let data = await res.json();
 
         if (data.error && data.error.message && data.error.message.includes('does not exist')) {
-          res = await callGroqModel("openai/gpt-oss-120b");
+          res = await callGroqModel("llama3-8b-8192");
           data = await res.json();
         }
 
@@ -2290,6 +2291,7 @@
       const BACKUP_BUCKET = 'bapenta-files';
       const BACKUP_STATE_KEY = 'bapenta_supabase_backup_state_v1';
       const BACKUP_MIN_INTERVAL_MS = 30 * 60 * 1000; // maksimal 1 backup / 30 menit per device
+      const DELETED_KEYS_KEY = 'bapenta_deleted_sync_keys_v1';
 
       if (!window.supabase || !window.supabase.createClient) {
         console.warn('[Bapenta Sync] Supabase client tidak tersedia. Mode lokal tetap berjalan.');
@@ -2767,6 +2769,7 @@
       // Expose hanya fungsi sync, tidak mengubah UI.
       window.bapentaMarkPackageDeleted = (item) => markPackageDeleted(item);
       window.bapentaSyncNow = () => syncNow('manual');
+      window.bapentaScheduleSync = (reason) => scheduleSync(reason);
       window.bapentaScheduleSantriSync = () => scheduleSync('santri-local-change');
       window.bapentaBackupNow = () => createAutomaticCloudBackup('manual-backup');
       window.bapentaGetBackupState = () => {
@@ -2797,3 +2800,4 @@
   </script>
 </body>
 </html>
+
